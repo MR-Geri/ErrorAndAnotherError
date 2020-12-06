@@ -1,2 +1,4 @@
-# projectPygame
-pip freeze > requirements.txt
+# Инициализация 
+1. Используйте python 3.8 64x
+2. Создайте виртуальную среду venv
+3. Установите зависимости requirements.txt 
