@@ -3,6 +3,7 @@ import pandas as pd
 import re
 from pymorphy2 import MorphAnalyzer
 from nltk.corpus import stopwords
+import datetime
 
 
 patterns = r"[A-Za-z0-9!#$%&'()*+,./:;<=>?@[\]^_`{|}~—\"\-]+"
@@ -25,6 +26,7 @@ def lemmatize(doc):
 
 
 def main():
+    t = datetime.datetime.now()
     nltk.download('stopwords')
     df_pos = pd.read_csv("../content/positive.csv", sep=";", header=None)
     df_neg = pd.read_csv("../content/negative.csv", sep=";", header=None)
@@ -33,6 +35,7 @@ def main():
     data = df.apply(lemmatize)
     data = data.dropna()
     print(data)
+    print(datetime.datetime.now() - t)
 
 
 if __name__ == '__main__':
