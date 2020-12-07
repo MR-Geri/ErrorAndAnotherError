@@ -1,17 +1,38 @@
 import nltk
-from nltk.tokenize import sent_tokenize
+import pandas as pd
+import re
+from pymorphy2 import MorphAnalyzer
 from nltk.corpus import stopwords
-import pymorphy2
-from tensorflow.keras.datasets import imdb
+
+
+patterns = r"[A-Za-z0-9!#$%&'()*+,./:;<=>?@[\]^_`{|}~—\"\-]+"
+stopwords_ru = stopwords.words("russian")
+morph = MorphAnalyzer()
+
+
+def lemmatize(doc):
+    doc = re.sub(patterns, ' ', doc)
+    tokens = []
+    for token in doc.split():
+        if token and token not in stopwords_ru:
+            token = token.strip()
+            token = morph.normal_forms(token)[0]
+
+            tokens.append(token)
+    if len(tokens) > 2:
+        return tokens
+    return None
 
 
 def main():
-    # nltk.download('punkt')
-    # nltk.download('stopwords')
-    morph = pymorphy2.MorphAnalyzer()
-    text = "Я - к.т.н, т.е. проучился долгое время. Имею образование."
-    print(sent_tokenize(text, language="russian"))
-    print(morph.parse("хочу"))
+    nltk.download('stopwords')
+    df_pos = pd.read_csv("../content/positive.csv", sep=";", header=None)
+    df_neg = pd.read_csv("../content/negative.csv", sep=";", header=None)
+    df = df_pos.iloc[:, 3].append(df_neg.iloc[:, 3])
+    df = df.dropna().drop_duplicates()
+    data = df.apply(lemmatize)
+    data = data.dropna()
+    print(data)
 
 
 if __name__ == '__main__':
