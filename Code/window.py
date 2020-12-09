@@ -4,26 +4,45 @@ from Code.settings import *
 
 
 class Window:
-    def __init__(self, size_display: Tuple[int, int], caption: str) -> None:
+    def __init__(self, controller: object, size_display: Tuple[int, int], caption: str) -> None:
         self.caption = caption
         self.is_run = False
+        self.controller = controller
         #
         self.display = pg.display.set_mode(size_display)
         pg.display.set_caption(self.caption)
         self.bd = pg.Surface(size_display)
         self.bd.fill(pg.Color(BACKGROUND_COLOR))
 
+    def event(self) -> None:
+        for en in pg.event.get():
+            if en.type == pg.QUIT:
+                pg.quit()
+                quit()
 
-class MenuWindow(Window):
-    def __init__(self, size_display: Tuple[int, int], caption: str):
-        super().__init__(size_display, caption)
+    def render(self) -> None:
+        pass
 
-    def run(self):
+    def run(self) -> None:
         self.is_run = True
         while self.is_run:
-            for en in pg.event.get():
-                if en.type == pg.QUIT:
-                    pg.quit()
-                    quit()
+            self.event()
+            self.render()
+            #
             self.display.blit(self.bd, (0, 0))
             pg.display.update()
+
+
+class MenuWindow(Window):
+    def __init__(self, controller: object, size_display: Tuple[int, int], caption: str) -> None:
+        super().__init__(controller, size_display, caption)
+
+
+class SettingsWindow(Window):
+    def __init__(self, controller: object, size_display: Tuple[int, int], caption: str) -> None:
+        super().__init__(controller, size_display, caption)
+
+
+class GameWindow(Window):
+    def __init__(self, controller: object, size_display: Tuple[int, int], caption: str) -> None:
+        super().__init__(controller, size_display, caption)
