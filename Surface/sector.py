@@ -6,7 +6,5 @@ class Sector:
     def gen_board(self) -> None:
         """
         Генерация поля (карты) в секторе.
-
-        :return:
         """
         self.board = [[0 for x in range(self.width)] for y in range(self.height)]
