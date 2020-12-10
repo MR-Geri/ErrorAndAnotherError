@@ -26,4 +26,3 @@ class Sector:
         for cells in self.board:
             for cell in cells:
                 self.surface.blit(cell.image, cell.rect)
-
