@@ -19,9 +19,12 @@ class Sector:
         """
         Генерация поля (карты) в секторе.
         """
-        self.board = [[Cell(x, y, self.size_cell) for x in range(self.width)] for y in range(self.height)]
+        self.board = [
+            [Cell(number_x, number_y, self.size_cell) for number_x in range(self.width)]
+            for number_y in range(self.height)
+        ]
 
-    def update(self):
+    def update(self) -> None:
         self.surface.fill(pg.Color(SECTORS_BACKGROUND_COLOR))
         for cells in self.board:
             for cell in cells:
