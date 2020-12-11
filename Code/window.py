@@ -72,9 +72,8 @@ class GameWindow(Window):
         self.display.blit(self.sector.surface, self.camera.get_cord())
 
     def get_number_cell(self, mouse_pos: Tuple[int, int]) -> Tuple[int, int]:
-        x = (-self.camera.rect.x + mouse_pos[0]) // SIZE_CELL
-        y = (-self.camera.rect.y + mouse_pos[1]) // SIZE_CELL
-        return x, y
+        x, y = self.camera.get_cord()
+        return (-x + mouse_pos[0]) // SIZE_CELL, (-y + mouse_pos[1]) // SIZE_CELL
 
     def event(self) -> None:
         for en in pg.event.get():
