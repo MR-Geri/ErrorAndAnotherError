@@ -5,7 +5,9 @@ from Code.settings import *
 
 
 class Camera(object):
-    def __init__(self, width, height) -> None:
+    def __init__(self, width: int, height: int) -> None:
+        self.width = width
+        self.height = height
         self.state = pg.Rect(0, 0, width, height)
         self.speed_x, self.speed_y = 0, 0
 
@@ -22,6 +24,5 @@ class Camera(object):
             self.speed_y += CAMERA_SPEED_Y
         if down:
             self.speed_y -= CAMERA_SPEED_Y
-        #
-        self.state.x += self.speed_x
-        self.state.y += self.speed_y
+        self.state.x = -min(self.width - WIN_WIDTH, -min(0, self.state.x + self.speed_x))
+        self.state.y = -min(self.height - WIN_HEIGHT, -min(0, self.state.y + self.speed_y))

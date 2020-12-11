@@ -93,5 +93,4 @@ class GameWindow(Window):
                 self.camera_right = False
             if en.type == pg.KEYUP and en.key == pg.K_a:
                 self.camera_left = False
-            #
-            self.camera.move(self.camera_left, self.camera_right, self.camera_up, self.camera_down)
+        self.camera.move(self.camera_left, self.camera_right, self.camera_up, self.camera_down)
