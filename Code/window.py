@@ -67,15 +67,20 @@ class GameWindow(Window):
         self.camera = Camera(100 * SIZE_CELL, 100 * SIZE_CELL)
         self.camera_left, self.camera_right, self.camera_up, self.camera_down = False, False, False, False
 
-    def render(self):
+    def render(self) -> None:
         pg.display.set_caption(str(self.clock.get_fps()))
         self.display.blit(self.sector.surface, self.camera.get_cord())
+
+    def click(self, mouse_pos: Tuple[int, int]) -> None:
+        pass
 
     def event(self) -> None:
         for en in pg.event.get():
             if en.type == pg.QUIT:
                 pg.quit()
                 quit()
+            if en.type == pg.MOUSEBUTTONUP:
+                self.click(en.pos)
             if en.type == pg.KEYDOWN and en.key == pg.K_w:
                 self.camera_up = True
             if en.type == pg.KEYDOWN and en.key == pg.K_s:
@@ -93,4 +98,5 @@ class GameWindow(Window):
                 self.camera_right = False
             if en.type == pg.KEYUP and en.key == pg.K_a:
                 self.camera_left = False
+
         self.camera.move(self.camera_left, self.camera_right, self.camera_up, self.camera_down)

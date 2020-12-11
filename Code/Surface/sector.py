@@ -1,4 +1,3 @@
-from typing import Tuple
 import pygame as pg
 from Code.settings import *
 from Code.Surface.cell import Cell
