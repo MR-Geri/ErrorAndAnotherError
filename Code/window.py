@@ -68,7 +68,7 @@ class GameWindow(Window):
         self.camera_left, self.camera_right, self.camera_up, self.camera_down = False, False, False, False
 
     def render(self) -> None:
-        pg.display.set_caption(str(self.clock.get_fps()))
+        pg.display.set_caption(str(self.clock.get_fps()))  # нужно для отладки. FPS в заголовок окна!
         self.display.blit(self.sector.surface, self.camera.get_cord())
 
     def get_number_cell(self, mouse_pos: Tuple[int, int]) -> Tuple[int, int]:
