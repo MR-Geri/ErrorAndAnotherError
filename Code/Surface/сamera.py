@@ -1,27 +1,27 @@
+from typing import Tuple
+
 import pygame as pg
 from Code.settings import *
 
 
 class Camera(object):
-    def __init__(self, camera_func, width, height) -> None:
-        self.camera_func = camera_func
+    def __init__(self, width, height) -> None:
         self.state = pg.Rect(0, 0, width, height)
+        self.speed_x, self.speed_y = 0, 0
 
-    def apply(self, target):
-        return target.rect.move(self.state.topleft)
+    def get_cord(self) -> Tuple[int, int]:
+        return self.state.x, self.state.y
 
-    def update(self, target):
-        self.state = self.camera_func(self.state, target.rect)
-
-
-def camera_configure(camera, target_rect) -> pg.Rect:
-    left, right, _, _ = target_rect
-    _, _, w, h = camera
-    left, right = -left + WIN_WIDTH / 2, -right + WIN_HEIGHT / 2
-
-    left = min(0, left)                              # Не движемся дальше левой границы
-    left = max(-(camera.width-WIN_WIDTH), left)      # Не движемся дальше правой границы
-    right = max(-(camera.height-WIN_HEIGHT), right)  # Не движемся дальше нижней границы
-    right = min(0, right)                            # Не движемся дальше верхней границы
-
-    return pg.Rect(left, right, w, h)
+    def move(self, left: bool, right: bool, up: bool, down: bool) -> None:
+        self.speed_x, self.speed_y = 0, 0
+        if left:
+            self.speed_x += CAMERA_SPEED_X
+        if right:
+            self.speed_x -= CAMERA_SPEED_X
+        if up:
+            self.speed_y += CAMERA_SPEED_Y
+        if down:
+            self.speed_y -= CAMERA_SPEED_Y
+        #
+        self.state.x += self.speed_x
+        self.state.y += self.speed_y
