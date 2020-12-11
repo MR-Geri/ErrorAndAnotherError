@@ -71,8 +71,10 @@ class GameWindow(Window):
         pg.display.set_caption(str(self.clock.get_fps()))
         self.display.blit(self.sector.surface, self.camera.get_cord())
 
-    def click(self, mouse_pos: Tuple[int, int]) -> None:
-        pass
+    def get_number_cell(self, mouse_pos: Tuple[int, int]) -> Tuple[int, int]:
+        x = (-self.camera.rect.x + mouse_pos[0]) // SIZE_CELL
+        y = (-self.camera.rect.y + mouse_pos[1]) // SIZE_CELL
+        return x, y
 
     def event(self) -> None:
         for en in pg.event.get():
@@ -80,7 +82,7 @@ class GameWindow(Window):
                 pg.quit()
                 quit()
             if en.type == pg.MOUSEBUTTONUP:
-                self.click(en.pos)
+                self.get_number_cell(en.pos)
             if en.type == pg.KEYDOWN and en.key == pg.K_w:
                 self.camera_up = True
             if en.type == pg.KEYDOWN and en.key == pg.K_s:
