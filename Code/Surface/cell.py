@@ -10,6 +10,7 @@ class Cell(pg.sprite.Sprite):
         self.x = number_x * size_cell
         self.y = number_y * size_cell
         self.size_cell = size_cell
+        self.color = pg_random_color()
         #
         self.render(size_cell)
 
@@ -20,7 +21,7 @@ class Cell(pg.sprite.Sprite):
         self.image = pg.Surface((self.size_cell, self.size_cell))
         self.rect = pg.Rect(self.x, self.y, self.size_cell, self.size_cell)
         #
-        self.image.fill(pg_random_color())
+        self.image.fill(self.color)
         pg.draw.rect(
             self.image,
             pg.Color((255, 255, 255)),

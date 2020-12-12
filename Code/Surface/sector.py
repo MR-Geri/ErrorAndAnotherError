@@ -29,8 +29,11 @@ class Sector:
             for cell in cells:
                 self.surface.blit(cell.image, cell.rect)
 
-    def scale(self, size):
+    def scale(self, size_cell):
+        self.size_cell = size_cell
+        self.size_sector = (self.width * size_cell, self.height * size_cell)
+        self.surface = pg.Surface(self.size_sector)
         for cells in self.board:
             for cell in cells:
-                cell.render(size)
+                cell.render(size_cell)
         self.update()

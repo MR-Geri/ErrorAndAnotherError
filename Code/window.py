@@ -76,7 +76,7 @@ class GameWindow(Window):
 
     def scale(self, coeff_scale: float):
         # Масштабирование sector
-        if self.size_cell > coeff_scale:
+        if abs(coeff_scale) < self.size_cell or coeff_scale > 0:
             self.size_cell += coeff_scale
             self.sector.scale(self.size_cell)
             # Ограничение перемещения камеры|СОЗДАЁМ ЗАНОВО
