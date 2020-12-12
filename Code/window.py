@@ -63,25 +63,36 @@ class SettingsWindow(Window):
 class GameWindow(Window):
     def __init__(self, controller: object, size_display: Tuple[int, int], caption: str) -> None:
         super().__init__(controller, size_display, caption)
-        self.sector = Sector(width=100, height=100, size_cell=SIZE_CELL)
-        self.camera = Camera(100 * SIZE_CELL, 100 * SIZE_CELL)
+        self.size_cell = SIZE_CELL
+        self.sector = Sector(width=100, height=100, size_cell=self.size_cell)
+        self.camera = Camera(100 * self.size_cell, 100 * self.size_cell)
         self.camera_left, self.camera_right, self.camera_up, self.camera_down = False, False, False, False
 
     def render(self) -> None:
         pg.display.set_caption(str(self.clock.get_fps()))  # нужно для отладки. FPS в заголовок окна!
         self.display.blit(self.sector.surface, self.camera.get_cord())
 
+    def scale(self):
+        # Масштабирование sector
+        self.size_cell *= 1.1
+        self.sector.scale(self.size_cell)
+        #
+
     def get_number_cell(self, mouse_pos: Tuple[int, int]) -> Tuple[int, int]:
         x, y = self.camera.get_cord()
-        return (-x + mouse_pos[0]) // SIZE_CELL, (-y + mouse_pos[1]) // SIZE_CELL
+        return (-x + mouse_pos[0]) // self.size_cell, (-y + mouse_pos[1]) // self.size_cell
 
     def event(self) -> None:
         for en in pg.event.get():
             if en.type == pg.QUIT:
                 pg.quit()
                 quit()
-            if en.type == pg.MOUSEBUTTONUP:
-                self.get_number_cell(en.pos)
+            if en.type == pg.MOUSEBUTTONUP and en.button == 1:
+                print(self.get_number_cell(en.pos))
+            if en.type == pg.KEYDOWN and en.key == pg.K_LCTRL and en.type == pg.MOUSEBUTTONUP and en.button == 4:
+                print('вверх')
+            elif en.type == pg.KEYDOWN and en.key == pg.K_LCTRL and en.type == pg.MOUSEBUTTONUP and en.button == 5:
+                print('вниз')
             if en.type == pg.KEYDOWN and en.key == pg.K_w:
                 self.camera_up = True
             if en.type == pg.KEYDOWN and en.key == pg.K_s:
