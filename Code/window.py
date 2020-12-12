@@ -73,15 +73,15 @@ class GameWindow(Window):
         pg.display.set_caption(str(self.clock.get_fps()))  # нужно для отладки. FPS в заголовок окна!
         self.display.blit(self.sector.surface, self.camera.get_cord())
 
-    def scale(self):
+    def scale(self, coeff_scale: float):
         # Масштабирование sector
-        self.size_cell *= 1.1
+        self.size_cell = self.size_cell * coeff_scale
         self.sector.scale(self.size_cell)
         #
 
     def get_number_cell(self, mouse_pos: Tuple[int, int]) -> Tuple[int, int]:
         x, y = self.camera.get_cord()
-        return (-x + mouse_pos[0]) // self.size_cell, (-y + mouse_pos[1]) // self.size_cell
+        return int((-x + mouse_pos[0]) // self.size_cell), int((-y + mouse_pos[1]) // self.size_cell)
 
     def event(self) -> None:
         for en in pg.event.get():
@@ -97,9 +97,9 @@ class GameWindow(Window):
                 self.l_ctrl = False
             #
             if self.l_ctrl and en.type == pg.MOUSEBUTTONUP and en.button == 4:
-                print('вверх')
+                self.scale(1.1)
             if self.l_ctrl and en.type == pg.MOUSEBUTTONUP and en.button == 5:
-                print('вниз')
+                self.scale(0.9)
             #
             if en.type == pg.KEYDOWN and en.key == pg.K_w:
                 self.camera_up = True

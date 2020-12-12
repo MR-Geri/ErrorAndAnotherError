@@ -33,3 +33,4 @@ class Sector:
         for cells in self.board:
             for cell in cells:
                 cell.render(size)
+        self.update()

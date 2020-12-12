@@ -15,6 +15,8 @@ class Cell(pg.sprite.Sprite):
 
     def render(self, size_cell):
         self.size_cell = size_cell
+        self.x = self.number_x * size_cell
+        self.y = self.number_y * size_cell
         self.image = pg.Surface((self.size_cell, self.size_cell))
         self.rect = pg.Rect(self.x, self.y, self.size_cell, self.size_cell)
         #
