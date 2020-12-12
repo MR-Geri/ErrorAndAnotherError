@@ -75,8 +75,8 @@ class GameWindow(Window):
         self.display.blit(self.sector.surface, self.camera.get_cord())
 
     def scale(self, coeff_scale: float):
-        # Масштабирование sector
-        if abs(coeff_scale) < self.size_cell or coeff_scale > 0:
+        # Масштабирование sector с ограничениями
+        if (coeff_scale > 0 and self.size_cell < CELL_MAX_SIZE) or (coeff_scale < 0 and self.size_cell > CELL_MIN_SIZE):
             self.size_cell += coeff_scale
             self.sector.scale(self.size_cell)
             # Ограничение перемещения камеры|СОЗДАЁМ ЗАНОВО
