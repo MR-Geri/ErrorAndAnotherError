@@ -67,6 +67,7 @@ class GameWindow(Window):
         self.sector = Sector(width=100, height=100, size_cell=self.size_cell)
         self.camera = Camera(100 * self.size_cell, 100 * self.size_cell)
         self.camera_left, self.camera_right, self.camera_up, self.camera_down = False, False, False, False
+        self.l_ctrl = False
 
     def render(self) -> None:
         pg.display.set_caption(str(self.clock.get_fps()))  # нужно для отладки. FPS в заголовок окна!
@@ -89,10 +90,17 @@ class GameWindow(Window):
                 quit()
             if en.type == pg.MOUSEBUTTONUP and en.button == 1:
                 print(self.get_number_cell(en.pos))
-            if en.type == pg.KEYDOWN and en.key == pg.K_LCTRL and en.type == pg.MOUSEBUTTONUP and en.button == 4:
+            #
+            if en.type == pg.KEYDOWN and en.key == pg.K_LCTRL:
+                self.l_ctrl = True
+            if en.type == pg.KEYUP and en.key == pg.K_LCTRL:
+                self.l_ctrl = False
+            #
+            if self.l_ctrl and en.type == pg.MOUSEBUTTONUP and en.button == 4:
                 print('вверх')
-            elif en.type == pg.KEYDOWN and en.key == pg.K_LCTRL and en.type == pg.MOUSEBUTTONUP and en.button == 5:
+            if self.l_ctrl and en.type == pg.MOUSEBUTTONUP and en.button == 5:
                 print('вниз')
+            #
             if en.type == pg.KEYDOWN and en.key == pg.K_w:
                 self.camera_up = True
             if en.type == pg.KEYDOWN and en.key == pg.K_s:
