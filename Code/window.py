@@ -98,9 +98,9 @@ class GameWindow(Window):
                 self.l_ctrl = False
             #
             if self.l_ctrl and en.type == pg.MOUSEBUTTONUP and en.button == 4:
-                self.scale(10)
+                self.scale(COEFFICIENT_SCALE)
             if self.l_ctrl and en.type == pg.MOUSEBUTTONUP and en.button == 5:
-                self.scale(-10)
+                self.scale(-COEFFICIENT_SCALE)
             #
             if en.type == pg.KEYDOWN and en.key == pg.K_w:
                 self.camera_up = True
