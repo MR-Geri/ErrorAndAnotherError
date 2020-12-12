@@ -63,9 +63,9 @@ class SettingsWindow(Window):
 class GameWindow(Window):
     def __init__(self, controller: object, size_display: Tuple[int, int], caption: str) -> None:
         super().__init__(controller, size_display, caption)
-        self.size_cell = SIZE_CELL
-        self.sector = Sector(width=100, height=100, size_cell=self.size_cell)
-        self.camera = Camera(100 * self.size_cell, 100 * self.size_cell)
+        self.size_cell = CELL_SIZE
+        self.sector = Sector(width=CELL_X_NUMBER, height=CELL_Y_NUMBER, size_cell=self.size_cell)
+        self.camera = Camera(CELL_X_NUMBER * self.size_cell, CELL_Y_NUMBER * self.size_cell)
         self.camera_left, self.camera_right, self.camera_up, self.camera_down = False, False, False, False
         self.l_ctrl = False
 
@@ -75,9 +75,10 @@ class GameWindow(Window):
 
     def scale(self, coeff_scale: float):
         # Масштабирование sector
-        self.size_cell = self.size_cell * coeff_scale
+        self.size_cell += coeff_scale
         self.sector.scale(self.size_cell)
-        #
+        # Ограничение перемещения камеры|СОЗДАЁМ ЗАНОВО
+        self.camera = Camera(CELL_X_NUMBER * self.size_cell, CELL_Y_NUMBER * self.size_cell)
 
     def get_number_cell(self, mouse_pos: Tuple[int, int]) -> Tuple[int, int]:
         x, y = self.camera.get_cord()
@@ -97,9 +98,9 @@ class GameWindow(Window):
                 self.l_ctrl = False
             #
             if self.l_ctrl and en.type == pg.MOUSEBUTTONUP and en.button == 4:
-                self.scale(1.1)
+                self.scale(10)
             if self.l_ctrl and en.type == pg.MOUSEBUTTONUP and en.button == 5:
-                self.scale(0.9)
+                self.scale(-10)
             #
             if en.type == pg.KEYDOWN and en.key == pg.K_w:
                 self.camera_up = True
