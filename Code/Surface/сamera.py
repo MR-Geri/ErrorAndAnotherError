@@ -8,7 +8,7 @@ class Camera(object):
     def __init__(self, width: int, height: int) -> None:
         self.width = width
         self.height = height
-        self.rect = pg.Rect(0, 0, width, height)
+        self.rect = pg.Rect((WIN_WIDTH - self.width) // 2, (WIN_HEIGHT - self.height) // 2, width, height)
         self.speed_x, self.speed_y = 0, 0
 
     def get_cord(self) -> Tuple[int, int]:
@@ -16,6 +16,7 @@ class Camera(object):
 
     def move(self, left: bool, right: bool, up: bool, down: bool) -> None:
         self.speed_x, self.speed_y = 0, 0
+        max_width, max_height = WIN_WIDTH - self.width, WIN_HEIGHT - self.height
         if left:
             self.speed_x += CAMERA_SPEED_X
         if right:
@@ -24,5 +25,7 @@ class Camera(object):
             self.speed_y += CAMERA_SPEED_Y
         if down:
             self.speed_y -= CAMERA_SPEED_Y
-        self.rect.x = -min(self.width - WIN_WIDTH, -min(0, self.rect.x + self.speed_x))    # Ограничение по X
-        self.rect.y = -min(self.height - WIN_HEIGHT, -min(0, self.rect.y + self.speed_y))  # Ограничение по Y
+        if -max_width >= -(self.rect.x + self.speed_x) >= 0:
+            self.rect.x += self.speed_x
+        if -max_height >= -(self.rect.y + self.speed_y) >= 0:
+            self.rect.y += self.speed_y
