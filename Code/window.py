@@ -4,6 +4,7 @@ from typing import Tuple
 from Code.Surface.сamera import Camera
 from Code.settings import *
 from Code.Surface.sector import Sector
+from Code.info_panel import InfoPanel
 
 
 class Window:
@@ -66,6 +67,7 @@ class GameWindow(Window):
         self.size_cell = CELL_SIZE
         self.sector = Sector(width=CELL_X_NUMBER, height=CELL_Y_NUMBER, size_cell=self.size_cell)
         self.camera = Camera(CELL_X_NUMBER * self.size_cell, CELL_Y_NUMBER * self.size_cell)
+        self.panel = InfoPanel(INFO_PANEL_X, WIN_HEIGHT)
         #
         self.camera_left, self.camera_right, self.camera_up, self.camera_down = False, False, False, False
         self.l_ctrl = False
@@ -73,6 +75,8 @@ class GameWindow(Window):
     def render(self) -> None:
         pg.display.set_caption(str(self.clock.get_fps()))  # нужно для отладки. FPS в заголовок окна!
         self.display.blit(self.sector.surface, self.camera.get_cord())
+        self.display.blit(self.panel.panel_left, self.panel.panel_left_cord)
+        self.display.blit(self.panel.panel_right, self.panel.panel_right_cord)
 
     def scale(self, coeff_scale: float):
         # Масштабирование sector с ограничениями
