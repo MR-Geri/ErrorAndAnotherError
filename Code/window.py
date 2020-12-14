@@ -66,8 +66,13 @@ class GameWindow(Window):
         super().__init__(controller, size_display, caption)
         self.size_cell = CELL_SIZE
         self.sector = Sector(width=CELL_X_NUMBER, height=CELL_Y_NUMBER, size_cell=self.size_cell)
-        self.camera = Camera(CELL_X_NUMBER * self.size_cell, CELL_Y_NUMBER * self.size_cell)
         self.panel = InfoPanel(INFO_PANEL_X, WIN_HEIGHT)
+        self.camera = Camera(
+            CELL_X_NUMBER * self.size_cell,
+            CELL_Y_NUMBER * self.size_cell,
+            self.panel.width,
+            self.panel.width
+        )
         #
         self.camera_left, self.camera_right, self.camera_up, self.camera_down = False, False, False, False
         self.l_ctrl = False
@@ -84,7 +89,12 @@ class GameWindow(Window):
             self.size_cell += coeff_scale
             self.sector.scale(self.size_cell)
             # Ограничение перемещения камеры|СОЗДАЁМ ЗАНОВО
-            self.camera = Camera(CELL_X_NUMBER * self.size_cell, CELL_Y_NUMBER * self.size_cell)
+            self.camera = Camera(
+                CELL_X_NUMBER * self.size_cell,
+                CELL_Y_NUMBER * self.size_cell,
+                self.panel.width,
+                self.panel.width
+            )
 
     def get_number_cell(self, mouse_pos: Tuple[int, int]) -> Tuple[int, int]:
         x, y = self.camera.get_cord()
