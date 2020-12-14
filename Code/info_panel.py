@@ -2,7 +2,7 @@ import pygame as pg
 from Code.settings import *
 
 
-class InfoPanel:
+class InfoPanels:
     def __init__(self, width: int, height: int) -> None:
         self.width = width
         self.height = height
@@ -14,3 +14,6 @@ class InfoPanel:
     def render(self) -> None:
         self.panel_left = pg.Surface((self.width, self.height))
         self.panel_right = pg.Surface((self.width, self.height))
+        #
+        self.panel_left.fill(pg.Color((128, 128, 128)))
+        self.panel_right.fill(pg.Color((128, 128, 128)))

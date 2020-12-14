@@ -4,7 +4,7 @@ from typing import Tuple
 from Code.Surface.сamera import Camera
 from Code.settings import *
 from Code.Surface.sector import Sector
-from Code.info_panel import InfoPanel
+from Code.info_panel import InfoPanels
 
 
 class Window:
@@ -66,7 +66,7 @@ class GameWindow(Window):
         super().__init__(controller, size_display, caption)
         self.size_cell = CELL_SIZE
         self.sector = Sector(width=CELL_X_NUMBER, height=CELL_Y_NUMBER, size_cell=self.size_cell)
-        self.panel = InfoPanel(INFO_PANEL_X, WIN_HEIGHT)
+        self.panel = InfoPanels(INFO_PANEL_X, WIN_HEIGHT)
         self.camera = Camera(
             CELL_X_NUMBER * self.size_cell,
             CELL_Y_NUMBER * self.size_cell,
