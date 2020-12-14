@@ -100,13 +100,22 @@ class GameWindow(Window):
         x, y = self.camera.get_cord()
         return int((-x + mouse_pos[0]) // self.size_cell), int((-y + mouse_pos[1]) // self.size_cell)
 
+    def click(self, pos) -> None:
+        if self.panel.panel_right_cord[0] > pos[0] > self.panel.width:
+            x, y = self.get_number_cell(pos)
+            print('Клик по полю:\n', x, y)
+        if pos[0] < self.panel.width:
+            print('Клик по левой панели информации.')
+        if pos[0] > self.panel.panel_right_cord[0]:
+            print('Клик по правой панели информации')
+
     def event(self) -> None:
         for en in pg.event.get():
             if en.type == pg.QUIT:
                 pg.quit()
                 quit()
             if en.type == pg.MOUSEBUTTONUP and en.button == 1:
-                print(self.get_number_cell(en.pos))
+                self.click(pos=en.pos)
             #
             if en.type == pg.KEYDOWN and en.key == pg.K_LCTRL:
                 self.l_ctrl = True
