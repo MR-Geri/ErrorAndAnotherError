@@ -1,4 +1,6 @@
 import pygame as pg
+from math import ceil
+
 from Code.settings import CELL_COLOR
 from Code.graphics import pg_random_color
 
@@ -25,5 +27,10 @@ class Cell(pg.sprite.Sprite):
         pg.draw.rect(
             self.image,
             pg.Color((255, 255, 255)),
-            (0.25 * self.size_cell, 0.25 * self.size_cell, 0.5 * self.size_cell, 0.5 * self.size_cell)
+            (
+                int(0.25 * self.size_cell),
+                int(0.25 * self.size_cell),
+                ceil(0.5 * self.size_cell),
+                ceil(0.5 * self.size_cell)
+            )
         )

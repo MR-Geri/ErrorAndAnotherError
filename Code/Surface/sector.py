@@ -24,7 +24,7 @@ class Sector:
         ]
 
     def update(self) -> None:
-        self.surface.fill(pg.Color(SECTORS_BACKGROUND_COLOR))
+        self.surface.fill(pg.Color(BACKGROUND_COLOR))
         for cells in self.board:
             for cell in cells:
                 self.surface.blit(cell.image, cell.rect)

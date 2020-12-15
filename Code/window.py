@@ -13,7 +13,10 @@ class Window:
         self.is_run = False
         self.controller = controller
         #
-        self.display = pg.display.set_mode(size_display)
+        if FULL_SCREEN:
+            self.display = pg.display.set_mode(size_display, pg.FULLSCREEN)
+        else:
+            self.display = pg.display.set_mode(size_display)
         pg.display.set_caption(self.caption)
         self.bd = pg.Surface(size_display)
         self.bd.fill(pg.Color(BACKGROUND_COLOR))
@@ -47,13 +50,26 @@ class MenuWindow(Window):
     def __init__(self, controller: object, size_display: Tuple[int, int], caption: str) -> None:
         super().__init__(controller, size_display, caption)
 
+    def new_game(self) -> None:
+        self.controller.action_window('game')
+
+    def load_game(self) -> None:
+        pass
+
+    def settings(self) -> None:
+        pass
+
+    @staticmethod
+    def exit() -> None:
+        pg.quit()
+        quit()
+
     def event(self) -> None:
         for en in pg.event.get():
             if en.type == pg.QUIT:
-                pg.quit()
-                quit()
+                self.exit()
             elif en.type == pg.KEYUP and en.key == pg.K_SPACE:
-                self.controller.action_window('game')
+                self.new_game()
 
 
 class SettingsWindow(Window):
