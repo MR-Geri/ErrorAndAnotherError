@@ -4,7 +4,7 @@ from typing import Tuple
 from Code.Surface.сamera import Camera
 from Code.settings import *
 from Code.Surface.sector import Sector
-from Code.info_panel import InfoPanels
+from Code.info_panel import LeftPanel, RightPanel
 
 
 class Window:
@@ -32,6 +32,9 @@ class Window:
     def render(self) -> None:
         pass
 
+    def update(self) -> None:
+        pass
+
     def run(self) -> None:
         self.is_run = True
         while self.is_run:
@@ -39,6 +42,7 @@ class Window:
             self.display.blit(self.bd, (0, 0))
             self.event()
             self.render()
+            self.update()
             #
             pg.display.update()
 
@@ -59,15 +63,11 @@ class MenuWindow(Window):
     def settings(self) -> None:
         pass
 
-    @staticmethod
-    def exit() -> None:
-        pg.quit()
-        quit()
-
     def event(self) -> None:
         for en in pg.event.get():
             if en.type == pg.QUIT:
-                self.exit()
+                pg.quit()
+                quit()
             elif en.type == pg.KEYUP and en.key == pg.K_SPACE:
                 self.new_game()
 
@@ -82,22 +82,17 @@ class GameWindow(Window):
         super().__init__(controller, size_display, caption)
         self.size_cell = CELL_SIZE
         self.sector = Sector(width=CELL_X_NUMBER, height=CELL_Y_NUMBER, size_cell=self.size_cell)
-        self.panel = InfoPanels(INFO_PANEL_X, WIN_HEIGHT)
+        self.left_panel = LeftPanel(INFO_PANEL_WIDTH, WIN_HEIGHT, pos=(0, 0))
+        self.right_panel = RightPanel(INFO_PANEL_WIDTH, WIN_HEIGHT, pos=(WIN_WIDTH - INFO_PANEL_WIDTH, 0))
         self.camera = Camera(
             CELL_X_NUMBER * self.size_cell,
             CELL_Y_NUMBER * self.size_cell,
-            self.panel.width,
-            self.panel.width
+            INFO_PANEL_WIDTH,
+            INFO_PANEL_WIDTH
         )
         #
         self.camera_left, self.camera_right, self.camera_up, self.camera_down = False, False, False, False
         self.l_ctrl = False
-
-    def render(self) -> None:
-        pg.display.set_caption(str(self.clock.get_fps()))  # нужно для отладки. FPS в заголовок окна!
-        self.display.blit(self.sector.surface, self.camera.get_cord())
-        self.display.blit(self.panel.panel_left, self.panel.panel_left_cord)
-        self.display.blit(self.panel.panel_right, self.panel.panel_right_cord)
 
     def scale(self, coeff_scale: float):
         # Масштабирование sector с ограничениями
@@ -108,8 +103,8 @@ class GameWindow(Window):
             self.camera = Camera(
                 CELL_X_NUMBER * self.size_cell,
                 CELL_Y_NUMBER * self.size_cell,
-                self.panel.width,
-                self.panel.width
+                INFO_PANEL_WIDTH,
+                INFO_PANEL_WIDTH
             )
 
     def get_number_cell(self, mouse_pos: Tuple[int, int]) -> Tuple[int, int]:
@@ -117,13 +112,24 @@ class GameWindow(Window):
         return int((-x + mouse_pos[0]) // self.size_cell), int((-y + mouse_pos[1]) // self.size_cell)
 
     def click(self, pos) -> None:
-        if self.panel.panel_right_cord[0] > pos[0] > self.panel.width:
+        if self.right_panel.rect.x > pos[0] > INFO_PANEL_WIDTH:
             x, y = self.get_number_cell(pos)
             print('Клик по полю:\n', x, y)
-        if pos[0] < self.panel.width:
+        if pos[0] < INFO_PANEL_WIDTH:
             print('Клик по левой панели информации.')
-        if pos[0] > self.panel.panel_right_cord[0]:
+        if pos[0] > self.right_panel.rect.x:
             print('Клик по правой панели информации')
+
+    def render(self) -> None:
+        self.display.blit(self.sector.surface, self.camera.get_cord())
+        self.display.blit(self.left_panel.surface, self.left_panel.rect)
+        self.display.blit(self.right_panel.surface, self.right_panel.rect)
+
+    def update(self) -> None:
+        pg.display.set_caption(str(self.clock.get_fps()))  # нужно для отладки. FPS в заголовок окна!
+        self.camera.move(self.camera_left, self.camera_right, self.camera_up, self.camera_down)
+        self.right_panel.update()
+        self.right_panel.render()
 
     def event(self) -> None:
         for en in pg.event.get():
@@ -160,5 +166,3 @@ class GameWindow(Window):
                 self.camera_right = False
             if en.type == pg.KEYUP and en.key == pg.K_a:
                 self.camera_left = False
-
-        self.camera.move(self.camera_left, self.camera_right, self.camera_up, self.camera_down)
