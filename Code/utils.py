@@ -8,6 +8,7 @@ def print_text(display, text: str, pos: Tuple[int, int], font_color: Tuple[int, 
     font_type = pg.font.Font(None, font_size)
     text = font_type.render(text, True, font_color)
     text_rect = text.get_rect()
+    text_rect.x, text_rect.y = pos
     display.blit(text, text_rect)
 
 
