@@ -22,7 +22,7 @@ class Text:
 
 
 class TextMaxSize:
-    def __init__(self, text: str, width: int = None, height: int = None,
+    def __init__(self, text: str,  pos: Tuple[int, int], width: int = None, height: int = None,
                  font_color: Tuple[int, int, int] = (255, 255, 255), font_type: str = None) -> None:
         font_size = 1
         while True:
@@ -32,6 +32,7 @@ class TextMaxSize:
                 font_size -= 1
                 self.surface = pg.font.Font(font_type, font_size).render(text, True, font_color)
                 self.rect = self.surface.get_rect()
+                self.rect.x, self.rect.y = pos
                 break
             font_size += 1
 
@@ -39,8 +40,7 @@ class TextMaxSize:
 class TextMaxSizeCenter(TextMaxSize):
     def __init__(self, text: str, width: int = None, height: int = None, pos: Tuple[int, int] = (0, 0),
                  font_color: Tuple[int, int, int] = (255, 255, 255), font_type: str = None) -> None:
-        super().__init__(text=text, width=width, height=height, font_color=font_color, font_type=font_type)
-        self.rect.x, self.rect.y = pos
+        super().__init__(text=text, pos=pos, width=width, height=height, font_color=font_color, font_type=font_type)
         if width:
             self.rect.x += (width - self.rect.width) // 2
         if height:

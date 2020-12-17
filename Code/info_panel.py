@@ -4,7 +4,7 @@ import pygame as pg
 import datetime
 
 from Code.settings import *
-from Code.utils import Text, TextMaxSize, TextMaxSizeCenter
+from Code.texts import Text, TextMaxSize, TextMaxSizeCenter
 
 
 class Panel:
