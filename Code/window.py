@@ -1,5 +1,6 @@
 import pygame as pg
 from typing import Tuple
+import datetime
 
 from Code.Surface.сamera import Camera
 from Code.settings import *
@@ -84,6 +85,7 @@ class GameWindow(Window):
         self.sector = Sector(width=CELL_X_NUMBER, height=CELL_Y_NUMBER, size_cell=self.size_cell)
         self.left_panel = LeftPanel(INFO_PANEL_WIDTH, WIN_HEIGHT, pos=(0, 0))
         self.right_panel = RightPanel(INFO_PANEL_WIDTH, WIN_HEIGHT, pos=(WIN_WIDTH - INFO_PANEL_WIDTH, 0))
+        self.time_update_right_panel = datetime.datetime.now()
         self.camera = Camera(
             CELL_X_NUMBER * self.size_cell,
             CELL_Y_NUMBER * self.size_cell,
@@ -126,10 +128,16 @@ class GameWindow(Window):
         self.display.blit(self.right_panel.surface, self.right_panel.rect)
 
     def update(self) -> None:
+        time_now = datetime.datetime.now()
+        time_update_right_panel = time_now - self.time_update_right_panel
+        #
         pg.display.set_caption(str(self.clock.get_fps()))  # нужно для отладки. FPS в заголовок окна!
         self.camera.move(self.camera_left, self.camera_right, self.camera_up, self.camera_down)
-        self.right_panel.update()
-        self.right_panel.render()
+        # Обновление панели каждую секунду
+        if int(time_update_right_panel.seconds) >= 1:
+            self.time_update_right_panel = time_now
+            self.right_panel.update()
+            self.right_panel.render()
 
     def event(self) -> None:
         for en in pg.event.get():

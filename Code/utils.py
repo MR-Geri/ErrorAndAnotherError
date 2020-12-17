@@ -11,23 +11,36 @@ def print_text(display, text: str, pos: Tuple[int, int], font_color: Tuple[int, 
     display.blit(text, text_rect)
 
 
-def max_size_font(text: str, width: int, height: int, font_type: str = None,
-                  font_color: Tuple[int, int, int] = (255, 0, 0), font_size: int = 20):
-    font_type_ = pg.font.Font(font_type, font_size)
-    text_ = font_type_.render(text, True, font_color)
-    w, h = text_.get_rect()
-    while width > w and height > h:
-        font_size += 1
-        font_type_ = pg.font.Font(font_type, font_size)
-        text_ = font_type_.render(text, True, font_color)
-        w, h = text_.get_rect()
-    return text_
-
-
 class Text:
     def __init__(self, text: str, pos: Tuple[int, int], font_color: Tuple[int, int, int] = (255, 255, 255),
                  font_type: str = None, font_size: int = 20) -> None:
         self.font_type = pg.font.Font(font_type, font_size)
-        self.surface = max_size_font()
+        self.surface = self.font_type.render(text, True, font_color)
         self.rect = self.surface.get_rect()
         self.rect.x, self.rect.y = pos
+
+
+class TextMaxSize:
+    def __init__(self, text: str, width: int = None, height: int = None,
+                 font_color: Tuple[int, int, int] = (255, 255, 255), font_type: str = None) -> None:
+        font_size = 1
+        while True:
+            self.surface = pg.font.Font(font_type, font_size).render(text, True, font_color)
+            self.rect = self.surface.get_rect()
+            if (width and width <= self.rect.width) or (height and height <= self.rect.height):
+                font_size -= 1
+                self.surface = pg.font.Font(font_type, font_size).render(text, True, font_color)
+                self.rect = self.surface.get_rect()
+                break
+            font_size += 1
+
+
+class TextMaxSizeCenter(TextMaxSize):
+    def __init__(self, text: str, width: int = None, height: int = None, pos: Tuple[int, int] = (0, 0),
+                 font_color: Tuple[int, int, int] = (255, 255, 255), font_type: str = None) -> None:
+        super().__init__(text=text, width=width, height=height, font_color=font_color, font_type=font_type)
+        self.rect.x, self.rect.y = pos
+        if width:
+            self.rect.x += (width - self.rect.width) // 2
+        if height:
+            self.rect.y += (height - self.rect.height) // 2
