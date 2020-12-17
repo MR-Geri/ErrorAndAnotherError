@@ -1,10 +1,9 @@
 from typing import Tuple
-
 import pygame as pg
 import datetime
 
 from Code.settings import *
-from Code.texts import Text, TextMaxSize, TextMaxSizeCenter
+from Code.texts import TextMaxSizeCenter
 
 
 class Panel:
@@ -46,10 +45,10 @@ class RightPanel(Panel):
         text = datetime.datetime.now().strftime('%d/%m/%y %H:%M:%S')
         pos_ = (0, self.indent_height)
         self.system_time = TextMaxSizeCenter(text=f'{text}', width=self.rect.width, pos=pos_,
-                                             font_type='../Data/Font/PT Mono.ttf')
+                                             font_type=PT_MONO)
         pos_ = (0, pos_[1] + self.system_time.rect.height + self.indent_height)
         self.system_time_ = TextMaxSizeCenter(text=f'{text}', width=self.rect.width, pos=pos_,
-                                              font_type='../Data/Font/PT Mono.ttf')
+                                              font_type=PT_MONO)
 
     def render(self) -> None:
         self.surface = pg.Surface((self.rect.width, self.rect.height))
