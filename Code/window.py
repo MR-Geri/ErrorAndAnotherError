@@ -75,22 +75,44 @@ class MenuWindow(Window):
         self.buttons.add(button)
         pos = (pos[0], button.rect.y + button.rect.height + self.button_indent_h)
         button = Button(
-            pos=pos, width=WIN_WIDTH // 3, height=WIN_HEIGHT // 10, func=self.new_game,
+            pos=pos, width=WIN_WIDTH // 3, height=WIN_HEIGHT // 10, func=self.load_game,
             color_disabled=(30, 30, 30), color_active=(40, 40, 40),
             text=TextMaxSizeCenter(text='Загрузить игру', width=WIN_WIDTH // 3, height=WIN_HEIGHT // 10,
                                    font_type=PT_MONO)
         )
         self.buttons.add(button)
         pos = (pos[0], button.rect.y + button.rect.height + self.button_indent_h)
+        button = Button(
+            pos=pos, width=WIN_WIDTH // 3, height=WIN_HEIGHT // 10, func=self.settings,
+            color_disabled=(30, 30, 30), color_active=(40, 40, 40),
+            text=TextMaxSizeCenter(text='Настройки', width=WIN_WIDTH // 3, height=WIN_HEIGHT // 10,
+                                   font_type=PT_MONO)
+        )
+        self.buttons.add(button)
+        pos = (pos[0], button.rect.y + button.rect.height + self.button_indent_h)
+        button = Button(
+            pos=pos, width=WIN_WIDTH // 3, height=WIN_HEIGHT // 10, func=self.exit,
+            color_disabled=(30, 30, 30), color_active=(40, 40, 40),
+            text=TextMaxSizeCenter(text='Выйти', width=WIN_WIDTH // 3, height=WIN_HEIGHT // 10,
+                                   font_type=PT_MONO)
+        )
+        self.buttons.add(button)
 
     def new_game(self) -> None:
+        print('Новая игра')
         self.controller.action_window('game')
 
     def load_game(self) -> None:
-        pass
+        print('Загрузка игры')
+        self.controller.action_window('game')
 
     def settings(self) -> None:
         pass
+
+    @staticmethod
+    def exit() -> None:
+        pg.quit()
+        quit()
 
     def render(self) -> None:
         self.display.blit(self.background.surface, self.background.rect)
