@@ -17,18 +17,17 @@ class Button:
         self.render()
 
     def update(self, event: pg.event.Event) -> None:
-        if event.type == pg.MOUSEBUTTONUP and event.button == 1:
-            self.flag = False
-        if event.type == pg.MOUSEBUTTONDOWN and event.button == 1 and not self.flag:
-            self.flag = True
-            self.func()
         try:
             if self.rect.collidepoint(*event.pos):
                 self.color = self.color_active
-                self.render()
+                if event.type == pg.MOUSEBUTTONUP and event.button == 1:
+                    self.flag = False
+                if event.type == pg.MOUSEBUTTONDOWN and event.button == 1 and not self.flag:
+                    self.flag = True
+                    self.func()
             else:
                 self.color = self.color_disabled
-                self.render()
+            self.render()
         except AttributeError:
             pass
 

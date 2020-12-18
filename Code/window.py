@@ -56,7 +56,7 @@ class Window:
 class MenuWindow(Window):
     def __init__(self, controller: object, size_display: Tuple[int, int], caption: str) -> None:
         super().__init__(controller, size_display, caption)
-        self.background = Matrix((0, 0), WIN_WIDTH, WIN_HEIGHT)
+        self.background = Matrix((0, 0), WIN_WIDTH, WIN_HEIGHT, MENU_BACKGROUND)
         self.background.render()
         self.buttons = Buttons()
         self.init_button()

@@ -7,7 +7,7 @@ from Code.settings import *
 
 
 class Matrix:
-    def __init__(self, pos: Tuple[int, int], width, height, font_size=8):
+    def __init__(self, pos: Tuple[int, int], width: int, height: int, path: str, font_size=8):
         self.surface = pg.Surface((width, height))
         self.rect = pg.Rect(*pos, width, height)
         self.FONT_SIZE = font_size
@@ -20,7 +20,7 @@ class Matrix:
         self.cols_speed = np.random.randint(1, 250, size=self.SIZE)
         self.prerendered_chars = self.get_prerendered_chars()
 
-        self.image = self.get_image('../Data/kiany.jpg')
+        self.image = self.get_image(path)
 
     def get_image(self, path_to_file):
         image = pg.image.load(path_to_file)
@@ -29,7 +29,7 @@ class Matrix:
         return pixel_array
 
     def get_prerendered_chars(self):
-        char_colors = [(0, green, 0) for green in range(256)]
+        char_colors = [(color, color, color) for color in range(256)]
         prerendered_chars = {}
         for char in self.katakana:
             prerendered_char = {(char, color): self.font.render(char, True, color) for color in char_colors}
@@ -63,6 +63,6 @@ class Matrix:
                     if red and green and blue:
                         color = (red + green + blue) // 3
                         color = 220 if 160 < color < 220 else color
-                        char = self.prerendered_chars[(char, (0, color, 0))]
+                        char = self.prerendered_chars[(char, (color, color, color))]
                         char.set_alpha(color + 60)
                         self.surface.blit(char, pos)
