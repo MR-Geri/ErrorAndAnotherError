@@ -16,7 +16,7 @@ class Button:
         self.flag = False
         self.render()
 
-    def update(self, event) -> None:
+    def update(self, event: pg.event.Event) -> None:
         if event.type == pg.MOUSEBUTTONUP and event.button == 1:
             self.flag = False
         if event.type == pg.MOUSEBUTTONDOWN and event.button == 1 and not self.flag:
@@ -24,15 +24,13 @@ class Button:
             self.func()
         try:
             if self.rect.collidepoint(*event.pos):
-                print(1)
-        except Exception as e:
-            print(e)
-
-    def focus(self) -> None:
-        self.color = self.color_active
-
-    def no_focus(self) -> None:
-        self.color = self.color_disabled
+                self.color = self.color_active
+                self.render()
+            else:
+                self.color = self.color_disabled
+                self.render()
+        except AttributeError:
+            pass
 
     def render(self) -> None:
         self.surface = pg.Surface((self.rect.width, self.rect.height))
@@ -42,4 +40,15 @@ class Button:
 
 class Buttons:
     def __init__(self) -> None:
-        pass
+        self.buttons = []
+
+    def add(self, button: Button) -> None:
+        self.buttons.append(button)
+
+    def update(self, event: pg.event.Event) -> None:
+        for button in self.buttons:
+            button.update(event)
+
+    def render(self, display: pg.Surface) -> None:
+        for button in self.buttons:
+            display.blit(button.surface, button.rect)

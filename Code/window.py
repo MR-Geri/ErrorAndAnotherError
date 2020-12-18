@@ -3,7 +3,7 @@ import pygame as pg
 import datetime
 
 from Code.Surface.сamera import Camera
-from Code.buttons import Button
+from Code.buttons import Button, Buttons
 from Code.settings import *
 from Code.Surface.sector import Sector
 from Code.info_panel import LeftPanel, RightPanel
@@ -55,17 +55,18 @@ class Window:
 class MenuWindow(Window):
     def __init__(self, controller: object, size_display: Tuple[int, int], caption: str) -> None:
         super().__init__(controller, size_display, caption)
-        self.button = Button(
-            pos=(10, 10), width=WIN_WIDTH // 5, height=WIN_HEIGHT // 10, func=self.ck,
+        self.buttons = Buttons()
+        self.init_button()
+
+    def init_button(self) -> None:
+        self.buttons.add(Button(
+            pos=(10, 10), width=WIN_WIDTH // 4, height=WIN_HEIGHT // 10, func=self.new_game,
             color_disabled=(30, 30, 30), color_active=(40, 40, 40),
-            text=TextMaxSizeCenter(text='Играть', width=WIN_WIDTH // 5, height=WIN_HEIGHT // 10, font_type=PT_MONO)
-        )
+            text=TextMaxSizeCenter(text='Играть', width=WIN_WIDTH // 4, height=WIN_HEIGHT // 10, font_type=PT_MONO)
+        ))
 
     def new_game(self) -> None:
         self.controller.action_window('game')
-
-    def ck(self):
-        print(123)
 
     def load_game(self) -> None:
         pass
@@ -74,19 +75,17 @@ class MenuWindow(Window):
         pass
 
     def render(self) -> None:
-        self.display.blit(self.button.surface, self.button.rect)
+        self.buttons.render(self.display)
 
     def update(self) -> None:
         pg.display.set_caption(str(self.clock.get_fps()))  # нужно для отладки. FPS в заголовок окна!
 
     def event(self) -> None:
         for en in pg.event.get():
-            self.button.update(en)
+            self.buttons.update(en)
             if en.type == pg.QUIT:
                 pg.quit()
                 quit()
-            elif en.type == pg.KEYUP and en.key == pg.K_SPACE:
-                self.new_game()
 
 
 class SettingsWindow(Window):
