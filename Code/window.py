@@ -2,6 +2,7 @@ from typing import Tuple
 import pygame as pg
 import datetime
 
+from Code.Graphics.matrix import Matrix
 from Code.Surface.сamera import Camera
 from Code.buttons import Button, Buttons
 from Code.settings import *
@@ -55,6 +56,8 @@ class Window:
 class MenuWindow(Window):
     def __init__(self, controller: object, size_display: Tuple[int, int], caption: str) -> None:
         super().__init__(controller, size_display, caption)
+        self.background = Matrix((0, 0), WIN_WIDTH, WIN_HEIGHT)
+        self.background.render()
         self.buttons = Buttons()
         self.init_button()
 
@@ -75,10 +78,12 @@ class MenuWindow(Window):
         pass
 
     def render(self) -> None:
+        self.display.blit(self.background.surface, self.background.rect)
         self.buttons.render(self.display)
 
     def update(self) -> None:
         pg.display.set_caption(str(self.clock.get_fps()))  # нужно для отладки. FPS в заголовок окна!
+        self.background.render()
 
     def event(self) -> None:
         for en in pg.event.get():

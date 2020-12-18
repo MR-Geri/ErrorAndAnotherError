@@ -26,5 +26,5 @@ ALL_TEXT = Text or TextMaxSize or TextMaxSizeCenter
 COLOR = str or tuple
 # Font
 PT_MONO = '../Data/Font/PT Mono.ttf'
-MS_MINCHO = '../../Data/Font/MS Mincho.ttf'
+MS_MINCHO = '../Data/Font/MS Mincho.ttf'
 #

@@ -1,27 +1,30 @@
+from typing import Tuple
+
 import pygame as pg
 import numpy as np
 
-from Code.settings import MS_MINCHO
+from Code.settings import *
 
 
 class Matrix:
-    def __init__(self, app, font_size=8):
-        self.app = app
+    def __init__(self, pos: Tuple[int, int], width, height, font_size=8):
+        self.surface = pg.Surface((width, height))
+        self.rect = pg.Rect(*pos, width, height)
         self.FONT_SIZE = font_size
-        self.SIZE = self.ROWS, self.COLS = app.HEIGHT // font_size, app.WIDTH // font_size
+        self.SIZE = self.ROWS, self.COLS = height // font_size, width // font_size
         self.katakana = np.array([chr(int('0x30a0', 16) + i) for i in range(96)] + ['' for _ in range(10)])
         self.font = pg.font.Font(MS_MINCHO, font_size, bold=True)
 
         self.matrix = np.random.choice(self.katakana, self.SIZE)
         self.char_intervals = np.random.randint(25, 50, size=self.SIZE)
-        self.cols_speed = np.random.randint(1, 500, size=self.SIZE)
+        self.cols_speed = np.random.randint(1, 250, size=self.SIZE)
         self.prerendered_chars = self.get_prerendered_chars()
 
-        self.image = self.get_image('../../Data/kiany.jpg')
+        self.image = self.get_image('../Data/kiany.jpg')
 
     def get_image(self, path_to_file):
         image = pg.image.load(path_to_file)
-        image = pg.transform.scale(image, self.app.RES)
+        image = pg.transform.scale(image, (self.rect.width, self.rect.height))
         pixel_array = pg.pixelarray.PixelArray(image)
         return pixel_array
 
@@ -33,7 +36,7 @@ class Matrix:
             prerendered_chars.update(prerendered_char)
         return prerendered_chars
 
-    def run(self):
+    def render(self):
         frames = pg.time.get_ticks()
         self.change_chars(frames)
         self.shift_column(frames)
@@ -51,6 +54,7 @@ class Matrix:
         self.matrix[mask[:, 0], mask[:, 1]] = new_chars
 
     def draw(self):
+        self.surface.fill(pg.Color('black'))
         for y, row in enumerate(self.matrix):
             for x, char in enumerate(row):
                 if char:
@@ -61,31 +65,4 @@ class Matrix:
                         color = 220 if 160 < color < 220 else color
                         char = self.prerendered_chars[(char, (0, color, 0))]
                         char.set_alpha(color + 60)
-                        self.app.surface.blit(char, pos)
-
-
-class MatrixVision:
-    def __init__(self):
-        self.RES = self.WIDTH, self.HEIGHT = 960, 720
-        pg.init()
-        self.screen = pg.display.set_mode(self.RES)
-        self.surface = pg.Surface(self.RES)
-        self.clock = pg.time.Clock()
-        self.matrix = Matrix(self)
-
-    def draw(self):
-        self.surface.fill(pg.Color('black'))
-        self.matrix.run()
-        self.screen.blit(self.surface, (0, 0))
-
-    def run(self):
-        while True:
-            self.draw()
-            [exit() for i in pg.event.get() if i.type == pg.QUIT]
-            pg.display.flip()
-            self.clock.tick(30)
-
-
-if __name__ == '__main__':
-    app = MatrixVision()
-    app.run()
+                        self.surface.blit(char, pos)
