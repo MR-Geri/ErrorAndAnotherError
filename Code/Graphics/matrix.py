@@ -9,7 +9,7 @@ class Matrix:
         self.app = app
         self.FONT_SIZE = font_size
         self.SIZE = self.ROWS, self.COLS = app.HEIGHT // font_size, app.WIDTH // font_size
-        self.katakana = np.array([chr(int('0x30a0', 16) + i) for i in range(96)] + ['' for i in range(10)])
+        self.katakana = np.array([chr(int('0x30a0', 16) + i) for i in range(96)] + ['' for _ in range(10)])
         self.font = pg.font.Font(MS_MINCHO, font_size, bold=True)
 
         self.matrix = np.random.choice(self.katakana, self.SIZE)
