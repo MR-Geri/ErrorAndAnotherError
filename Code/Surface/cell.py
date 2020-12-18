@@ -1,8 +1,7 @@
 import pygame as pg
 from math import ceil
 
-from Code.settings import CELL_COLOR
-from Code.graphics import pg_random_color
+from Code.Graphics.colors import pg_random_color
 
 
 class Cell(pg.sprite.Sprite):
