@@ -58,15 +58,30 @@ class MenuWindow(Window):
         super().__init__(controller, size_display, caption)
         self.background = Matrix((0, 0), WIN_WIDTH, WIN_HEIGHT, MENU_BACKGROUND)
         self.background.render()
+        #
         self.buttons = Buttons()
+        self.button_indent_h = WIN_HEIGHT // 100
+        self.button_indent_w = WIN_WIDTH // 100
+        #
         self.init_button()
 
     def init_button(self) -> None:
-        self.buttons.add(Button(
-            pos=(10, 10), width=WIN_WIDTH // 4, height=WIN_HEIGHT // 10, func=self.new_game,
+        pos = (self.button_indent_w, self.button_indent_h)
+        button = Button(
+            pos=pos, width=WIN_WIDTH // 3, height=WIN_HEIGHT // 10, func=self.new_game,
             color_disabled=(30, 30, 30), color_active=(40, 40, 40),
-            text=TextMaxSizeCenter(text='Играть', width=WIN_WIDTH // 4, height=WIN_HEIGHT // 10, font_type=PT_MONO)
-        ))
+            text=TextMaxSizeCenter(text='Новая игра', width=WIN_WIDTH // 3, height=WIN_HEIGHT // 10, font_type=PT_MONO)
+        )
+        self.buttons.add(button)
+        pos = (pos[0], button.rect.y + button.rect.height + self.button_indent_h)
+        button = Button(
+            pos=pos, width=WIN_WIDTH // 3, height=WIN_HEIGHT // 10, func=self.new_game,
+            color_disabled=(30, 30, 30), color_active=(40, 40, 40),
+            text=TextMaxSizeCenter(text='Загрузить игру', width=WIN_WIDTH // 3, height=WIN_HEIGHT // 10,
+                                   font_type=PT_MONO)
+        )
+        self.buttons.add(button)
+        pos = (pos[0], button.rect.y + button.rect.height + self.button_indent_h)
 
     def new_game(self) -> None:
         self.controller.action_window('game')

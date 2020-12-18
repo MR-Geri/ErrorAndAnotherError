@@ -19,7 +19,6 @@ class Matrix:
         self.char_intervals = np.random.randint(25, 50, size=self.SIZE)
         self.cols_speed = np.random.randint(1, 250, size=self.SIZE)
         self.prerendered_chars = self.get_prerendered_chars()
-
         self.image = self.get_image(path)
 
     def get_image(self, path_to_file):

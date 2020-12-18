@@ -6,7 +6,7 @@ WIN_WIDTH, WIN_HEIGHT = 1920 // 2, 1080 // 2
 DISPLAY_SIZE = (WIN_WIDTH, WIN_HEIGHT)
 FULL_SCREEN = False
 MENU_TITLE = 'Название игры'
-FPS = 120
+FPS = 60
 # Цвета
 BACKGROUND_COLOR = '#313335'
 CELL_COLOR = '#013a33'
@@ -28,5 +28,5 @@ COLOR = str or tuple
 PT_MONO = '../Data/Font/PT Mono.ttf'
 MS_MINCHO = '../Data/Font/MS Mincho.ttf'
 # Path
-MENU_BACKGROUND = '../Data/space.jpg'
+MENU_BACKGROUND = '../Data/game.jpg'
 #
