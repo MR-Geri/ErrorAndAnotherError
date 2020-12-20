@@ -47,12 +47,9 @@ class RightPanel(Panel):
         self.system_time = TextMaxSizeCenter(text=f'{text}', width=self.rect.width, pos=pos_,
                                              font_type=PT_MONO)
         pos_ = (0, pos_[1] + self.system_time.rect.height + self.indent_height)
-        self.system_time_ = TextMaxSizeCenter(text=f'{text}', width=self.rect.width, pos=pos_,
-                                              font_type=PT_MONO)
 
     def render(self) -> None:
         self.surface = pg.Surface((self.rect.width, self.rect.height))
         self.surface.fill(self.color_background)
         #
         self.surface.blit(self.system_time.surface, self.system_time.rect)
-        self.surface.blit(self.system_time_.surface, self.system_time_.rect)

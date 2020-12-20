@@ -1,3 +1,4 @@
+import time
 from typing import Tuple
 import pygame as pg
 import datetime
@@ -40,6 +41,8 @@ class Window:
         pass
 
     def run(self) -> None:
+        time.sleep(0.5)
+        pg.event.clear()
         self.is_run = True
         while self.is_run:
             self.clock.tick(FPS)
