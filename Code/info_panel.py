@@ -11,7 +11,7 @@ class Panel:
         self.rect = pg.Rect(*pos, width, height)
         self.surface = pg.Surface((self.rect.width, self.rect.height))
         self.color_background = pg.Color((128, 128, 128))
-        self.indent_height = self.rect.height // 100
+        self.indent_height = self.rect.height // 50
         self.update()
         self.render()
 
