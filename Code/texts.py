@@ -1,4 +1,4 @@
-from typing import Tuple
+from typing import Tuple, List
 
 import pygame as pg
 
@@ -13,7 +13,7 @@ def print_text(display, text: str, pos: Tuple[int, int], font_color: Tuple[int, 
 
 
 class Text:
-    def __init__(self, text: str, pos: Tuple[int, int], font_color: Tuple[int, int, int] = (255, 255, 255),
+    def __init__(self, text: str, pos: Tuple[int, int] = (0, 0), font_color: Tuple[int, int, int] = (255, 255, 255),
                  font_type: str = None, font_size: int = 20) -> None:
         self.font_type = pg.font.Font(font_type, font_size)
         self.surface = self.font_type.render(text, True, font_color)
@@ -22,19 +22,19 @@ class Text:
 
 
 class TextMaxSize:
-    def __init__(self, text: str,  pos: Tuple[int, int], width: int = None, height: int = None,
+    def __init__(self, text: str,  pos: Tuple[int, int] = (0, 0), width: int = None, height: int = None,
                  font_color: Tuple[int, int, int] = (255, 255, 255), font_type: str = None) -> None:
-        font_size = 1
+        self.font_size = 1
         while True:
-            self.surface = pg.font.Font(font_type, font_size).render(text, True, font_color)
+            self.surface = pg.font.Font(font_type, self.font_size).render(text, True, font_color)
             self.rect = self.surface.get_rect()
             if (width and width <= self.rect.width) or (height and height <= self.rect.height):
-                font_size -= 1
-                self.surface = pg.font.Font(font_type, font_size).render(text, True, font_color)
+                self.font_size -= 1
+                self.surface = pg.font.Font(font_type, self.font_size).render(text, True, font_color)
                 self.rect = self.surface.get_rect()
                 self.rect.x, self.rect.y = pos
                 break
-            font_size += 1
+            self.font_size += 1
 
 
 class TextMaxSizeCenter(TextMaxSize):
@@ -45,3 +45,21 @@ class TextMaxSizeCenter(TextMaxSize):
             self.rect.x += (width - self.rect.width) // 2
         if height:
             self.rect.y += (height - self.rect.height) // 2
+
+
+class TextCenter(Text):
+    def __init__(self, text: str, width: int = None, height: int = None,
+                 font_color: Tuple[int, int, int] = (255, 255, 255),
+                 font_type: str = None, font_size: int = 20) -> None:
+        super().__init__(text=text, pos=(0, 0), font_color=font_color, font_type=font_type, font_size=font_size)
+        if width:
+            self.rect.x = (width - self.rect.width) // 2
+        if height:
+            self.rect.y = (height - self.rect.height) // 2
+
+
+def max_size_list_text(texts: list, width: int, height: int, font_type: str = None) -> int:
+    size = list()
+    for text in texts:
+        size.append(TextMaxSize(text=text, width=width, height=height, font_type=font_type).font_size)
+    return min(size)

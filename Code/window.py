@@ -8,6 +8,7 @@ from Code.buttons import Button, Buttons
 from Code.settings import *
 from Code.Surface.sector import Sector
 from Code.info_panel import LeftPanel, RightPanel
+from Code.texts import max_size_list_text, TextCenter
 
 
 class Window:
@@ -66,35 +67,36 @@ class MenuWindow(Window):
         self.init_button()
 
     def init_button(self) -> None:
+        width, height = WIN_WIDTH // 3, WIN_HEIGHT // 10
+        size = max_size_list_text(
+            ['Новая игра', 'Загрузить игру', 'Настройки', 'Выйти'], width, height, PT_MONO
+        )
         pos = (self.button_indent_w, self.button_indent_h)
         button = Button(
             pos=pos, width=WIN_WIDTH // 3, height=WIN_HEIGHT // 10, func=self.new_game,
             color_disabled=(30, 30, 30), color_active=(40, 40, 40),
-            text=TextMaxSizeCenter(text='Новая игра', width=WIN_WIDTH // 3, height=WIN_HEIGHT // 10, font_type=PT_MONO)
+            text=TextCenter(text='Новая игра', width=width, height=height, font_type=PT_MONO, font_size=size)
         )
         self.buttons.add(button)
         pos = (pos[0], button.rect.y + button.rect.height + self.button_indent_h)
         button = Button(
             pos=pos, width=WIN_WIDTH // 3, height=WIN_HEIGHT // 10, func=self.load_game,
             color_disabled=(30, 30, 30), color_active=(40, 40, 40),
-            text=TextMaxSizeCenter(text='Загрузить игру', width=WIN_WIDTH // 3, height=WIN_HEIGHT // 10,
-                                   font_type=PT_MONO)
+            text=TextCenter(text='Загрузить игру', width=width, height=height, font_type=PT_MONO, font_size=size)
         )
         self.buttons.add(button)
         pos = (pos[0], button.rect.y + button.rect.height + self.button_indent_h)
         button = Button(
             pos=pos, width=WIN_WIDTH // 3, height=WIN_HEIGHT // 10, func=self.settings,
             color_disabled=(30, 30, 30), color_active=(40, 40, 40),
-            text=TextMaxSizeCenter(text='Настройки', width=WIN_WIDTH // 3, height=WIN_HEIGHT // 10,
-                                   font_type=PT_MONO)
+            text=TextCenter(text='Настройки', width=width, height=height, font_type=PT_MONO, font_size=size)
         )
         self.buttons.add(button)
         pos = (pos[0], button.rect.y + button.rect.height + self.button_indent_h)
         button = Button(
             pos=pos, width=WIN_WIDTH // 3, height=WIN_HEIGHT // 10, func=self.exit,
             color_disabled=(30, 30, 30), color_active=(40, 40, 40),
-            text=TextMaxSizeCenter(text='Выйти', width=WIN_WIDTH // 3, height=WIN_HEIGHT // 10,
-                                   font_type=PT_MONO)
+            text=TextCenter(text='Выйти', width=width, height=height, font_type=PT_MONO, font_size=size)
         )
         self.buttons.add(button)
 
