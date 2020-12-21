@@ -1,5 +1,4 @@
-from Code.texts import Text, TextMaxSize, TextMaxSizeCenter
-
+from Code.texts import Text, TextMaxSize, TextMaxSizeCenter, TextCenter
 
 # Настройки окна
 WIN_WIDTH, WIN_HEIGHT = 1920 // 2, 1080 // 2
@@ -22,7 +21,7 @@ CELL_MAX_SIZE = 50
 #
 INFO_PANEL_WIDTH = WIN_WIDTH // 5
 # Типизация
-ALL_TEXT = Text or TextMaxSize or TextMaxSizeCenter
+ALL_TEXT = Text or TextMaxSize or TextMaxSizeCenter or TextCenter
 COLOR = str or tuple
 # Font
 PT_MONO = '../Data/Font/PT Mono.ttf'
