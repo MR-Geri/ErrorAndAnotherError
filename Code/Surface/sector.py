@@ -1,6 +1,33 @@
+import random
+from typing import Tuple
 import pygame as pg
+
 from Code.settings import *
-from Code.Surface.cell import Cell
+from Code.Surface.cell import Plain, Swamp, Mountain
+
+
+class Biome:
+    def __init__(self, max_size_x: int, max_size_y: int, size_sector: Tuple[int, int]) -> None:
+        self.max_size = (random.randint(0, max_size_x), random.randint(0, max_size_y))
+        self.size = random.randint(0, self.max_size[0] * self.max_size[1])
+        self.pos = (random.randint(0, size_sector[0]), random.randint(0, size_sector[1]))
+        self.all_pos = self.gen_all_pos()
+
+    def gen_all_pos(self) -> list:
+        print(self.size)
+        return list()
+
+
+class GeneratorBiomes:
+    def __init__(self, max_size_x: int, max_size_y: int, size_sector: Tuple[int, int]):
+        self.all_pos = []
+        self.mountain = Biome(max_size_x, max_size_y, size_sector)
+
+    def check(self, x: int, y: int) -> bool:
+        return False
+
+    def get_biomes(self, x: int, y: int):
+        return None
 
 
 class Sector:
@@ -16,10 +43,16 @@ class Sector:
 
     def gen_board(self) -> None:
         """
-        Генерация поля (карты) в секторе.
+        Генерация сектора.
         """
+        biomes = GeneratorBiomes(self.size_sector[0] // 10, self.size_sector[1] // 10, self.size_sector)
+        print(biomes.mountain.max_size, biomes.mountain.pos)
         self.board = [
-            [Cell(number_x, number_y, self.size_cell) for number_x in range(self.width)]
+            [
+                Mountain(number_x, number_y, self.size_cell)
+                if biomes.check(number_x, number_y) else
+                Plain(number_x, number_y, self.size_cell)
+                for number_x in range(self.width)]
             for number_y in range(self.height)
         ]
 
