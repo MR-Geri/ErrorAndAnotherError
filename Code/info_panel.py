@@ -46,7 +46,7 @@ class RightPanel(Panel):
         pos_ = (0, self.indent_height)
         self.system_time = TextMaxSizeCenter(text=f'{text}', width=self.rect.width, pos=pos_,
                                              font_type=PT_MONO)
-        pos_ = (0, pos_[1] + self.system_time.rect.height + self.indent_height)
+        pos_ = (0, pos_[1] + self.system_time.rect.number_y + self.indent_height)
 
     def render(self) -> None:
         self.surface = pg.Surface((self.rect.width, self.rect.height))

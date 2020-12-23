@@ -1,3 +1,4 @@
+from Code.Map.cell import Plain, Swamp, Mountain
 from Code.texts import Text, TextMaxSize, TextMaxSizeCenter, TextCenter
 
 # Настройки окна
@@ -22,6 +23,7 @@ CELL_MAX_SIZE = 50
 INFO_PANEL_WIDTH = WIN_WIDTH // 5
 # Типизация
 ALL_TEXT = Text or TextMaxSize or TextMaxSizeCenter or TextCenter
+ALL_CELL = Plain or Swamp or Mountain
 COLOR = str or tuple
 # Font
 PT_MONO = '../Data/Font/PT Mono.ttf'
