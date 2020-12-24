@@ -13,7 +13,8 @@ class Button:
         self.color_disabled = color_disabled
         self.color_active = color_active
         self.color = self.color_disabled
-        self.flag = False
+        self.flag_click = False
+        self.flag_func = False
         self.render()
 
     def update(self, event: pg.event.Event) -> None:
@@ -21,10 +22,13 @@ class Button:
             if self.rect.collidepoint(*event.pos):
                 self.color = self.color_active
                 if event.type == pg.MOUSEBUTTONUP and event.button == 1:
-                    self.flag = False
-                if event.type == pg.MOUSEBUTTONDOWN and event.button == 1 and not self.flag:
-                    self.flag = True
-                    self.func()
+                    if self.flag_func:
+                        self.flag_func = False
+                        self.func()
+                    self.flag_click = False
+                if event.type == pg.MOUSEBUTTONDOWN and event.button == 1 and not self.flag_click:
+                    self.flag_click = True
+                    self.flag_func = True
             else:
                 self.color = self.color_disabled
             self.render()

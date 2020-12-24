@@ -112,7 +112,8 @@ class MenuWindow(Window):
         self.controller.action_window('game')
 
     def settings(self) -> None:
-        pass
+        print('Настройки')
+        self.controller.action_window('settings')
 
     @staticmethod
     def exit() -> None:
@@ -120,7 +121,7 @@ class MenuWindow(Window):
         quit()
 
     def render(self) -> None:
-        self.display.blit(self.background.surface, self.background.rect)
+        self.display.blit(self.background.surface, self.background.rect)  # матрица
         self.buttons.render(self.display)
 
     def update(self) -> None:
