@@ -14,11 +14,11 @@ CELL_COLOR = '#013a33'
 CAMERA_SPEED_X, CAMERA_SPEED_Y = 2, 2
 # Ячейки
 COEFFICIENT_SCALE = 5
-CELL_Y_NUMBER = 50
-CELL_X_NUMBER = 50
-CELL_SIZE = 10
-CELL_MIN_SIZE = 10
-CELL_MAX_SIZE = 50
+CELL_SIZE = 10  # Стартовое значение мастаба (MIN ZOOM)
+CELL_MIN_SIZE = 10  # Нужно для масштабирования (ZOOM)
+CELL_MAX_SIZE = 50  # Нужно для масштабирования (ZOOM)
+SECTOR_Y_NUMBER = 50  # Размер сектора
+SECTOR_X_NUMBER = 50  # Размер сектора
 #
 INFO_PANEL_WIDTH = WIN_WIDTH // 5
 # Типизация
@@ -30,4 +30,7 @@ PT_MONO = '../Data/Font/PT Mono.ttf'
 MS_MINCHO = '../Data/Font/MS Mincho.ttf'
 # Path
 MENU_BACKGROUND = '../Data/game.jpg'
+# Биомы
+MAX_SIZE_MOUNTAIN = (20, 20)
+MAX_QUANTITY_MOUNTAIN = 1
 #

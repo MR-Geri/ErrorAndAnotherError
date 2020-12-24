@@ -3,7 +3,6 @@ import pygame as pg
 
 from Code.Map.biomes import GeneratorBiomes
 from Code.settings import *
-from Code.Map.cell import Plain
 
 
 class Sector:
@@ -26,14 +25,9 @@ class Sector:
             number_y=self.number_y,
             size_cell=self.size_cell
         )
-        print(biomes.mountain.max_size, biomes.mountain.pos)
         self.board = [
-            [
-                biomes.get_cell(number_x, number_y)
-                if biomes.check(number_x, number_y) else
-                Plain(number_x, number_y, self.size_cell)
-                for number_x in range(self.number_x)]
-            for number_y in range(self.number_y)
+            [biomes.get_cell(x, y) for x in range(self.number_x)]
+            for y in range(self.number_y)
         ]
 
     def update(self) -> None:

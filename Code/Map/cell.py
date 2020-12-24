@@ -42,5 +42,5 @@ class Swamp(Cell):
 
 class Mountain(Cell):
     def __init__(self, number_x: int, number_y: int, size_cell: int):
-        self.color = pg.Color('#404D4C')
+        self.color = pg.Color('#FF0000')
         super().__init__(number_x, number_y, size_cell)

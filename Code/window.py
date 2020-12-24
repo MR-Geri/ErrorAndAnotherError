@@ -81,21 +81,21 @@ class MenuWindow(Window):
             text=TextCenter(text='Новая игра', width=width, height=height, font_type=PT_MONO, font_size=size)
         )
         self.buttons.add(button)
-        pos = (pos[0], button.rect.y + button.rect.number_y + self.button_indent_h)
+        pos = (pos[0], button.rect.y + button.rect.height + self.button_indent_h)
         button = Button(
             pos=pos, width=WIN_WIDTH // 3, height=WIN_HEIGHT // 10, func=self.load_game,
             color_disabled=(30, 30, 30), color_active=(40, 40, 40),
             text=TextCenter(text='Загрузить игру', width=width, height=height, font_type=PT_MONO, font_size=size)
         )
         self.buttons.add(button)
-        pos = (pos[0], button.rect.y + button.rect.number_y + self.button_indent_h)
+        pos = (pos[0], button.rect.y + button.rect.height + self.button_indent_h)
         button = Button(
             pos=pos, width=WIN_WIDTH // 3, height=WIN_HEIGHT // 10, func=self.settings,
             color_disabled=(30, 30, 30), color_active=(40, 40, 40),
             text=TextCenter(text='Настройки', width=width, height=height, font_type=PT_MONO, font_size=size)
         )
         self.buttons.add(button)
-        pos = (pos[0], button.rect.y + button.rect.number_y + self.button_indent_h)
+        pos = (pos[0], button.rect.y + button.rect.height + self.button_indent_h)
         button = Button(
             pos=pos, width=WIN_WIDTH // 3, height=WIN_HEIGHT // 10, func=self.exit,
             color_disabled=(30, 30, 30), color_active=(40, 40, 40),
@@ -144,13 +144,14 @@ class GameWindow(Window):
     def __init__(self, controller: object, size_display: Tuple[int, int], caption: str) -> None:
         super().__init__(controller, size_display, caption)
         self.size_cell = CELL_SIZE
-        self.sector = Sector(number_x=CELL_X_NUMBER, number_y=CELL_Y_NUMBER, size_cell=self.size_cell)
+        # sector нужно ЗАГРУЖАТЬ если это НЕ НОВАЯ игра
+        self.sector = Sector(number_x=SECTOR_X_NUMBER, number_y=SECTOR_Y_NUMBER, size_cell=self.size_cell)
         self.left_panel = LeftPanel(INFO_PANEL_WIDTH, WIN_HEIGHT, pos=(0, 0))
         self.right_panel = RightPanel(INFO_PANEL_WIDTH, WIN_HEIGHT, pos=(WIN_WIDTH - INFO_PANEL_WIDTH, 0))
         self.time_update_right_panel = datetime.datetime.now()
         self.camera = Camera(
-            CELL_X_NUMBER * self.size_cell,
-            CELL_Y_NUMBER * self.size_cell,
+            SECTOR_X_NUMBER * self.size_cell,
+            SECTOR_Y_NUMBER * self.size_cell,
             INFO_PANEL_WIDTH,
             INFO_PANEL_WIDTH
         )
@@ -165,8 +166,8 @@ class GameWindow(Window):
             self.sector.scale(self.size_cell)
             # Ограничение перемещения камеры|СОЗДАЁМ ЗАНОВО
             self.camera = Camera(
-                CELL_X_NUMBER * self.size_cell,
-                CELL_Y_NUMBER * self.size_cell,
+                SECTOR_X_NUMBER * self.size_cell,
+                SECTOR_Y_NUMBER * self.size_cell,
                 INFO_PANEL_WIDTH,
                 INFO_PANEL_WIDTH
             )
