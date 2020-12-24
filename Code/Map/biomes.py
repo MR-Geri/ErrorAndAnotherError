@@ -50,6 +50,13 @@ class BiomeMountain(Biome):
                          min_quantity=min_quantity, size_cell=size_cell, cell=Mountain)
 
 
+class BiomeSwamp(Biome):
+    def __init__(self, number_x: int, number_y: int, max_size_biome: Tuple[int, int],
+                 min_quantity: int, size_cell: int) -> None:
+        super().__init__(number_x=number_x, number_y=number_y, max_size_biome=max_size_biome,
+                         min_quantity=min_quantity, size_cell=size_cell, cell=Swamp)
+
+
 class GeneratorBiomes:
     def __init__(self, number_x: int, number_y: int, size_cell: int):
         self.number_x = number_x
@@ -57,8 +64,10 @@ class GeneratorBiomes:
         self.size_cell = size_cell
         #
         self.mountain = []
+        self.swamp = []
         self.for_biomes = [
-            (BiomeMountain, MAX_QUANTITY_MOUNTAIN, MIN_QUANTITY_MOUNTAIN_CELL, MAX_SIZE_MOUNTAIN, self.mountain)
+            (BiomeMountain, MAX_QUANTITY_MOUNTAIN, MIN_QUANTITY_MOUNTAIN_CELL, MAX_SIZE_MOUNTAIN, self.mountain),
+            (BiomeSwamp, MAX_QUANTITY_SWAMP, MIN_QUANTITY_SWAMP_CELL, MAX_SIZE_SWAMP, self.swamp)
         ]
         #
         self.biomes = []
