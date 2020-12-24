@@ -6,7 +6,7 @@ from Code.settings import *
 
 
 class Biome:
-    def __init__(self, number_x: int, number_y: int, max_size_biome: Tuple[int, int],
+    def __init__(self, number_x: int, number_y: int, max_size_biome: Tuple[int, int], min_quantity: int,
                  size_cell: int, cell: ALL_CELL) -> None:
         self.number_x = number_x
         self.number_y = number_y
@@ -15,7 +15,7 @@ class Biome:
         self.size_cell = size_cell
         #
         self.number_xy = (random.randint(1, self.max_size_biome[0]), random.randint(1, self.max_size_biome[1]))
-        self.size = random.randint(1, self.max_size_biome[0] * self.max_size_biome[1])
+        self.size = random.randint(min_quantity, self.max_size_biome[0] * self.max_size_biome[1])
         self.pos = (
             random.randint(self.number_xy[0], self.number_x - self.number_xy[0]),
             random.randint(self.number_xy[1], self.number_y - self.number_xy[1])
@@ -44,9 +44,10 @@ class Biome:
 
 
 class BiomeMountain(Biome):
-    def __init__(self, number_x: int, number_y: int, max_size_biome: Tuple[int, int], size_cell: int) -> None:
+    def __init__(self, number_x: int, number_y: int, max_size_biome: Tuple[int, int],
+                 min_quantity: int, size_cell: int) -> None:
         super().__init__(number_x=number_x, number_y=number_y, max_size_biome=max_size_biome,
-                         size_cell=size_cell, cell=Mountain)
+                         min_quantity=min_quantity, size_cell=size_cell, cell=Mountain)
 
 
 class GeneratorBiomes:
@@ -56,7 +57,9 @@ class GeneratorBiomes:
         self.size_cell = size_cell
         #
         self.mountain = []
-        self.for_biomes = [(BiomeMountain, MAX_QUANTITY_MOUNTAIN, MAX_SIZE_MOUNTAIN, self.mountain)]
+        self.for_biomes = [
+            (BiomeMountain, MAX_QUANTITY_MOUNTAIN, MIN_QUANTITY_MOUNTAIN_CELL, MAX_SIZE_MOUNTAIN, self.mountain)
+        ]
         #
         self.biomes = []
         self.gen_biomes()
@@ -78,10 +81,10 @@ class GeneratorBiomes:
         return True
 
     def gen_biomes(self) -> None:
-        for biome, quantity, max_size_biome, link_biome in self.for_biomes:
+        for biome, quantity, min_quantity, max_size_biome, link_biome in self.for_biomes:
             for i in range(quantity):
                 while True:
-                    temp_biome = biome(self.number_x, self.number_y, max_size_biome, self.size_cell)
+                    temp_biome = biome(self.number_x, self.number_y, max_size_biome, min_quantity, self.size_cell)
                     if self.entering_biome(temp_biome):
                         break
                 link_biome.append(temp_biome)
