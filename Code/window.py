@@ -3,6 +3,7 @@ from typing import Tuple
 import pygame as pg
 import datetime
 
+from Code.Graphics.colors import pg_random_color
 from Code.Graphics.matrix import Matrix
 from Code.сamera import Camera
 from Code.buttons import Button, Buttons
@@ -10,6 +11,7 @@ from Code.settings import *
 from Code.Map.sector import Sector
 from Code.info_panel import LeftPanel, RightPanel
 from Code.texts import max_size_list_text, TextCenter
+from slider import Slider, volume
 
 
 class Window:
@@ -139,6 +141,15 @@ class MenuWindow(Window):
 class SettingsWindow(Window):
     def __init__(self, controller: object, size_display: Tuple[int, int], caption: str) -> None:
         super().__init__(controller, size_display, caption)
+        self.volume_slider = Slider(
+            (100, 100), 500, 100, pg_random_color(), pg_random_color(), pg.Color((255, 255, 255)), volume
+        )
+
+    def update(self) -> None:
+        pg.display.set_caption(str(self.clock.get_fps()))  # нужно для отладки. FPS в заголовок окна!
+
+    def render(self) -> None:
+        self.display.blit(self.volume_slider.surface, self.volume_slider.rect)
 
 
 class GameWindow(Window):
