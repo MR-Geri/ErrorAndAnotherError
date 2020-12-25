@@ -4,7 +4,7 @@ import pygame as pg
 from Code.settings import *
 
 
-class Camera(object):
+class Camera:
     def __init__(self, width: int, height: int, left: int, right: int) -> None:
         self.width = width
         self.height = height
