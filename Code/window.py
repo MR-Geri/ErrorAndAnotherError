@@ -11,7 +11,7 @@ from Code.settings import *
 from Code.Map.sector import Sector
 from Code.info_panel import LeftPanel, RightPanel
 from Code.texts import max_size_list_text, TextCenter
-from slider import Slider, volume
+from slider import Slider, Volume
 
 
 class Window:
@@ -142,7 +142,7 @@ class SettingsWindow(Window):
     def __init__(self, controller: object, size_display: Tuple[int, int], caption: str) -> None:
         super().__init__(controller, size_display, caption)
         self.volume_slider = Slider(
-            (100, 100), 500, 100, pg_random_color(), pg_random_color(), pg.Color((255, 255, 255)), volume
+            (100, 100), 500, 50, pg_random_color(), pg_random_color(), pg.Color((255, 255, 255)), Volume(0, 100, 1)
         )
 
     def update(self) -> None:

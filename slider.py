@@ -4,14 +4,22 @@ import pygame as pg
 from Code.settings import *
 
 
-def volume():
-    pass
+class Volume:
+    def __init__(self, min_value: int, max_value: int, change: int) -> None:
+        self.min_value = min_value
+        self.max_value = max_value
+        self.change = change
+        self.value = (max_value - min_value) // 2
+
+    def edit_volume(self, sign) -> None:
+        self.value = min(self.max_value, max(self.min_value, self.value + sign * self.change))
 
 
 class Slider:
     def __init__(self, pos: Tuple[int, int], width: int, height: int,
                  color_no_use: COLOR, color_use: COLOR, color_circle: COLOR, func) -> None:
         self.rect = pg.Rect(*pos, width, height)
+        self.line = pg.Rect(pos[0], pos[1], width, self.rect.height // 4)
         self.func = func
         self.color_no_use = color_no_use
         self.color_use = color_use
@@ -33,15 +41,29 @@ class Slider:
             pass
 
     def render(self) -> None:
-        self.surface = pg.Surface((self.rect.width, self.rect.height))
+        self.surface = pg.Surface((self.rect.width, self.rect.height))  # , pg.SRCALPHA
         radius_main = self.rect.height // 2
-        height = self.rect.height // 2
+        height = self.rect.height // 4
         mini_radius = height // 2
         width = self.rect.width - height
         pos = (mini_radius, (self.rect.height - height) // 2)
-        pg.draw.circle(self.surface, self.color_no_use, (pos[0], pos[1] + mini_radius), mini_radius)
-        pg.draw.circle(self.surface, self.color_no_use, (width + mini_radius, pos[1] + mini_radius), mini_radius)
-        pg.draw.rect(self.surface, self.color_no_use, (pos[0], pos[1], width, height))
+        pg.draw.circle(
+            self.surface, self.color_no_use, (pos[0] + radius_main, pos[1] + mini_radius), mini_radius
+        )
+        pg.draw.circle(
+            self.surface, self.color_no_use, (pos[0] + width - radius_main, pos[1] + mini_radius), mini_radius
+        )
+        pg.draw.rect(
+            self.surface, self.color_no_use, (pos[0] + radius_main, pos[1], width - radius_main * 2, height)
+        )
+        w = self.rect.width - radius_main * 2 - mini_radius
+        pg.draw.circle(
+            self.surface,
+            self.color_circle,
+            (pos[0] + radius_main + (w * (self.func.value / self.func.max_value)),
+             pos[1] + mini_radius),
+            radius_main
+        )
 
 
 class Sliders:
