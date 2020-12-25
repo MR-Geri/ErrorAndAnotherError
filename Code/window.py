@@ -11,7 +11,7 @@ from Code.settings import *
 from Code.Map.sector import Sector
 from Code.info_panel import LeftPanel, RightPanel
 from Code.texts import max_size_list_text, TextCenter
-from slider import Slider, Volume
+from slider import Slider, Numbers, Sliders
 
 
 class Window:
@@ -68,8 +68,8 @@ class MenuWindow(Window):
         self.buttons = Buttons()
         self.button_indent_h = WIN_HEIGHT // 100
         self.button_indent_w = WIN_WIDTH // 100
-        #
         self.init_button()
+        #
 
     def init_button(self) -> None:
         width, height = WIN_WIDTH // 3, WIN_HEIGHT // 10
@@ -141,15 +141,28 @@ class MenuWindow(Window):
 class SettingsWindow(Window):
     def __init__(self, controller: object, size_display: Tuple[int, int], caption: str) -> None:
         super().__init__(controller, size_display, caption)
-        self.volume_slider = Slider(
-            (100, 100), 500, 50, pg_random_color(), pg_random_color(), pg.Color((255, 255, 255)), Volume(0, 100, 1)
+        self.sliders = Sliders()
+        self.init_slider()
+        #
+
+    def init_slider(self) -> None:
+        volume_slider = Slider(
+            (100, 100), 500, 30, pg_random_color(), pg_random_color(), pg.Color((255, 255, 255)), Numbers(0, 100, 1)
         )
+        self.sliders.add(volume_slider)
 
     def update(self) -> None:
         pg.display.set_caption(str(self.clock.get_fps()))  # нужно для отладки. FPS в заголовок окна!
 
     def render(self) -> None:
-        self.display.blit(self.volume_slider.surface, self.volume_slider.rect)
+        self.sliders.render(self.display)
+
+    def event(self) -> None:
+        for en in pg.event.get():
+            self.sliders.update(en)
+            if en.type == pg.QUIT:
+                pg.quit()
+                quit()
 
 
 class GameWindow(Window):
