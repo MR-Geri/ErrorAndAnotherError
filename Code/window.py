@@ -3,13 +3,15 @@ from typing import Tuple
 import pygame as pg
 import datetime
 
+from Code.Graphics.colors import pg_random_color
 from Code.Graphics.matrix import Matrix
-from Code.Surface.сamera import Camera
+from Code.сamera import Camera
 from Code.buttons import Button, Buttons
 from Code.settings import *
-from Code.Surface.sector import Sector
+from Code.Map.sector import Sector
 from Code.info_panel import LeftPanel, RightPanel
 from Code.texts import max_size_list_text, TextCenter
+from slider import Slider, Numbers, Sliders
 
 
 class Window:
@@ -66,8 +68,8 @@ class MenuWindow(Window):
         self.buttons = Buttons()
         self.button_indent_h = WIN_HEIGHT // 100
         self.button_indent_w = WIN_WIDTH // 100
-        #
         self.init_button()
+        #
 
     def init_button(self) -> None:
         width, height = WIN_WIDTH // 3, WIN_HEIGHT // 10
@@ -112,7 +114,8 @@ class MenuWindow(Window):
         self.controller.action_window('game')
 
     def settings(self) -> None:
-        pass
+        print('Настройки')
+        self.controller.action_window('settings')
 
     @staticmethod
     def exit() -> None:
@@ -120,7 +123,7 @@ class MenuWindow(Window):
         quit()
 
     def render(self) -> None:
-        self.display.blit(self.background.surface, self.background.rect)
+        self.display.blit(self.background.surface, self.background.rect)  # матрица
         self.buttons.render(self.display)
 
     def update(self) -> None:
@@ -138,19 +141,42 @@ class MenuWindow(Window):
 class SettingsWindow(Window):
     def __init__(self, controller: object, size_display: Tuple[int, int], caption: str) -> None:
         super().__init__(controller, size_display, caption)
+        self.sliders = Sliders()
+        self.init_slider()
+        #
+
+    def init_slider(self) -> None:
+        volume_slider = Slider(
+            (100, 100), 500, 30, pg_random_color(), pg_random_color(), pg.Color((255, 255, 255)), Numbers(0, 100, 1)
+        )
+        self.sliders.add(volume_slider)
+
+    def update(self) -> None:
+        pg.display.set_caption(str(self.clock.get_fps()))  # нужно для отладки. FPS в заголовок окна!
+
+    def render(self) -> None:
+        self.sliders.render(self.display)
+
+    def event(self) -> None:
+        for en in pg.event.get():
+            self.sliders.update(en)
+            if en.type == pg.QUIT:
+                pg.quit()
+                quit()
 
 
 class GameWindow(Window):
     def __init__(self, controller: object, size_display: Tuple[int, int], caption: str) -> None:
         super().__init__(controller, size_display, caption)
         self.size_cell = CELL_SIZE
-        self.sector = Sector(width=CELL_X_NUMBER, height=CELL_Y_NUMBER, size_cell=self.size_cell)
+        # sector нужно ЗАГРУЖАТЬ если это НЕ НОВАЯ игра
+        self.sector = Sector(number_x=SECTOR_X_NUMBER, number_y=SECTOR_Y_NUMBER, size_cell=self.size_cell)
         self.left_panel = LeftPanel(INFO_PANEL_WIDTH, WIN_HEIGHT, pos=(0, 0))
         self.right_panel = RightPanel(INFO_PANEL_WIDTH, WIN_HEIGHT, pos=(WIN_WIDTH - INFO_PANEL_WIDTH, 0))
         self.time_update_right_panel = datetime.datetime.now()
         self.camera = Camera(
-            CELL_X_NUMBER * self.size_cell,
-            CELL_Y_NUMBER * self.size_cell,
+            SECTOR_X_NUMBER * self.size_cell,
+            SECTOR_Y_NUMBER * self.size_cell,
             INFO_PANEL_WIDTH,
             INFO_PANEL_WIDTH
         )
@@ -165,8 +191,8 @@ class GameWindow(Window):
             self.sector.scale(self.size_cell)
             # Ограничение перемещения камеры|СОЗДАЁМ ЗАНОВО
             self.camera = Camera(
-                CELL_X_NUMBER * self.size_cell,
-                CELL_Y_NUMBER * self.size_cell,
+                SECTOR_X_NUMBER * self.size_cell,
+                SECTOR_Y_NUMBER * self.size_cell,
                 INFO_PANEL_WIDTH,
                 INFO_PANEL_WIDTH
             )

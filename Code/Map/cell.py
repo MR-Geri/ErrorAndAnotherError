@@ -21,26 +21,26 @@ class Cell(pg.sprite.Sprite):
         self.rect = pg.Rect(self.x, self.y, self.size_cell, self.size_cell)
         #
         self.image.fill(self.color)
-        pg.draw.rect(
-            self.image,
-            pg.Color((255, 255, 255)),
-            (0.25 * self.size_cell, 0.25 * self.size_cell, 0.5 * self.size_cell, 0.5 * self.size_cell)
-        )
+        # pg.draw.rect(
+        #     self.image,
+        #     pg.Color((255, 255, 255)),
+        #     (0.25 * self.size_cell, 0.25 * self.size_cell, 0.5 * self.size_cell, 0.5 * self.size_cell)
+        # )
 
 
 class Plain(Cell):
     def __init__(self, number_x: int, number_y: int, size_cell: int):
         self.color = pg.Color('#194D0F')
-        super(Plain, self).__init__(number_x, number_y, size_cell)
+        super().__init__(number_x, number_y, size_cell)
 
 
 class Swamp(Cell):
     def __init__(self, number_x: int, number_y: int, size_cell: int):
-        self.color = pg.Color('#4D2C2B')
-        super(Swamp, self).__init__(number_x, number_y, size_cell)
+        self.color = pg.Color('#0000FF')
+        super().__init__(number_x, number_y, size_cell)
 
 
 class Mountain(Cell):
     def __init__(self, number_x: int, number_y: int, size_cell: int):
-        self.color = pg.Color('#404D4C')
-        super(Mountain, self).__init__(number_x, number_y, size_cell)
+        self.color = pg.Color('#FF0000')
+        super().__init__(number_x, number_y, size_cell)
