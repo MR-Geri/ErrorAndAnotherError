@@ -1,5 +1,6 @@
 from Code.Map.cell import Plain, Swamp, Mountain
 from Code.texts import Text, TextMaxSize, TextMaxSizeCenter, TextCenter
+from typing import Union
 
 # Настройки окна
 WIN_WIDTH, WIN_HEIGHT = 1920 // 2, 1080 // 2
@@ -8,8 +9,11 @@ FULL_SCREEN = False
 MENU_TITLE = 'Название игры'
 FPS = 60
 # Цвета
-BACKGROUND_COLOR = '#313335'
-CELL_COLOR = '#013a33'
+COLOR_BACKGROUND = '#313335'
+COLOR_CELL = '#013a33'
+COLOR_SLIDER_USE = '#25B2B9'
+COLOR_SLIDER_NO_USE = '#D5F0F8'
+COLOR_SLIDER_CIRCLE = 'white'
 # Камера
 CAMERA_SPEED_X, CAMERA_SPEED_Y = 2, 2
 # Ячейки
@@ -22,14 +26,14 @@ SECTOR_X_NUMBER = 50  # Размер сектора
 #
 INFO_PANEL_WIDTH = WIN_WIDTH // 5
 # Типизация
-ALL_TEXT = Text or TextMaxSize or TextMaxSizeCenter or TextCenter
-ALL_CELL = Plain or Swamp or Mountain
-COLOR = str or tuple
+ALL_TEXT = Union[Text, TextMaxSize, TextMaxSizeCenter, TextCenter]
+ALL_CELL = Union[Plain, Swamp, Mountain]
+COLOR = Union[tuple, str]
 # Font
 PT_MONO = '../Data/Font/PT Mono.ttf'
 MS_MINCHO = '../Data/Font/MS Mincho.ttf'
 # Path
-MENU_BACKGROUND = '../Data/game.jpg'
+MENU_BACKGROUND = '../Data/Images/game.jpg'
 # Биомы
 MAX_SIZE_MOUNTAIN = (10, 10)
 MAX_QUANTITY_MOUNTAIN = 3

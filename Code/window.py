@@ -4,7 +4,6 @@ import pygame as pg
 import datetime
 
 from Code.settings import *
-from Code.Graphics.colors import pg_random_color
 from Code.Graphics.matrix import Matrix
 from Code.сamera import Camera
 from Code.buttons import Button, Buttons
@@ -26,7 +25,7 @@ class Window:
             self.display = pg.display.set_mode(size_display)
         pg.display.set_caption(self.caption)
         self.bd = pg.Surface(size_display)
-        self.bd.fill(pg.Color(BACKGROUND_COLOR))
+        self.bd.fill(pg.Color(COLOR_BACKGROUND))
         #
         self.clock = pg.time.Clock()
 
@@ -141,13 +140,18 @@ class MenuWindow(Window):
 class SettingsWindow(Window):
     def __init__(self, controller: object, size_display: Tuple[int, int], caption: str) -> None:
         super().__init__(controller, size_display, caption)
+        self.volume = Numbers(0, 1, 0.01)
         self.sliders = Sliders()
         self.init_slider()
         #
 
     def init_slider(self) -> None:
         volume_slider = Slider(
-            (100, 100), 500, 30, pg_random_color(), pg_random_color(), pg.Color((255, 255, 255)), Numbers(0, 100, 1)
+            pos=(100, 100), width=500, height=30,
+            color_no_use=COLOR_SLIDER_NO_USE,
+            color_use=COLOR_SLIDER_USE,
+            color_circle=COLOR_SLIDER_CIRCLE,
+            func=self.volume
         )
         self.sliders.add(volume_slider)
 

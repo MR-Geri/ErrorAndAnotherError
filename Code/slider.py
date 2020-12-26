@@ -1,15 +1,15 @@
-from typing import Tuple
+from typing import Tuple, Union
 import pygame as pg
 
 from Code.settings import *
 
 
 class Numbers:
-    def __init__(self, min_value: int, max_value: int, change: int) -> None:
+    def __init__(self, min_value: Union[int, float], max_value: Union[int, float], change: Union[int, float]) -> None:
         self.min_value = min_value
         self.max_value = max_value
         self.change = change
-        self.value = int((max_value - min_value) / 2)
+        self.value = round((max_value - min_value) / 2, 3)
 
     def edit(self, sign) -> None:
         self.value = min(self.max_value, max(self.min_value, self.value + sign * self.change))
@@ -45,8 +45,11 @@ class Slider:
                 if event.type == pg.MOUSEBUTTONUP and event.button == 1:
                     self.flag_click = False
                 if self.flag_click:
-                    value = int((event.pos[0] - self.rect.x - self.radius_main) / self.pixel_change * self.func.change)
+                    value = round(
+                        (event.pos[0] - self.rect.x - self.radius_main) / self.pixel_change * self.func.change, 3
+                    )
                     self.func.set_value(value)
+                    print(self.func.value)
                 if event.type == pg.MOUSEBUTTONDOWN and event.button == 1 and not self.flag_click:
                     self.flag_click = True
             else:
