@@ -3,15 +3,15 @@ from typing import Tuple
 import pygame as pg
 import datetime
 
+from Code.settings import *
 from Code.Graphics.colors import pg_random_color
 from Code.Graphics.matrix import Matrix
 from Code.сamera import Camera
 from Code.buttons import Button, Buttons
-from Code.settings import *
 from Code.Map.sector import Sector
 from Code.info_panel import LeftPanel, RightPanel
 from Code.texts import max_size_list_text, TextCenter
-from slider import Slider, Numbers, Sliders
+from Code.slider import Slider, Numbers, Sliders
 
 
 class Window:
