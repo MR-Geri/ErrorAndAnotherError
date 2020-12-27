@@ -171,6 +171,8 @@ class SettingsWindow(Window):
             if en.type == pg.QUIT:
                 pg.quit()
                 quit()
+            if en.type == pg.KEYUP and en.key == pg.K_ESCAPE:
+                self.controller.action_window('menu')
 
 
 class GameWindow(Window):
@@ -242,6 +244,8 @@ class GameWindow(Window):
                 quit()
             if en.type == pg.MOUSEBUTTONUP and en.button == 1:
                 self.click(pos=en.pos)
+            if en.type == pg.KEYUP and en.key == pg.K_ESCAPE:
+                self.controller.action_window('menu')
             #
             if en.type == pg.KEYDOWN and en.key == pg.K_LCTRL:
                 self.l_ctrl = True
