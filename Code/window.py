@@ -1,4 +1,3 @@
-import time
 from typing import Tuple
 import pygame as pg
 import datetime
@@ -43,7 +42,6 @@ class Window:
         pass
 
     def run(self) -> None:
-        time.sleep(0.5)
         pg.event.clear()
         self.is_run = True
         while self.is_run:
@@ -142,7 +140,7 @@ class SettingsWindow(Window):
     def __init__(self, controller: object, size_display: Tuple[int, int], caption: str) -> None:
         super().__init__(controller, size_display, caption)
         self.volume = Numbers(0, 1, 0.01)
-        self.music = Music(path=BACRGROUND_MUSIC, volume=self.volume.value)
+        self.music = Music(path=ALL_BACKGROUND_MUSIC, volume=self.volume.value)
         self.sliders = Sliders()
         self.init_slider()
         #

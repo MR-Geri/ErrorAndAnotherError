@@ -1,4 +1,5 @@
 from typing import Union
+from os import walk, path, chdir
 
 from Code.Map.cell import Plain, Swamp, Mountain
 from Code.texts import Text, TextMaxSize, TextMaxSizeCenter, TextCenter
@@ -43,5 +44,6 @@ MAX_SIZE_SWAMP = (20, 20)
 MAX_QUANTITY_SWAMP = 5
 MIN_QUANTITY_SWAMP_CELL = 8
 # Музыка
-BACRGROUND_MUSIC = '../Data/Sounds/background.mp3'
+BACKGROUND_MUSIC = '../Data/Sounds/background_music/background.mp3'
+ALL_BACKGROUND_MUSIC = [[root + i for i in files] for root, _, files in walk('../Data/Sounds/background_music/')][0]
 #
