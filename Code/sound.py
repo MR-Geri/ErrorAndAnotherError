@@ -1,12 +1,37 @@
+from typing import Union
+from random import choice
+
 import pygame as pg
 
 
 class Music:
-    def __init__(self, path: str, volume: int) -> None:
-        self.path = path
+    def __init__(self, path: Union[str, list], volume: float = 0) -> None:
+        self.is_play = None
+        self.list_path = path if type(path) == list else None
+        self.path = path if type(path) == str else choice(self.list_path)
         self.volume = volume
         self.set_music(self.path)
 
     def set_music(self, path: str) -> None:
         self.path = path
         pg.mixer.music.load(path)
+        pg.mixer.music.set_volume(self.volume)
+
+    def update(self, volume: float) -> None:
+        self.volume = volume
+        pg.mixer.music.set_volume(self.volume)
+
+    def play(self):
+        if self.is_play is None:
+            pg.mixer.music.play(-1)
+        elif not self.is_play:
+            pg.mixer.music.unpause()
+        self.is_play = True
+
+    def stop(self):
+        pg.mixer.music.stop()
+        self.is_play = None
+
+    def pause(self):
+        self.is_play = False
+        pg.mixer.music.pause()

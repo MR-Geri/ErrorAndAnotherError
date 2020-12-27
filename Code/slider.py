@@ -1,7 +1,7 @@
+from Code.settings import COLOR
+
 from typing import Tuple, Union
 import pygame as pg
-
-from Code.settings import *
 
 
 class Numbers:
@@ -20,9 +20,10 @@ class Numbers:
 
 class Slider:
     def __init__(self, pos: Tuple[int, int], width: int, height: int,
-                 color_no_use: COLOR, color_use: COLOR, color_circle: COLOR, func) -> None:
+                 color_no_use: COLOR, color_use: COLOR, color_circle: COLOR, slider, func) -> None:
         self.rect = pg.Rect(*pos, width, height)
         self.circle = pg.Rect(*pos, self.rect.height, self.rect.height)
+        self.slider = slider
         self.func = func
         self.color_no_use = color_no_use
         self.color_use = color_use
@@ -34,7 +35,7 @@ class Slider:
         self.rect_width = int(self.rect.width - 2 * self.radius_main - 2 * self.radius_mini)
         self.padding = int((self.rect.height - self.rect_height) / 2)
         self.pixel_size = self.rect_width + 2 * self.radius_mini
-        self.pixel_change = self.pixel_size / self.func.max_value * self.func.change
+        self.pixel_change = self.pixel_size / self.slider.max_value * self.slider.change
         #
         self.flag_click = False
         self.render()
@@ -46,10 +47,11 @@ class Slider:
                     self.flag_click = False
                 if self.flag_click:
                     value = round(
-                        (event.pos[0] - self.rect.x - self.radius_main) / self.pixel_change * self.func.change, 3
+                        (event.pos[0] - self.rect.x - self.radius_main) / self.pixel_change * self.slider.change, 3
                     )
-                    self.func.set_value(value)
-                    print(self.func.value)
+                    self.slider.set_value(value)
+                    # print(self.slider.value)
+                    self.func.update(self.slider.value)
                 if event.type == pg.MOUSEBUTTONDOWN and event.button == 1 and not self.flag_click:
                     self.flag_click = True
             else:
@@ -70,7 +72,7 @@ class Slider:
         pg.draw.rect(
             self.surface, self.color_no_use, (self.two_radius, self.padding, self.rect_width, self.rect_height)
         )
-        w_value = self.pixel_size * (self.func.value / self.func.max_value)
+        w_value = self.pixel_size * (self.slider.value / self.slider.max_value)
         pg.draw.rect(self.surface, self.color_use, (self.two_radius, self.padding, w_value, self.rect_height))
         self.circle.x = self.rect.x + w_value
         self.circle.y = self.rect.y + self.padding + self.radius_mini - self.radius_main

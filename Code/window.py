@@ -5,6 +5,7 @@ import datetime
 
 from Code.settings import *
 from Code.Graphics.matrix import Matrix
+from Code.sound import Music
 from Code.сamera import Camera
 from Code.buttons import Button, Buttons
 from Code.Map.sector import Sector
@@ -141,9 +142,11 @@ class SettingsWindow(Window):
     def __init__(self, controller: object, size_display: Tuple[int, int], caption: str) -> None:
         super().__init__(controller, size_display, caption)
         self.volume = Numbers(0, 1, 0.01)
+        self.music = Music(path=BACRGROUND_MUSIC, volume=self.volume.value)
         self.sliders = Sliders()
         self.init_slider()
         #
+        self.music.play()
 
     def init_slider(self) -> None:
         volume_slider = Slider(
@@ -151,7 +154,8 @@ class SettingsWindow(Window):
             color_no_use=COLOR_SLIDER_NO_USE,
             color_use=COLOR_SLIDER_USE,
             color_circle=COLOR_SLIDER_CIRCLE,
-            func=self.volume
+            slider=self.volume,
+            func=self.music
         )
         self.sliders.add(volume_slider)
 

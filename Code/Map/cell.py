@@ -21,11 +21,11 @@ class Cell(pg.sprite.Sprite):
         self.rect = pg.Rect(self.x, self.y, self.size_cell, self.size_cell)
         #
         self.image.fill(self.color)
-        # pg.draw.rect(
-        #     self.image,
-        #     pg.Color((255, 255, 255)),
-        #     (0.25 * self.size_cell, 0.25 * self.size_cell, 0.5 * self.size_cell, 0.5 * self.size_cell)
-        # )
+        pg.draw.rect(
+            self.image,
+            pg.Color((255, 255, 255)),
+            (0.25 * self.size_cell, 0.25 * self.size_cell, 0.5 * self.size_cell, 0.5 * self.size_cell)
+        )
 
 
 class Plain(Cell):

@@ -1,6 +1,7 @@
+from typing import Union
+
 from Code.Map.cell import Plain, Swamp, Mountain
 from Code.texts import Text, TextMaxSize, TextMaxSizeCenter, TextCenter
-from typing import Union
 
 # Настройки окна
 WIN_WIDTH, WIN_HEIGHT = 1920 // 2, 1080 // 2
@@ -41,4 +42,6 @@ MIN_QUANTITY_MOUNTAIN_CELL = 4
 MAX_SIZE_SWAMP = (20, 20)
 MAX_QUANTITY_SWAMP = 5
 MIN_QUANTITY_SWAMP_CELL = 8
+# Музыка
+BACRGROUND_MUSIC = '../Data/Sounds/background.mp3'
 #
