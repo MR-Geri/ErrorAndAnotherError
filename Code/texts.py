@@ -15,10 +15,20 @@ def print_text(display, text: str, pos: Tuple[int, int], font_color: Tuple[int, 
 class Text:
     def __init__(self, text: str, pos: Tuple[int, int] = (0, 0), font_color: Tuple[int, int, int] = (255, 255, 255),
                  font_type: str = None, font_size: int = 20) -> None:
+        self.font_color = font_color
+        self.pos = pos
+        #
         self.font_type = pg.font.Font(font_type, font_size)
-        self.surface = self.font_type.render(text, True, font_color)
+        self.surface = self.font_type.render(text, True, self.font_color)
         self.rect = self.surface.get_rect()
-        self.rect.x, self.rect.y = pos
+        self.rect.x, self.rect.y = self.pos
+
+    def render(self, text: str) -> None:
+        # Если не передан размер, тот что при ините.
+        # сделать для каждого текста перерендер.
+        self.surface = self.font_type.render(text, True, self.font_color)
+        self.rect = self.surface.get_rect()
+        self.rect.x, self.rect.y = self.pos
 
 
 class TextMaxSize:

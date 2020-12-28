@@ -47,3 +47,9 @@ class Music:
     def pause(self) -> None:
         self.is_play = False
         pg.mixer.music.pause()
+
+    def pause_and_play(self) -> None:
+        if self.is_play:
+            self.pause()
+        else:
+            self.play()

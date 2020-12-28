@@ -75,7 +75,7 @@ class MenuWindow(Window):
     def init_button(self) -> None:
         width, height = WIN_WIDTH // 3, WIN_HEIGHT // 10
         size = max_size_list_text(
-            ['Новая игра', 'Загрузить игру', 'Настройки', 'Выйти', '<', '>'], width, height, PT_MONO
+            ['Новая игра', 'Загрузить игру', 'Настройки', 'Выйти'], width, height, PT_MONO
         )
         pos = (self.button_indent_w, self.button_indent_h)
         button = Button(
@@ -107,16 +107,23 @@ class MenuWindow(Window):
         self.buttons.add(button)
         pos = (pos[0], button.rect.y + button.rect.height + 2 * self.button_indent_h)
         button = Button(
-            pos=pos, width=width // 2, height=height, func=self.music.previous,
+            pos=pos, width=width // 3, height=height, func=self.music.previous,
             color_disabled=(30, 30, 30), color_active=(40, 40, 40),
-            text=TextCenter(text='<', width=width // 2, height=height, font_type=PT_MONO, font_size=size)
+            text=TextCenter(text='<', width=width // 3, height=height, font_type=PT_MONO, font_size=size)
         )
         self.buttons.add(button)
-        pos = (pos[0] + width // 2, button.rect.y)
+        pos = (pos[0] + button.rect.width, button.rect.y)
         button = Button(
-            pos=pos, width=width // 2, height=height, func=self.music.next,
+            pos=pos, width=width // 3, height=height, func=self.music.pause_and_play,
             color_disabled=(30, 30, 30), color_active=(40, 40, 40),
-            text=TextCenter(text='>', width=width // 2, height=height, font_type=PT_MONO, font_size=size)
+            text=TextCenter(text='►', width=width // 3, height=height, font_type=PT_MONO, font_size=size)
+        )
+        self.buttons.add(button)
+        pos = (pos[0] + button.rect.width, button.rect.y)
+        button = Button(
+            pos=pos, width=width // 3, height=height, func=self.music.next,
+            color_disabled=(30, 30, 30), color_active=(40, 40, 40),
+            text=TextCenter(text='>', width=width // 3, height=height, font_type=PT_MONO, font_size=size)
         )
         self.buttons.add(button)
 
