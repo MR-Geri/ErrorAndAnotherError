@@ -48,14 +48,14 @@ class TextMaxSizeCenter(TextMaxSize):
 
 
 class TextCenter(Text):
-    def __init__(self, text: str, width: int = None, height: int = None,
+    def __init__(self, text: str, width: int = None, height: int = None, pos: Tuple[int, int] = (0, 0),
                  font_color: Tuple[int, int, int] = (255, 255, 255),
                  font_type: str = None, font_size: int = 20) -> None:
-        super().__init__(text=text, pos=(0, 0), font_color=font_color, font_type=font_type, font_size=font_size)
+        super().__init__(text=text, pos=pos, font_color=font_color, font_type=font_type, font_size=font_size)
         if width:
-            self.rect.x = (width - self.rect.width) // 2
+            self.rect.x += (width - self.rect.width) // 2
         if height:
-            self.rect.y = (height - self.rect.height) // 2
+            self.rect.y += (height - self.rect.height) // 2
 
 
 def max_size_list_text(texts: list, width: int, height: int, font_type: str = None) -> int:

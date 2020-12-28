@@ -22,7 +22,7 @@ class Window:
         if FULL_SCREEN:
             self.display = pg.display.set_mode(size_display, pg.FULLSCREEN)
         else:
-            self.display = pg.display.set_mode(size_display, pg.HWSURFACE | pg.DOUBLEBUF)
+            self.display = pg.display.set_mode(size_display)
         pg.display.set_caption(self.caption)
         self.bd = pg.Surface(size_display)
         self.bd.fill(pg.Color(COLOR_BACKGROUND))

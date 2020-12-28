@@ -1,5 +1,5 @@
 from typing import Union
-from os import walk, path, chdir
+from os import walk
 
 from Code.Map.cell import Plain, Swamp, Mountain
 from Code.texts import Text, TextMaxSize, TextMaxSizeCenter, TextCenter
