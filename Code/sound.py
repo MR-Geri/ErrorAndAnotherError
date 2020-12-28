@@ -14,13 +14,14 @@ class Music:
 
     def next(self) -> None:
         self.stop()
-        self.set_music(self.list_path[(self.list_path.index(self.path) + 1) % len(self.list_path)])
+        ind = self.list_path.index(self.path) + 1
+        self.set_music(self.list_path[ind % len(self.list_path)])
         self.play()
 
     def previous(self) -> None:
         self.stop()
-        ind = self.list_path.index(self.path)
-        self.set_music(self.list_path[ind - 1 if ind > 0 else len(self.list_path) - 1])
+        ind = self.list_path.index(self.path) + len(self.list_path) - 1
+        self.set_music(self.list_path[ind % len(self.list_path)])
         self.play()
 
     def set_music(self, path: str) -> None:
