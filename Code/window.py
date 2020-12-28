@@ -18,6 +18,9 @@ class Window:
         self.caption = caption
         self.is_run = False
         self.controller = controller
+        self.volume = Numbers(0, 1, 0.01)
+        self.music = Music(path=ALL_BACKGROUND_MUSIC, volume=self.volume.value)
+        self.music.play()
         #
         if FULL_SCREEN:
             self.display = pg.display.set_mode(size_display, pg.FULLSCREEN)
@@ -72,34 +75,48 @@ class MenuWindow(Window):
     def init_button(self) -> None:
         width, height = WIN_WIDTH // 3, WIN_HEIGHT // 10
         size = max_size_list_text(
-            ['Новая игра', 'Загрузить игру', 'Настройки', 'Выйти'], width, height, PT_MONO
+            ['Новая игра', 'Загрузить игру', 'Настройки', 'Выйти', '<', '>'], width, height, PT_MONO
         )
         pos = (self.button_indent_w, self.button_indent_h)
         button = Button(
-            pos=pos, width=WIN_WIDTH // 3, height=WIN_HEIGHT // 10, func=self.new_game,
+            pos=pos, width=width, height=WIN_HEIGHT // 10, func=self.new_game,
             color_disabled=(30, 30, 30), color_active=(40, 40, 40),
             text=TextCenter(text='Новая игра', width=width, height=height, font_type=PT_MONO, font_size=size)
         )
         self.buttons.add(button)
         pos = (pos[0], button.rect.y + button.rect.height + self.button_indent_h)
         button = Button(
-            pos=pos, width=WIN_WIDTH // 3, height=WIN_HEIGHT // 10, func=self.load_game,
+            pos=pos, width=width, height=WIN_HEIGHT // 10, func=self.load_game,
             color_disabled=(30, 30, 30), color_active=(40, 40, 40),
             text=TextCenter(text='Загрузить игру', width=width, height=height, font_type=PT_MONO, font_size=size)
         )
         self.buttons.add(button)
         pos = (pos[0], button.rect.y + button.rect.height + self.button_indent_h)
         button = Button(
-            pos=pos, width=WIN_WIDTH // 3, height=WIN_HEIGHT // 10, func=self.settings,
+            pos=pos, width=width, height=WIN_HEIGHT // 10, func=self.settings,
             color_disabled=(30, 30, 30), color_active=(40, 40, 40),
             text=TextCenter(text='Настройки', width=width, height=height, font_type=PT_MONO, font_size=size)
         )
         self.buttons.add(button)
         pos = (pos[0], button.rect.y + button.rect.height + self.button_indent_h)
         button = Button(
-            pos=pos, width=WIN_WIDTH // 3, height=WIN_HEIGHT // 10, func=self.exit,
+            pos=pos, width=width, height=WIN_HEIGHT // 10, func=self.exit,
             color_disabled=(30, 30, 30), color_active=(40, 40, 40),
             text=TextCenter(text='Выйти', width=width, height=height, font_type=PT_MONO, font_size=size)
+        )
+        self.buttons.add(button)
+        pos = (pos[0], button.rect.y + button.rect.height + 2 * self.button_indent_h)
+        button = Button(
+            pos=pos, width=width // 2, height=height, func=self.music.previous,
+            color_disabled=(30, 30, 30), color_active=(40, 40, 40),
+            text=TextCenter(text='<', width=width // 2, height=height, font_type=PT_MONO, font_size=size)
+        )
+        self.buttons.add(button)
+        pos = (pos[0] + width // 2, button.rect.y)
+        button = Button(
+            pos=pos, width=width // 2, height=height, func=self.music.next,
+            color_disabled=(30, 30, 30), color_active=(40, 40, 40),
+            text=TextCenter(text='>', width=width // 2, height=height, font_type=PT_MONO, font_size=size)
         )
         self.buttons.add(button)
 
@@ -139,12 +156,9 @@ class MenuWindow(Window):
 class SettingsWindow(Window):
     def __init__(self, controller: object, size_display: Tuple[int, int], caption: str) -> None:
         super().__init__(controller, size_display, caption)
-        self.volume = Numbers(0, 1, 0.01)
-        self.music = Music(path=ALL_BACKGROUND_MUSIC, volume=self.volume.value)
         self.sliders = Sliders()
         self.init_slider()
         #
-        self.music.play()
 
     def init_slider(self) -> None:
         volume_slider = Slider(

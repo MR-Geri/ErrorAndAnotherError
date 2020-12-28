@@ -22,7 +22,6 @@ class Slider:
     def __init__(self, pos: Tuple[int, int], width: int, height: int,
                  color_no_use: COLOR, color_use: COLOR, color_circle: COLOR, slider, func) -> None:
         self.rect = pg.Rect(*pos, width, height)
-        self.circle = pg.Rect(*pos, self.rect.height, self.rect.height)
         self.slider = slider
         self.func = func
         self.color_no_use = color_no_use
@@ -74,8 +73,6 @@ class Slider:
         )
         w_value = self.pixel_size * (self.slider.value / self.slider.max_value)
         pg.draw.rect(self.surface, self.color_use, (self.two_radius, self.padding, w_value, self.rect_height))
-        self.circle.x = self.rect.x + w_value
-        self.circle.y = self.rect.y + self.padding + self.radius_mini - self.radius_main
         pg.draw.circle(
             self.surface, self.color_circle,
             (self.radius_main + w_value, self.padding + self.radius_mini), self.radius_main

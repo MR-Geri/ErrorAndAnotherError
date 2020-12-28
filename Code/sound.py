@@ -12,6 +12,17 @@ class Music:
         self.volume = volume
         self.set_music(self.path)
 
+    def next(self) -> None:
+        self.stop()
+        self.set_music(self.list_path[(self.list_path.index(self.path) + 1) % len(self.list_path)])
+        self.play()
+
+    def previous(self) -> None:
+        self.stop()
+        ind = self.list_path.index(self.path)
+        self.set_music(self.list_path[ind - 1 if ind > 0 else len(self.list_path) - 1])
+        self.play()
+
     def set_music(self, path: str) -> None:
         self.path = path
         pg.mixer.music.load(path)
@@ -21,17 +32,17 @@ class Music:
         self.volume = volume
         pg.mixer.music.set_volume(self.volume)
 
-    def play(self):
+    def play(self) -> None:
         if self.is_play is None:
             pg.mixer.music.play(-1)
         elif not self.is_play:
             pg.mixer.music.unpause()
         self.is_play = True
 
-    def stop(self):
+    def stop(self) -> None:
         pg.mixer.music.stop()
         self.is_play = None
 
-    def pause(self):
+    def pause(self) -> None:
         self.is_play = False
         pg.mixer.music.pause()
