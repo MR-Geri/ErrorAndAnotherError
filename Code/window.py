@@ -1,16 +1,14 @@
 from typing import Tuple
 import pygame as pg
-import datetime
 
 from Code.settings import *
 from Code.Graphics.matrix import Matrix
-from Code.sound import Music
 from Code.сamera import Camera
 from Code.buttons import Button, Buttons, ButtonTwoStates
 from Code.Map.sector import Sector
 from Code.info_panel import LeftPanel, RightPanel
 from Code.texts import max_size_list_text, TextCenter
-from Code.slider import Slider, Numbers, Sliders
+from Code.slider import Slider, Sliders
 
 
 class Window:
@@ -18,8 +16,8 @@ class Window:
         self.caption = caption
         self.is_run = False
         self.controller = controller
-        self.volume = Numbers(0, 1, 0.01)
-        self.music = Music(path=ALL_BACKGROUND_MUSIC, volume=self.volume.value)
+        self.volume = self.controller.volume
+        self.music = self.controller.music
         self.music.play()
         #
         if FULL_SCREEN:
@@ -62,9 +60,10 @@ class Window:
 
 class MenuWindow(Window):
     def __init__(self, controller: object, size_display: Tuple[int, int], caption: str) -> None:
-        super().__init__(controller, size_display, caption)
+        super(MenuWindow, self).__init__(controller, size_display, caption)
         self.background = Matrix((0, 0), WIN_WIDTH, WIN_HEIGHT, MENU_BACKGROUND)
         self.background.render()
+        self.background_update = 0
         #
         self.buttons = Buttons()
         self.button_indent_h = WIN_HEIGHT // 100
@@ -203,7 +202,7 @@ class GameWindow(Window):
         self.sector = Sector(number_x=SECTOR_X_NUMBER, number_y=SECTOR_Y_NUMBER, size_cell=self.size_cell)
         self.left_panel = LeftPanel(INFO_PANEL_WIDTH, WIN_HEIGHT, pos=(0, 0))
         self.right_panel = RightPanel(INFO_PANEL_WIDTH, WIN_HEIGHT, pos=(WIN_WIDTH - INFO_PANEL_WIDTH, 0))
-        self.time_update_right_panel = datetime.datetime.now()
+        self.frame_update_right_panel = 0
         self.camera = Camera(
             SECTOR_X_NUMBER * self.size_cell,
             SECTOR_Y_NUMBER * self.size_cell,
@@ -246,14 +245,11 @@ class GameWindow(Window):
         self.display.blit(self.right_panel.surface, self.right_panel.rect)
 
     def update(self) -> None:
-        time_now = datetime.datetime.now()
-        time_update_right_panel = time_now - self.time_update_right_panel
-        #
         pg.display.set_caption(str(self.clock.get_fps()))  # нужно для отладки. FPS в заголовок окна!
         self.camera.move(self.camera_left, self.camera_right, self.camera_up, self.camera_down)
         # Обновление панели каждую секунду
-        if int(time_update_right_panel.seconds) >= 1:
-            self.time_update_right_panel = time_now
+        self.frame_update_right_panel = (self.frame_update_right_panel + 1) % (FPS + 1)
+        if not self.frame_update_right_panel:
             self.right_panel.update()
             self.right_panel.render()
 

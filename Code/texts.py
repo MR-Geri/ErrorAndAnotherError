@@ -12,6 +12,13 @@ def print_text(display, text: str, pos: Tuple[int, int], font_color: Tuple[int, 
     display.blit(text, text_rect)
 
 
+def max_size_list_text(texts: list, width: int, height: int, font_type: str = None) -> int:
+    size = list()
+    for text in texts:
+        size.append(TextMaxSize(text=text, width=width, height=height, font_type=font_type).font_size)
+    return min(size)
+
+
 class Text:
     def __init__(self, text: str, pos: Tuple[int, int] = (0, 0), font_color: Tuple[int, int, int] = (255, 255, 255),
                  font_type: str = None, font_size: int = 20) -> None:
@@ -58,8 +65,6 @@ class TextCenter(Text):
             self.rect.y += (height - self.rect.height) // 2
 
 
-def max_size_list_text(texts: list, width: int, height: int, font_type: str = None) -> int:
-    size = list()
-    for text in texts:
-        size.append(TextMaxSize(text=text, width=width, height=height, font_type=font_type).font_size)
-    return min(size)
+class RunningLine(Text):
+    def __init__(self) -> None:
+        super().__init__()
