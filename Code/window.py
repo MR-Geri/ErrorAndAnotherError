@@ -6,7 +6,7 @@ from Code.settings import *
 from Code.Graphics.matrix import Matrix
 from Code.sound import Music
 from Code.сamera import Camera
-from Code.buttons import Button, Buttons
+from Code.buttons import Button, Buttons, ButtonTwoStates
 from Code.Map.sector import Sector
 from Code.info_panel import LeftPanel, RightPanel
 from Code.texts import max_size_list_text, TextCenter
@@ -113,10 +113,11 @@ class MenuWindow(Window):
         )
         self.buttons.add(button)
         pos = (pos[0] + button.rect.width, button.rect.y)
-        button = Button(
+        button = ButtonTwoStates(
             pos=pos, width=width // 3, height=height, func=self.music.pause_and_play,
             color_disabled=(30, 30, 30), color_active=(40, 40, 40),
-            text=TextCenter(text='►', width=width // 3, height=height, font_type=PT_MONO, font_size=size)
+            texts=(TextCenter(text='||', width=width // 3, height=height, font_type=PT_MONO, font_size=size),
+                   TextCenter(text='►', width=width // 3, height=height, font_type=PT_MONO, font_size=size))
         )
         self.buttons.add(button)
         pos = (pos[0] + button.rect.width, button.rect.y)

@@ -39,10 +39,11 @@ class Button:
 
 class ButtonTwoStates(Button):
     def __init__(self, pos: Tuple[int, int], width: int, height: int, color_disabled: COLOR, color_active: COLOR,
-                 list_text: List[ALL_TEXT, ...],  func):
-        self.list_text = list_text
+                 texts: Tuple[ALL_TEXT, ALL_TEXT],  func):
+        self.texts = texts
+        self.text = self.texts[0]
         super().__init__(pos=pos, width=width, height=height, color_disabled=color_disabled, color_active=color_active,
-                         text=self.list_text[0], func=func)
+                         text=self.text, func=func)
 
     def update(self, event: pg.event.Event) -> None:
         try:
@@ -51,6 +52,7 @@ class ButtonTwoStates(Button):
                 if event.type == pg.MOUSEBUTTONUP and event.button == 1 and self.flag_click:
                     self.flag_click = False
                     self.func()
+                    self.text = self.texts[(self.texts.index(self.text) + 1) % len(self.texts)]
                 if event.type == pg.MOUSEBUTTONDOWN and event.button == 1 and not self.flag_click:
                     self.flag_click = True
             else:
