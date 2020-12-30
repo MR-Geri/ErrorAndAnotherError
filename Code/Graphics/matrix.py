@@ -35,11 +35,12 @@ class Matrix:
             prerendered_chars.update(prerendered_char)
         return prerendered_chars
 
-    def render(self):
+    def render(self, display: pg.Surface):
         frames = pg.time.get_ticks()
         self.change_chars(frames)
         self.shift_column(frames)
         self.draw()
+        display.blit(self.surface, self.rect)
 
     def shift_column(self, frames):
         num_cols = np.argwhere(frames % self.cols_speed == 0)

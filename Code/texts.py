@@ -1,4 +1,4 @@
-from typing import Tuple, List
+from typing import Tuple
 
 import pygame as pg
 
@@ -63,8 +63,3 @@ class TextCenter(Text):
             self.rect.x += (width - self.rect.width) // 2
         if height:
             self.rect.y += (height - self.rect.height) // 2
-
-
-class RunningLine(Text):
-    def __init__(self) -> None:
-        super().__init__()

@@ -1,8 +1,6 @@
 from typing import Union
 from os import walk
 
-from Code.Map.cell import Plain, Swamp, Mountain
-from Code.texts import Text, TextMaxSize, TextMaxSizeCenter, TextCenter
 
 # Настройки окна
 WIN_WIDTH, WIN_HEIGHT = 1920 // 2, 1080 // 2
@@ -28,7 +26,11 @@ SECTOR_X_NUMBER = 50  # Размер сектора
 #
 INFO_PANEL_WIDTH = WIN_WIDTH // 5
 # Типизация
+from Code.running_line import RunningLineMaxSizeCenter
+from Code.Map.cell import Plain, Swamp, Mountain
+from Code.texts import Text, TextMaxSize, TextMaxSizeCenter, TextCenter
 ALL_TEXT = Union[Text, TextMaxSize, TextMaxSizeCenter, TextCenter]
+ALL_RUNNING_LINE = Union[RunningLineMaxSizeCenter]
 ALL_CELL = Union[Plain, Swamp, Mountain]
 COLOR = Union[tuple, str]
 # Font
@@ -44,6 +46,6 @@ MAX_SIZE_SWAMP = (20, 20)
 MAX_QUANTITY_SWAMP = 5
 MIN_QUANTITY_SWAMP_CELL = 8
 # Музыка
-BACKGROUND_MUSIC = '../Data/Sounds/background_music/background.mp3'
+BACKGROUND_MUSIC = '../Data/Sounds/background_music/relax-piano-old.mp3'
 ALL_BACKGROUND_MUSIC = [[root + i for i in files] for root, _, files in walk('../Data/Sounds/background_music/')][0]
 #

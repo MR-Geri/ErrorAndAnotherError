@@ -3,13 +3,16 @@ from random import choice
 
 import pygame as pg
 
+from Code.settings import ALL_RUNNING_LINE
+
 
 class Music:
-    def __init__(self, path: Union[str, list], volume: float = 0) -> None:
+    def __init__(self, path: Union[str, list], running_line: ALL_RUNNING_LINE = None, volume: float = 0) -> None:
         self.is_play = None
         self.list_path = path if type(path) == list else None
         self.path = path if type(path) == str else choice(self.list_path)
         self.volume = volume
+        self.running_line = running_line
         self.set_music(self.path)
 
     def next(self) -> None:
@@ -26,6 +29,10 @@ class Music:
 
     def set_music(self, path: str) -> None:
         self.path = path
+        if self.running_line:
+            n = max([i for i, char in enumerate(self.path) if char == '/']) + 1
+            k = max([i for i, char in enumerate(self.path) if char == '.'])
+            self.running_line.set_text(self.path[n:k])
         pg.mixer.music.load(path)
         pg.mixer.music.set_volume(self.volume)
 
@@ -34,6 +41,10 @@ class Music:
         pg.mixer.music.set_volume(self.volume)
 
     def play(self) -> None:
+        if self.running_line:
+            n = max([i for i, char in enumerate(self.path) if char == '/']) + 1
+            k = max([i for i, char in enumerate(self.path) if char == '.'])
+            self.running_line.set_text(self.path[n:k])
         if self.is_play is None:
             pg.mixer.music.play(-1)
         elif not self.is_play:

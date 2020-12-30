@@ -1,6 +1,7 @@
 from typing import Tuple
 import pygame as pg
 
+from Code.running_line import RunningLineMaxSizeCenter
 from Code.settings import *
 from Code.Graphics.matrix import Matrix
 from Code.сamera import Camera
@@ -18,7 +19,6 @@ class Window:
         self.controller = controller
         self.volume = self.controller.volume
         self.music = self.controller.music
-        self.music.play()
         #
         if FULL_SCREEN:
             self.display = pg.display.set_mode(size_display, pg.FULLSCREEN)
@@ -62,70 +62,78 @@ class MenuWindow(Window):
     def __init__(self, controller: object, size_display: Tuple[int, int], caption: str) -> None:
         super(MenuWindow, self).__init__(controller, size_display, caption)
         self.background = Matrix((0, 0), WIN_WIDTH, WIN_HEIGHT, MENU_BACKGROUND)
-        self.background.render()
         self.background_update = 0
         #
+        self.interface_padding = (WIN_WIDTH // 100, WIN_HEIGHT // 100)
+        self.interface = pg.Rect(*self.interface_padding, WIN_WIDTH // 3, WIN_HEIGHT // 10)
         self.buttons = Buttons()
-        self.button_indent_h = WIN_HEIGHT // 100
-        self.button_indent_w = WIN_WIDTH // 100
         self.init_button()
+        #
+        self.running_line = RunningLineMaxSizeCenter(
+            text='тестовая строка', width=self.interface.width, height=self.interface.height,
+            pos=(self.interface_padding[0], self.interface.y), speed=30, font_type=PT_MONO
+        )
+        self.music.running_line = self.running_line
+        self.music.play()
         #
 
     def init_button(self) -> None:
-        width, height = WIN_WIDTH // 3, WIN_HEIGHT // 10
+        interface = self.interface
+        width, height = self.interface.width, self.interface.height
         size = max_size_list_text(
             ['Новая игра', 'Загрузить игру', 'Настройки', 'Выйти'], width, height, PT_MONO
         )
-        pos = (self.button_indent_w, self.button_indent_h)
         button = Button(
-            pos=pos, width=width, height=WIN_HEIGHT // 10, func=self.new_game,
+            pos=(interface.x, interface.y), width=width, height=height, func=self.new_game,
             color_disabled=(30, 30, 30), color_active=(40, 40, 40),
             text=TextCenter(text='Новая игра', width=width, height=height, font_type=PT_MONO, font_size=size)
         )
         self.buttons.add(button)
-        pos = (pos[0], button.rect.y + button.rect.height + self.button_indent_h)
+        interface.y += interface.height + self.interface_padding[1]
         button = Button(
-            pos=pos, width=width, height=WIN_HEIGHT // 10, func=self.load_game,
+            pos=(interface.x, interface.y), width=width, height=height, func=self.load_game,
             color_disabled=(30, 30, 30), color_active=(40, 40, 40),
             text=TextCenter(text='Загрузить игру', width=width, height=height, font_type=PT_MONO, font_size=size)
         )
         self.buttons.add(button)
-        pos = (pos[0], button.rect.y + button.rect.height + self.button_indent_h)
+        interface.y += interface.height + self.interface_padding[1]
         button = Button(
-            pos=pos, width=width, height=WIN_HEIGHT // 10, func=self.settings,
+            pos=(interface.x, interface.y), width=width, height=height, func=self.settings,
             color_disabled=(30, 30, 30), color_active=(40, 40, 40),
             text=TextCenter(text='Настройки', width=width, height=height, font_type=PT_MONO, font_size=size)
         )
         self.buttons.add(button)
-        pos = (pos[0], button.rect.y + button.rect.height + self.button_indent_h)
+        interface.y += interface.height + self.interface_padding[1]
         button = Button(
-            pos=pos, width=width, height=WIN_HEIGHT // 10, func=self.exit,
+            pos=(interface.x, interface.y), width=width, height=height, func=self.exit,
             color_disabled=(30, 30, 30), color_active=(40, 40, 40),
             text=TextCenter(text='Выйти', width=width, height=height, font_type=PT_MONO, font_size=size)
         )
         self.buttons.add(button)
-        pos = (pos[0], button.rect.y + button.rect.height + 2 * self.button_indent_h)
+        interface.y += interface.height + self.interface_padding[1]
         button = Button(
-            pos=pos, width=width // 3, height=height, func=self.music.previous,
+            pos=(interface.x, interface.y), width=width // 3, height=height, func=self.music.previous,
             color_disabled=(30, 30, 30), color_active=(40, 40, 40),
             text=TextCenter(text='<', width=width // 3, height=height, font_type=PT_MONO, font_size=size)
         )
         self.buttons.add(button)
-        pos = (pos[0] + button.rect.width, button.rect.y)
+        interface.x += interface.width // 3
         button = ButtonTwoStates(
-            pos=pos, width=width // 3, height=height, func=self.music.pause_and_play,
+            pos=(interface.x, interface.y), width=width // 3, height=height, func=self.music.pause_and_play,
             color_disabled=(30, 30, 30), color_active=(40, 40, 40),
             texts=(TextCenter(text='||', width=width // 3, height=height, font_type=PT_MONO, font_size=size),
                    TextCenter(text='►', width=width // 3, height=height, font_type=PT_MONO, font_size=size))
         )
         self.buttons.add(button)
-        pos = (pos[0] + button.rect.width, button.rect.y)
+        interface.x += interface.width // 3
         button = Button(
-            pos=pos, width=width // 3, height=height, func=self.music.next,
+            pos=(interface.x, interface.y), width=width // 3, height=height, func=self.music.next,
             color_disabled=(30, 30, 30), color_active=(40, 40, 40),
             text=TextCenter(text='>', width=width // 3, height=height, font_type=PT_MONO, font_size=size)
         )
         self.buttons.add(button)
+        interface.y += interface.height + self.interface_padding[0]
+        self.interface.y = interface.y
 
     def new_game(self) -> None:
         print('Новая игра')
@@ -145,12 +153,13 @@ class MenuWindow(Window):
         quit()
 
     def render(self) -> None:
-        self.display.blit(self.background.surface, self.background.rect)  # матрица
+        self.background.render(self.display)  # матрица
         self.buttons.render(self.display)
+        self.running_line.render(self.display)
 
     def update(self) -> None:
         pg.display.set_caption(str(self.clock.get_fps()))  # нужно для отладки. FPS в заголовок окна!
-        self.background.render()
+        self.running_line.update()
 
     def event(self) -> None:
         for en in pg.event.get():
