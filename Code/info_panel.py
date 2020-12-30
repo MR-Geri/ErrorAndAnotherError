@@ -43,6 +43,7 @@ class LeftPanel(Panel):
     def render(self) -> None:
         self.surface = pg.Surface((self.rect.width, self.rect.height))
         self.surface.fill(self.color_background)
+        #
         self.running_line.render(self.surface)
 
 
@@ -54,10 +55,10 @@ class RightPanel(Panel):
 
     def update(self) -> None:
         text = datetime.datetime.now().strftime('%d/%m/%y %H:%M:%S')
-        pos_ = (0, self.interface_indent[1])
-        self.system_time = TextMaxSizeCenter(text=f'{text}', width=self.rect.width, pos=pos_,
-                                             font_type=PT_MONO)
-        pos_ = (0, pos_[1] + self.system_time.rect.height + self.interface_indent[1])
+        pos = self.interface_indent
+        self.system_time = TextMaxSizeCenter(
+            text=f'{text}', width=self.interface_size[0], height=self.interface_size[1], pos=pos, font_type=PT_MONO
+        )
 
     def render(self) -> None:
         self.surface = pg.Surface((self.rect.width, self.rect.height))

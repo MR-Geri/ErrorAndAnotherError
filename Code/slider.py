@@ -9,7 +9,7 @@ class Numbers:
         self.min_value = min_value
         self.max_value = max_value
         self.change = change
-        self.value = round((max_value - min_value) / 2, 3)
+        self.value = round((max_value - min_value) / 16, 3)
 
     def edit(self, sign) -> None:
         self.value = min(self.max_value, max(self.min_value, self.value + sign * self.change))

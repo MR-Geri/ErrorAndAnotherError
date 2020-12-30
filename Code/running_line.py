@@ -9,7 +9,9 @@ class RunningLineMaxSizeCenter:
     def __init__(self, text: str, width: int, height: int, pos: Tuple[int, int], speed: int,
                  font_color: Tuple[int, int, int] = (255, 255, 255), font_type: str = None) -> None:
         self.text = text
-        self.cl_text = TextMaxSizeCenter(text + ' ', width=None, height=height, font_color=font_color, font_type=font_type)
+        self.cl_text = TextMaxSizeCenter(
+            f'  {self.text}  ', width=None, height=height, font_color=font_color, font_type=font_type
+        )
         self.speed = speed
         self.font_color, self.font_type, self.height = font_color, font_type, height
         self.rect = pg.Rect(*pos, width, height)
