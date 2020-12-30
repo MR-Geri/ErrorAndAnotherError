@@ -1,7 +1,6 @@
 from typing import Tuple
 import pygame as pg
 
-from Code.running_line import RunningLineMaxSizeCenter
 from Code.settings import *
 from Code.Graphics.matrix import Matrix
 from Code.сamera import Camera
@@ -73,7 +72,6 @@ class MenuWindow(Window):
             text='тестовая строка', width=self.interface.width, height=self.interface.height,
             pos=(self.interface_padding[0], self.interface.y), speed=30, font_type=PT_MONO
         )
-        self.music.running_line = self.running_line
         self.music.play()
         #
 
@@ -159,7 +157,7 @@ class MenuWindow(Window):
 
     def update(self) -> None:
         pg.display.set_caption(str(self.clock.get_fps()))  # нужно для отладки. FPS в заголовок окна!
-        self.running_line.update()
+        self.running_line.update(self.music.get_text())
 
     def event(self) -> None:
         for en in pg.event.get():
@@ -209,7 +207,7 @@ class GameWindow(Window):
         self.size_cell = CELL_SIZE
         # sector нужно ЗАГРУЖАТЬ если это НЕ НОВАЯ игра
         self.sector = Sector(number_x=SECTOR_X_NUMBER, number_y=SECTOR_Y_NUMBER, size_cell=self.size_cell)
-        self.left_panel = LeftPanel(INFO_PANEL_WIDTH, WIN_HEIGHT, pos=(0, 0))
+        self.left_panel = LeftPanel(INFO_PANEL_WIDTH, WIN_HEIGHT, pos=(0, 0), music=self.music)
         self.right_panel = RightPanel(INFO_PANEL_WIDTH, WIN_HEIGHT, pos=(WIN_WIDTH - INFO_PANEL_WIDTH, 0))
         self.frame_update_right_panel = 0
         self.camera = Camera(
@@ -249,6 +247,10 @@ class GameWindow(Window):
             print('Клик по правой панели информации')
 
     def render(self) -> None:
+        self.left_panel.render()
+        if not self.frame_update_right_panel:
+            self.right_panel.render()
+        #
         self.display.blit(self.sector.surface, self.camera.get_cord())
         self.display.blit(self.left_panel.surface, self.left_panel.rect)
         self.display.blit(self.right_panel.surface, self.right_panel.rect)
@@ -260,7 +262,7 @@ class GameWindow(Window):
         self.frame_update_right_panel = (self.frame_update_right_panel + 1) % (FPS + 1)
         if not self.frame_update_right_panel:
             self.right_panel.update()
-            self.right_panel.render()
+        self.left_panel.update()
 
     def event(self) -> None:
         for en in pg.event.get():

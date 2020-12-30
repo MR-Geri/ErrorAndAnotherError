@@ -25,14 +25,6 @@ SECTOR_Y_NUMBER = 50  # Размер сектора
 SECTOR_X_NUMBER = 50  # Размер сектора
 #
 INFO_PANEL_WIDTH = WIN_WIDTH // 5
-# Типизация
-from Code.running_line import RunningLineMaxSizeCenter
-from Code.Map.cell import Plain, Swamp, Mountain
-from Code.texts import Text, TextMaxSize, TextMaxSizeCenter, TextCenter
-ALL_TEXT = Union[Text, TextMaxSize, TextMaxSizeCenter, TextCenter]
-ALL_RUNNING_LINE = Union[RunningLineMaxSizeCenter]
-ALL_CELL = Union[Plain, Swamp, Mountain]
-COLOR = Union[tuple, str]
 # Font
 PT_MONO = '../Data/Font/PT Mono.ttf'
 MS_MINCHO = '../Data/Font/MS Mincho.ttf'
@@ -47,4 +39,12 @@ MAX_QUANTITY_SWAMP = 5
 MIN_QUANTITY_SWAMP_CELL = 8
 # Музыка
 ALL_BACKGROUND_MUSIC = [[root + i for i in files] for root, _, files in walk('../Data/Sounds/background_music/')][0]
+# Типизация
+from Code.running_line import RunningLineMaxSizeCenter
+from Code.Map.cell import Plain, Swamp, Mountain
+from Code.texts import Text, TextMaxSize, TextMaxSizeCenter, TextCenter
+ALL_TEXT = Union[Text, TextMaxSize, TextMaxSizeCenter, TextCenter]
+ALL_RUNNING_LINE = Union[RunningLineMaxSizeCenter]
+ALL_CELL = Union[Plain, Swamp, Mountain]
+COLOR = Union[tuple, str]
 #
