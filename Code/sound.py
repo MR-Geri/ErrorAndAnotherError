@@ -3,8 +3,6 @@ from random import choice
 
 import pygame as pg
 
-from Code.settings import ALL_RUNNING_LINE
-
 
 class Music:
     def __init__(self, path: Union[str, list], volume: float = 0) -> None:

@@ -1,7 +1,8 @@
+from Code.settings import *
+
 from typing import Tuple
 import pygame as pg
 
-from Code.settings import *
 from Code.Graphics.matrix import Matrix
 from Code.сamera import Camera
 from Code.buttons import Button, Buttons, ButtonTwoStates
@@ -27,7 +28,7 @@ class Window:
         self.bd = pg.Surface(size_display)
         self.bd.fill(pg.Color(COLOR_BACKGROUND))
         #
-        self.clock = pg.time.Clock()
+        self.clock = CLOCK
 
     def event(self) -> None:
         for en in pg.event.get():

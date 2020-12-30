@@ -1,7 +1,7 @@
 from typing import Tuple
 import pygame as pg
 
-from Code.settings import FPS
+from Code.settings import CLOCK, FPS
 from Code.texts import TextMaxSizeCenter
 
 
@@ -30,6 +30,6 @@ class RunningLineMaxSizeCenter:
                 f'  {self.text}', width=None, height=self.height, font_color=self.font_color, font_type=self.font_type
             )
             self.pos = (self.cl_text.rect.x, self.cl_text.rect.y)
-        self.pos = (self.pos[0] - self.speed / FPS, self.pos[1])
+        self.pos = (self.pos[0] - self.speed / max(FPS // 2, CLOCK.get_fps()), self.pos[1])
         if self.pos[0] < -self.cl_text.rect.width:
             self.pos = (0, self.pos[1])

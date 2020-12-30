@@ -1,5 +1,6 @@
 from typing import Union
 from os import walk
+import pygame as pg
 
 
 # Настройки окна
@@ -8,6 +9,7 @@ DISPLAY_SIZE = (WIN_WIDTH, WIN_HEIGHT)
 FULL_SCREEN = False
 MENU_TITLE = 'Название игры'
 FPS = 60
+CLOCK = pg.time.Clock()
 # Цвета
 COLOR_BACKGROUND = '#313335'
 COLOR_CELL = '#013a33'

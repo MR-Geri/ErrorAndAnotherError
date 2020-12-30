@@ -1,9 +1,10 @@
+from Code.settings import *
+
 import pygame as pg
 
 from Code.slider import Numbers
 from Code.sound import Music
 from Code.window import MenuWindow, SettingsWindow, GameWindow
-from Code.settings import *
 
 
 class Controller:

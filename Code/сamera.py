@@ -1,7 +1,7 @@
-from typing import Tuple
-
-import pygame as pg
 from Code.settings import *
+
+from typing import Tuple
+import pygame as pg
 
 
 class Camera:

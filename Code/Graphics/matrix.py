@@ -1,9 +1,8 @@
-from typing import Tuple
+from Code.settings import *
 
+from typing import Tuple
 import pygame as pg
 import numpy as np
-
-from Code.settings import *
 
 
 class Matrix:

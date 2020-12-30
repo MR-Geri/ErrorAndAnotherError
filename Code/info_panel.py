@@ -1,8 +1,9 @@
+from Code.settings import *
+
 from typing import Tuple
 import pygame as pg
 import datetime
 
-from Code.settings import *
 from Code.sound import Music
 from Code.texts import TextMaxSizeCenter
 
