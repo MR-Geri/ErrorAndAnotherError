@@ -41,12 +41,12 @@ class Music:
         pg.mixer.music.set_volume(self.volume)
 
     def play(self) -> None:
-        if self.running_line:
-            n = max([i for i, char in enumerate(self.path) if char == '/']) + 1
-            k = max([i for i, char in enumerate(self.path) if char == '.'])
-            self.running_line.set_text(self.path[n:k])
         if self.is_play is None:
             pg.mixer.music.play(-1)
+            if self.running_line:
+                n = max([i for i, char in enumerate(self.path) if char == '/']) + 1
+                k = max([i for i, char in enumerate(self.path) if char == '.'])
+                self.running_line.set_text(self.path[n:k])
         elif not self.is_play:
             pg.mixer.music.unpause()
         self.is_play = True

@@ -29,6 +29,6 @@ class RunningLineMaxSizeCenter:
 
     def set_text(self, text):
         self.text = TextMaxSizeCenter(
-            f'  {text}  ', width=None, height=self.height, font_color=self.font_color, font_type=self.font_type
+            f'  {text}', width=None, height=self.height, font_color=self.font_color, font_type=self.font_type
         )
         self.pos = (self.text.rect.x, self.text.rect.y)

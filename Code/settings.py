@@ -46,6 +46,5 @@ MAX_SIZE_SWAMP = (20, 20)
 MAX_QUANTITY_SWAMP = 5
 MIN_QUANTITY_SWAMP_CELL = 8
 # Музыка
-BACKGROUND_MUSIC = '../Data/Sounds/background_music/relax-piano-old.mp3'
 ALL_BACKGROUND_MUSIC = [[root + i for i in files] for root, _, files in walk('../Data/Sounds/background_music/')][0]
 #
