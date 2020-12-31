@@ -50,6 +50,7 @@ class LeftPanel(Panel):
         self.interface.move(0)
         self.buttons = Buttons()
         self.init_button()
+        self.interface.move(0)
         #
         self.update()
         self.render()
@@ -58,35 +59,36 @@ class LeftPanel(Panel):
         size = max_size_list_text(
             ['<', '>', '||', '►'], self.interface.width, self.interface.height, PT_MONO
         )
+        height = 2 * self.interface.height + self.interface.indent[1]
         button = Button(
-            pos=self.interface.pos, width=self.interface.width // 3, height=self.interface.height,
+            pos=self.interface.pos, width=self.interface.width // 3, height=height,
             func=self.music.previous, color_disabled=(30, 30, 30), color_active=(40, 40, 40),
             text=TextCenter(
-                text='<', width=self.interface.width // 3, height=self.interface.height, font_type=PT_MONO,
+                text='<', width=self.interface.width // 3, height=height, font_type=PT_MONO,
                 font_size=size
             )
         )
         self.buttons.add(button)
         self.interface.move(self.interface.width // 3, 0, is_indent=(False, False))
         button = ButtonTwoStates(
-            pos=self.interface.pos, width=self.interface.width // 3, height=self.interface.height,
+            pos=self.interface.pos, width=self.interface.width // 3, height=height,
             func=self.music.pause_and_play, color_disabled=(30, 30, 30), color_active=(40, 40, 40),
-            text=TextCenter(text='||', width=self.interface.width // 3, height=self.interface.height,
+            text=TextCenter(text='||', width=self.interface.width // 3, height=height,
                             font_type=PT_MONO, font_size=size),
             texts=('►', '||'), get_state=self.music.get_state
         )
         self.buttons.add(button)
         self.interface.move(self.interface.width // 3, 0, is_indent=(False, False))
         button = Button(
-            pos=self.interface.pos, width=self.interface.width // 3, height=self.interface.height,
+            pos=self.interface.pos, width=self.interface.width // 3, height=height,
             func=self.music.next, color_disabled=(30, 30, 30), color_active=(40, 40, 40),
             text=TextCenter(
-                text='>', width=self.interface.width // 3, height=self.interface.height, font_type=PT_MONO,
+                text='>', width=self.interface.width // 3, height=height, font_type=PT_MONO,
                 font_size=size
             )
         )
         self.buttons.add(button)
-        self.interface.move(- 2 * (self.interface.width // 3), is_indent=(False, True))
+        self.interface.move(- 2 * (self.interface.width // 3), is_indent=(False, False))
 
     def update(self) -> None:
         self.running_line.update(self.music.get_text())

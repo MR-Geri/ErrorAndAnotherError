@@ -1,3 +1,5 @@
+from Code.sector_objects.entities import Entities
+from Code.sector_objects.robots import Robot
 from Code.settings import *
 
 from typing import Tuple
@@ -15,7 +17,12 @@ class Sector:
         self.board = None
         # Инициализация
         self.gen_board()
-        self.update()
+        #
+        self.entities = Entities((self.number_x, self.number_y))
+        self.robot1 = Robot(pos=(1, 1), size_cell=self.size_cell)
+        self.entities.add(self.robot1)
+        #
+        self.render()
 
     def gen_board(self) -> None:
         """
@@ -31,11 +38,12 @@ class Sector:
             for y in range(self.number_y)
         ]
 
-    def update(self) -> None:
+    def render(self) -> None:
         self.surface.fill(pg.Color(COLOR_BACKGROUND))
         for cells in self.board:
             for cell in cells:
                 self.surface.blit(cell.image, cell.rect)
+        self.entities.render(self.surface)
 
     def scale(self, size_cell):
         self.size_cell = size_cell
@@ -44,4 +52,5 @@ class Sector:
         for cells in self.board:
             for cell in cells:
                 cell.render(size_cell)
-        self.update()
+        self.entities.scale(size_cell=size_cell)
+        self.render()

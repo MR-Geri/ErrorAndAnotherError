@@ -61,3 +61,8 @@ class Music:
 
     def get_state(self) -> int:
         return 1 if self.is_play else 0
+
+
+class Sound:
+    def __init__(self) -> None:
+        self.crashing = []
