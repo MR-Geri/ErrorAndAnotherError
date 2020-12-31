@@ -58,3 +58,6 @@ class Music:
             self.pause()
         else:
             self.play()
+
+    def get_state(self) -> int:
+        return 1 if self.is_play else 0

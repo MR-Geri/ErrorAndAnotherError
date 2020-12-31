@@ -1,8 +1,8 @@
+from Code.settings import *
+
 import random
 from collections import defaultdict
 from typing import Tuple
-
-from Code.settings import *
 
 
 class Biome:

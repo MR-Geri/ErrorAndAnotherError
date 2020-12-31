@@ -36,12 +36,16 @@ class Button:
         self.surface.fill(pg.Color(self.color))
         self.surface.blit(self.text.surface, self.text.rect)
 
+    def update_text(self) -> None:
+        pass
+
 
 class ButtonTwoStates(Button):
     def __init__(self, pos: Tuple[int, int], width: int, height: int, color_disabled: COLOR, color_active: COLOR,
-                 texts: Tuple[ALL_TEXT, ALL_TEXT],  func):
+                 text: ALL_TEXT, texts: Tuple[str, str], get_state, func):
         self.texts = texts
-        self.text = self.texts[0]
+        self.text = text
+        self.get_state = get_state
         super().__init__(pos=pos, width=width, height=height, color_disabled=color_disabled, color_active=color_active,
                          text=self.text, func=func)
 
@@ -52,7 +56,6 @@ class ButtonTwoStates(Button):
                 if event.type == pg.MOUSEBUTTONUP and event.button == 1 and self.flag_click:
                     self.flag_click = False
                     self.func()
-                    self.text = self.texts[(self.texts.index(self.text) + 1) % len(self.texts)]
                 if event.type == pg.MOUSEBUTTONDOWN and event.button == 1 and not self.flag_click:
                     self.flag_click = True
             else:
@@ -60,6 +63,10 @@ class ButtonTwoStates(Button):
             self.render()
         except AttributeError:
             pass
+
+    def update_text(self) -> None:
+        self.text.set_text(self.texts[self.get_state()])
+        self.render()
 
 
 class Buttons:
@@ -76,3 +83,7 @@ class Buttons:
     def render(self, display: pg.Surface) -> None:
         for button in self.buttons:
             display.blit(button.surface, button.rect)
+
+    def update_text(self) -> None:
+        for button in self.buttons:
+            button.update_text()

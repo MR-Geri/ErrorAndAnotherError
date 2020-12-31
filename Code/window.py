@@ -1,3 +1,4 @@
+from Code.interface_utils import Interface
 from Code.settings import *
 
 from typing import Tuple
@@ -62,77 +63,77 @@ class MenuWindow(Window):
     def __init__(self, controller: object, size_display: Tuple[int, int], caption: str) -> None:
         super(MenuWindow, self).__init__(controller, size_display, caption)
         self.background = Matrix((0, 0), WIN_WIDTH, WIN_HEIGHT, MENU_BACKGROUND)
-        self.background_update = 0
         #
-        self.interface_padding = (WIN_WIDTH // 100, WIN_HEIGHT // 100)
-        self.interface = pg.Rect(*self.interface_padding, WIN_WIDTH // 3, WIN_HEIGHT // 10)
+        self.interface = Interface(
+            pos=(WIN_WIDTH // 100, WIN_HEIGHT // 100), max_width=WIN_WIDTH, max_height=WIN_HEIGHT,
+            indent=(0, WIN_HEIGHT // 100), size=(WIN_WIDTH // 3, WIN_HEIGHT // 10)
+        )
         self.buttons = Buttons()
         self.init_button()
         #
         self.running_line = RunningLineMaxSizeCenter(
             text='тестовая строка', width=self.interface.width, height=self.interface.height,
-            pos=(self.interface_padding[0], self.interface.y), speed=30, font_type=PT_MONO
+            pos=self.interface.pos, speed=30, font_type=PT_MONO
         )
         self.music.play()
         #
 
     def init_button(self) -> None:
-        interface = self.interface
         width, height = self.interface.width, self.interface.height
         size = max_size_list_text(
             ['Новая игра', 'Загрузить игру', 'Настройки', 'Выйти'], width, height, PT_MONO
         )
         button = Button(
-            pos=(interface.x, interface.y), width=width, height=height, func=self.new_game,
+            pos=self.interface.pos, width=width, height=height, func=self.new_game,
             color_disabled=(30, 30, 30), color_active=(40, 40, 40),
             text=TextCenter(text='Новая игра', width=width, height=height, font_type=PT_MONO, font_size=size)
         )
         self.buttons.add(button)
-        interface.y += interface.height + self.interface_padding[1]
+        self.interface.move(0)
         button = Button(
-            pos=(interface.x, interface.y), width=width, height=height, func=self.load_game,
+            pos=self.interface.pos, width=width, height=height, func=self.load_game,
             color_disabled=(30, 30, 30), color_active=(40, 40, 40),
             text=TextCenter(text='Загрузить игру', width=width, height=height, font_type=PT_MONO, font_size=size)
         )
         self.buttons.add(button)
-        interface.y += interface.height + self.interface_padding[1]
+        self.interface.move(0)
         button = Button(
-            pos=(interface.x, interface.y), width=width, height=height, func=self.settings,
+            pos=self.interface.pos, width=width, height=height, func=self.settings,
             color_disabled=(30, 30, 30), color_active=(40, 40, 40),
             text=TextCenter(text='Настройки', width=width, height=height, font_type=PT_MONO, font_size=size)
         )
         self.buttons.add(button)
-        interface.y += interface.height + self.interface_padding[1]
+        self.interface.move(0)
         button = Button(
-            pos=(interface.x, interface.y), width=width, height=height, func=self.exit,
+            pos=self.interface.pos, width=width, height=height, func=self.exit,
             color_disabled=(30, 30, 30), color_active=(40, 40, 40),
             text=TextCenter(text='Выйти', width=width, height=height, font_type=PT_MONO, font_size=size)
         )
         self.buttons.add(button)
-        interface.y += interface.height + self.interface_padding[1]
+        self.interface.move(0)
         button = Button(
-            pos=(interface.x, interface.y), width=width // 3, height=height, func=self.music.previous,
+            pos=self.interface.pos, width=width // 3, height=height, func=self.music.previous,
             color_disabled=(30, 30, 30), color_active=(40, 40, 40),
             text=TextCenter(text='<', width=width // 3, height=height, font_type=PT_MONO, font_size=size)
         )
         self.buttons.add(button)
-        interface.x += interface.width // 3
+        self.interface.move(width // 3, 0, is_indent=(False, False))
         button = ButtonTwoStates(
-            pos=(interface.x, interface.y), width=width // 3, height=height, func=self.music.pause_and_play,
-            color_disabled=(30, 30, 30), color_active=(40, 40, 40),
-            texts=(TextCenter(text='||', width=width // 3, height=height, font_type=PT_MONO, font_size=size),
-                   TextCenter(text='►', width=width // 3, height=height, font_type=PT_MONO, font_size=size))
+            pos=self.interface.pos, width=self.interface.width // 3, height=self.interface.height,
+            func=self.music.pause_and_play, color_disabled=(30, 30, 30), color_active=(40, 40, 40),
+            text=TextCenter(text='||', width=self.interface.width // 3, height=self.interface.height,
+                            font_type=PT_MONO, font_size=size),
+            texts=('►', '||'), get_state=self.music.get_state
         )
         self.buttons.add(button)
-        interface.x += interface.width // 3
+        self.interface.move(width // 3, 0, is_indent=(False, False))
         button = Button(
-            pos=(interface.x, interface.y), width=width // 3, height=height, func=self.music.next,
+            pos=self.interface.pos, width=width // 3, height=height, func=self.music.next,
             color_disabled=(30, 30, 30), color_active=(40, 40, 40),
             text=TextCenter(text='>', width=width // 3, height=height, font_type=PT_MONO, font_size=size)
         )
         self.buttons.add(button)
-        interface.y += interface.height + self.interface_padding[0]
-        self.interface.y = interface.y
+        self.interface.move(- 2 * (width // 3), is_indent=(False, True))
 
     def new_game(self) -> None:
         print('Новая игра')
@@ -159,6 +160,7 @@ class MenuWindow(Window):
     def update(self) -> None:
         pg.display.set_caption(str(self.clock.get_fps()))  # нужно для отладки. FPS в заголовок окна!
         self.running_line.update(self.music.get_text())
+        self.buttons.update_text()
 
     def event(self) -> None:
         for en in pg.event.get():
@@ -210,7 +212,6 @@ class GameWindow(Window):
         self.sector = Sector(number_x=SECTOR_X_NUMBER, number_y=SECTOR_Y_NUMBER, size_cell=self.size_cell)
         self.left_panel = LeftPanel(INFO_PANEL_WIDTH, WIN_HEIGHT, pos=(0, 0), music=self.music)
         self.right_panel = RightPanel(INFO_PANEL_WIDTH, WIN_HEIGHT, pos=(WIN_WIDTH - INFO_PANEL_WIDTH, 0))
-        self.frame_update_right_panel = 0
         self.camera = Camera(
             SECTOR_X_NUMBER * self.size_cell,
             SECTOR_Y_NUMBER * self.size_cell,
@@ -249,8 +250,7 @@ class GameWindow(Window):
 
     def render(self) -> None:
         self.left_panel.render()
-        if not self.frame_update_right_panel:
-            self.right_panel.render()
+        self.right_panel.render()
         #
         self.display.blit(self.sector.surface, self.camera.get_cord())
         self.display.blit(self.left_panel.surface, self.left_panel.rect)
@@ -260,13 +260,13 @@ class GameWindow(Window):
         pg.display.set_caption(str(self.clock.get_fps()))  # нужно для отладки. FPS в заголовок окна!
         self.camera.move(self.camera_left, self.camera_right, self.camera_up, self.camera_down)
         # Обновление панели каждую секунду
-        self.frame_update_right_panel = (self.frame_update_right_panel + 1) % (FPS + 1)
-        if not self.frame_update_right_panel:
-            self.right_panel.update()
+        self.right_panel.update()
         self.left_panel.update()
 
     def event(self) -> None:
         for en in pg.event.get():
+            self.left_panel.event(en)
+            self.right_panel.event(en)
             if en.type == pg.QUIT:
                 pg.quit()
                 quit()

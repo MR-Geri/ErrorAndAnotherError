@@ -1,8 +1,9 @@
+from Code.settings import *
+
 from typing import Tuple
 import pygame as pg
 
 from Code.Map.biomes import GeneratorBiomes
-from Code.settings import *
 
 
 class Sector:

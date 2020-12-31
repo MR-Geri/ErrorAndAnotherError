@@ -5,8 +5,8 @@ import pygame as pg
 
 def print_text(display, text: str, pos: Tuple[int, int], font_color: Tuple[int, int, int] = (255, 0, 0),
                font_size: int = 20) -> None:
-    font_type = pg.font.Font(None, font_size)
-    text = font_type.render(text, True, font_color)
+    font = pg.font.Font(None, font_size)
+    text = font.render(text, True, font_color)
     text_rect = text.get_rect()
     text_rect.x, text_rect.y = pos
     display.blit(text, text_rect)
@@ -22,15 +22,32 @@ def max_size_list_text(texts: list, width: int, height: int, font_type: str = No
 class Text:
     def __init__(self, text: str, pos: Tuple[int, int] = (0, 0), font_color: Tuple[int, int, int] = (255, 255, 255),
                  font_type: str = None, font_size: int = 20) -> None:
-        self.font_type = pg.font.Font(font_type, font_size)
-        self.surface = self.font_type.render(text, True, font_color)
+        self.pos = tuple(pos)
+        self.font_color = font_color
+        self.font_type = font_type
+        self.font_size = font_size
+        #
+        self.font = pg.font.Font(font_type, font_size)
+        self.surface = self.font.render(text, True, font_color)
         self.rect = self.surface.get_rect()
-        self.rect.x, self.rect.y = pos
+        self.rect.x, self.rect.y = self.pos
+
+    def set_text(self, text: str) -> None:
+        self.__init__(text=text, pos=self.pos, font_color=self.font_color, font_type=self.font_type,
+                      font_size=self.font_size)
+
+    def render(self, surface: pg.Surface) -> None:
+        surface.blit(self.surface, self.rect)
 
 
 class TextMaxSize:
-    def __init__(self, text: str,  pos: Tuple[int, int] = (0, 0), width: int = None, height: int = None,
+    def __init__(self, text: str,  width: int = None, height: int = None, pos: Tuple[int, int] = (0, 0),
                  font_color: Tuple[int, int, int] = (255, 255, 255), font_type: str = None) -> None:
+        self.width = int(width) if width is not None else None
+        self.height = int(height) if height is not None else None
+        self.pos = tuple(pos)
+        self.font_color = font_color
+        self.font_type = font_type
         self.font_size = 1
         while True:
             self.surface = pg.font.Font(font_type, self.font_size).render(text, True, font_color)
@@ -42,6 +59,12 @@ class TextMaxSize:
                 self.rect.x, self.rect.y = pos
                 break
             self.font_size += 1
+
+    def set_text(self, text: str) -> None:
+        self.__init__(text, self.width, self.height, self.pos, self.font_color, self.font_type)
+
+    def render(self, surface: pg.Surface) -> None:
+        surface.blit(self.surface, self.rect)
 
 
 class TextMaxSizeCenter(TextMaxSize):
@@ -58,8 +81,14 @@ class TextCenter(Text):
     def __init__(self, text: str, width: int = None, height: int = None, pos: Tuple[int, int] = (0, 0),
                  font_color: Tuple[int, int, int] = (255, 255, 255),
                  font_type: str = None, font_size: int = 20) -> None:
+        self.width = width
+        self.height = height
         super().__init__(text=text, pos=pos, font_color=font_color, font_type=font_type, font_size=font_size)
         if width:
             self.rect.x += (width - self.rect.width) // 2
         if height:
             self.rect.y += (height - self.rect.height) // 2
+
+    def set_text(self, text: str) -> None:
+        self.__init__(text=text, width=self.width, height=self.height, pos=self.pos, font_color=self.font_color,
+                      font_type=self.font_type, font_size=self.font_size)
