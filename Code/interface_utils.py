@@ -32,3 +32,4 @@ class Interface:
         else:
             raise InterfaceError("Выход за границы окна.")
         #
+        self.x, self.y = self.pos
