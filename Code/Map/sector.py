@@ -19,8 +19,6 @@ class Sector:
         self.gen_board()
         #
         self.entities = Entities((self.number_x, self.number_y))
-        self.robot1 = Robot(pos=(1, 1), size_cell=self.size_cell)
-        self.entities.add(self.robot1)
         #
         self.render()
 

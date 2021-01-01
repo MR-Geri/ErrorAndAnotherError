@@ -11,6 +11,7 @@ from Code.Map.sector import Sector
 from Code.info_panel import LeftPanel, RightPanel
 from Code.texts import max_size_list_text, TextCenter
 from Code.slider import Slider, Sliders
+from Code.sector_objects.robots import Robot
 
 
 class Window:
@@ -64,19 +65,22 @@ class MenuWindow(Window):
         super(MenuWindow, self).__init__(controller, size_display, caption)
         width3 = int(round(WIN_WIDTH / 3, 0))
         self.interface = Interface(
-            pos=(WIN_WIDTH // 100, WIN_HEIGHT // 100), max_width=WIN_WIDTH, max_height=WIN_HEIGHT,
+            pos=(WIN_WIDTH // 100, WIN_HEIGHT // 6 + WIN_HEIGHT // 100), max_width=WIN_WIDTH, max_height=WIN_HEIGHT,
             indent=(0, WIN_HEIGHT // 100), size=(width3, WIN_HEIGHT // 10)
         )
-        pos = (width3 + self.interface.x, WIN_HEIGHT // 3 + self.interface.y)
         self.background = Matrix(
-            pos, 2 * width3 - self.interface.x, 2 * (WIN_HEIGHT // 3) - self.interface.y, MENU_BACKGROUND
+            (width3 + 2 * self.interface.x, self.interface.y),
+            2 * width3 - self.interface.x - 2 * self.interface.x,
+            2 * (WIN_HEIGHT // 3), MENU_BACKGROUND
         )
         #
         self.buttons = Buttons()
         self.init_button()
+        self.interface.move(0)
         #
         self.running_line = RunningLineMaxSizeCenter(
-            text='тестовая строка', width=self.interface.width, height=self.interface.height,
+            text='тестовая строка', width=self.interface.width,
+            height=self.background.rect.y + self.background.rect.height - self.interface.y,
             pos=self.interface.pos, speed=30, font_type=PT_MONO
         )
         self.music.play()
@@ -138,7 +142,7 @@ class MenuWindow(Window):
             text=TextCenter(text='>', width=width3, height=height, font_type=PT_MONO, font_size=size)
         )
         self.buttons.add(button)
-        self.interface.move(- width, is_indent=(False, True))
+        self.interface.move(- width + width3, 0, is_indent=(False, False))
 
     def new_game(self) -> None:
         print('Новая игра')
@@ -158,7 +162,7 @@ class MenuWindow(Window):
         quit()
 
     def render(self) -> None:
-        # self.background.render(self.display)  # матрица
+        self.background.render(self.display)  # матрица
         self.buttons.render(self.display)
         self.running_line.render(self.display)
 
@@ -268,6 +272,22 @@ class GameWindow(Window):
         self.right_panel.update()
         self.left_panel.update()
 
+    def read_file(self) -> None:
+        sector = self.sector
+        with open(PLAYER_CODE + 'main.py') as commands:
+            try:
+                r = commands.read().split('\n')
+                for t in r:
+                    try:
+                        eval(str(t))
+                    except SyntaxError:
+                        exec(str(t))
+                    except Exception as e:
+                        print(e)
+                self.sector.render()
+            except Exception as e:
+                print(e)
+
     def event(self) -> None:
         for en in pg.event.get():
             self.left_panel.event(en)
@@ -277,6 +297,8 @@ class GameWindow(Window):
                 quit()
             if en.type == pg.MOUSEBUTTONUP and en.button == 1:
                 self.click(pos=en.pos)
+            if en.type == pg.MOUSEBUTTONUP and en.button == 3:
+                self.read_file()
             if en.type == pg.KEYUP and en.key == pg.K_ESCAPE:
                 self.controller.action_window('menu')
             #

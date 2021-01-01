@@ -27,11 +27,16 @@ SECTOR_Y_NUMBER = 50  # Размер сектора
 SECTOR_X_NUMBER = 50  # Размер сектора
 #
 INFO_PANEL_WIDTH = WIN_WIDTH // 5
-# Font
+# Path
 PT_MONO = '../Data/Font/PT Mono.ttf'
 MS_MINCHO = '../Data/Font/MS Mincho.ttf'
-# Path
+
 MENU_BACKGROUND = '../Data/Images/game.jpg'
+
+PATH_CRASHES = '../Data/Sounds/crashes/'
+ALL_BACKGROUND_MUSIC = [[root + i for i in files] for root, _, files in walk('../Data/Sounds/background_music/')][0]
+
+PLAYER_CODE = '../Game_code/'
 # Биомы
 MAX_SIZE_MOUNTAIN = (10, 10)
 MAX_QUANTITY_MOUNTAIN = 3
@@ -39,9 +44,6 @@ MIN_QUANTITY_MOUNTAIN_CELL = 4
 MAX_SIZE_SWAMP = (20, 20)
 MAX_QUANTITY_SWAMP = 5
 MIN_QUANTITY_SWAMP_CELL = 8
-# Музыка
-ALL_BACKGROUND_MUSIC = [[root + i for i in files] for root, _, files in walk('../Data/Sounds/background_music/')][0]
-PATH_CRASHES = '../Data/Sounds/crashes/'
 # Типизация
 from Code.running_line import RunningLineMaxSizeCenter
 from Code.Map.cell import Plain, Swamp, Mountain
