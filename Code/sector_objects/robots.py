@@ -1,5 +1,6 @@
-from typing import Tuple
+from Code.settings import *
 
+from typing import Tuple
 import pygame as pg
 
 
@@ -12,6 +13,8 @@ class Robot:
         self.energy = 0
         self.dmg = 0
         self.hp = 100
+        #
+        self.crash = pg.mixer.Sound(PATH_CRASHES + 'robot.wav')
         #
         self.rect = pg.Rect(*self.pos, self.size_cell, self.size_cell)
         self.surface = pg.Surface((self.size_cell, self.size_cell), pg.SRCALPHA)

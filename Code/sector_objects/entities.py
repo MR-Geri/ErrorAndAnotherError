@@ -1,7 +1,6 @@
-from typing import Tuple
-
 from Code.settings import *
 
+from typing import Tuple
 import pygame as pg
 
 
@@ -12,6 +11,8 @@ class Entities:
 
     def add(self, entity) -> None:
         x, y = entity.pos
+        if self.entities_sector[y][x]:
+            self.entities_sector[y][x].crash.play()
         self.entities_sector[y][x] = entity
 
     def render(self, surface: pg.Surface) -> None:

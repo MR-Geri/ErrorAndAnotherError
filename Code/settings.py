@@ -41,6 +41,7 @@ MAX_QUANTITY_SWAMP = 5
 MIN_QUANTITY_SWAMP_CELL = 8
 # Музыка
 ALL_BACKGROUND_MUSIC = [[root + i for i in files] for root, _, files in walk('../Data/Sounds/background_music/')][0]
+PATH_CRASHES = '../Data/Sounds/crashes/'
 # Типизация
 from Code.running_line import RunningLineMaxSizeCenter
 from Code.Map.cell import Plain, Swamp, Mountain
