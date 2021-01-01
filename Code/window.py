@@ -62,12 +62,16 @@ class Window:
 class MenuWindow(Window):
     def __init__(self, controller: object, size_display: Tuple[int, int], caption: str) -> None:
         super(MenuWindow, self).__init__(controller, size_display, caption)
-        self.background = Matrix((0, 0), WIN_WIDTH, WIN_HEIGHT, MENU_BACKGROUND)
-        #
+        width3 = int(round(WIN_WIDTH / 3, 0))
         self.interface = Interface(
             pos=(WIN_WIDTH // 100, WIN_HEIGHT // 100), max_width=WIN_WIDTH, max_height=WIN_HEIGHT,
-            indent=(0, WIN_HEIGHT // 100), size=(WIN_WIDTH // 3, WIN_HEIGHT // 10)
+            indent=(0, WIN_HEIGHT // 100), size=(width3, WIN_HEIGHT // 10)
         )
+        pos = (width3 + self.interface.x, WIN_HEIGHT // 3 + self.interface.y)
+        self.background = Matrix(
+            pos, 2 * width3 - self.interface.x, 2 * (WIN_HEIGHT // 3) - self.interface.y, MENU_BACKGROUND
+        )
+        #
         self.buttons = Buttons()
         self.init_button()
         #
@@ -80,6 +84,7 @@ class MenuWindow(Window):
 
     def init_button(self) -> None:
         width, height = self.interface.width, self.interface.height
+        width3 = int(round(width / 3, 0))
         size = max_size_list_text(
             ['Новая игра', 'Загрузить игру', 'Настройки', 'Выйти'], width, height, PT_MONO
         )
@@ -112,28 +117,28 @@ class MenuWindow(Window):
         self.buttons.add(button)
         self.interface.move(0)
         button = Button(
-            pos=self.interface.pos, width=width // 3, height=height, func=self.music.previous,
+            pos=self.interface.pos, width=width3, height=height, func=self.music.previous,
             color_disabled=(30, 30, 30), color_active=(40, 40, 40),
-            text=TextCenter(text='<', width=width // 3, height=height, font_type=PT_MONO, font_size=size)
+            text=TextCenter(text='<', width=width3, height=height, font_type=PT_MONO, font_size=size)
         )
         self.buttons.add(button)
-        self.interface.move(width // 3, 0, is_indent=(False, False))
+        self.interface.move(button.rect.width, 0, is_indent=(False, False))
         button = ButtonTwoStates(
-            pos=self.interface.pos, width=self.interface.width // 3, height=self.interface.height,
+            pos=self.interface.pos, width=width - 2 * width3, height=self.interface.height,
             func=self.music.pause_and_play, color_disabled=(30, 30, 30), color_active=(40, 40, 40),
-            text=TextCenter(text='||', width=self.interface.width // 3, height=self.interface.height,
+            text=TextCenter(text='||', width=width - 2 * width3, height=self.interface.height,
                             font_type=PT_MONO, font_size=size),
             texts=('►', '||'), get_state=self.music.get_state
         )
         self.buttons.add(button)
-        self.interface.move(width // 3, 0, is_indent=(False, False))
+        self.interface.move(button.rect.width, 0, is_indent=(False, False))
         button = Button(
-            pos=self.interface.pos, width=width // 3, height=height, func=self.music.next,
+            pos=self.interface.pos, width=width3, height=height, func=self.music.next,
             color_disabled=(30, 30, 30), color_active=(40, 40, 40),
-            text=TextCenter(text='>', width=width // 3, height=height, font_type=PT_MONO, font_size=size)
+            text=TextCenter(text='>', width=width3, height=height, font_type=PT_MONO, font_size=size)
         )
         self.buttons.add(button)
-        self.interface.move(- 2 * (width // 3), is_indent=(False, True))
+        self.interface.move(- width, is_indent=(False, True))
 
     def new_game(self) -> None:
         print('Новая игра')
@@ -153,7 +158,7 @@ class MenuWindow(Window):
         quit()
 
     def render(self) -> None:
-        self.background.render(self.display)  # матрица
+        # self.background.render(self.display)  # матрица
         self.buttons.render(self.display)
         self.running_line.render(self.display)
 
