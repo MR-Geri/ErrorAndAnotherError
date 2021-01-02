@@ -25,21 +25,40 @@ class LineInput:
         self.render()
 
     def event(self, event: pg.event.Event) -> None:
+        """
+        Я сам не знаю, что тут происходит.
+        Если эта дичь не работает. ГОСПАДЕ перепиши сам по братски.
+        СЯБ!
+        """
         if event.type == pg.KEYDOWN and self.flag:
             if event.key == pg.K_RETURN:
                 self.flag = False
                 self.tick = 0
             elif event.key == pg.K_BACKSPACE:
-                self.text.set_text(self.text.text[:-1])
+                cur = int((-self.pos[0] / self.char) + self.pos_cursor[0])
+                text = [self.text.text[:cur - 1], self.text.text[cur:]]
+                self.text.set_text(text[0] + text[1])
+                if self.pos_cursor[0] == 0 and self.pos[0] < 0:
+                    self.pos[0] += self.char
+                self.pos_cursor[0] = max(self.pos_cursor[0] - 1, 0)
             elif event.key == pg.K_LEFT:
+                if self.pos_cursor[0] == 0 and self.pos[0] < 0:
+                    self.pos[0] += self.char
                 self.pos_cursor[0] = max(self.pos_cursor[0] - 1, 0)
             elif event.key == pg.K_RIGHT:
+                if self.pos_cursor[0] >= int(self.rect.width / self.char) and -self.pos[0] <= self.text.rect.width - \
+                        self.rect.width:
+                    self.pos[0] -= self.char
+                self.pos_cursor[0] = min(
+                    self.pos_cursor[0] + 1, int(self.text.rect.width / self.char), int(self.rect.width / self.char))
+            elif event.unicode:
+                cur = int((-self.pos[0] / self.char) + self.pos_cursor[0])
+                text = [self.text.text[:cur], self.text.text[cur:]]
+                self.text.set_text(text[0] + event.unicode + text[1])
                 self.pos_cursor[0] = min(self.pos_cursor[0] + 1, int(self.rect.width / self.char))
-            else:
-                self.text.set_text(self.text.text + event.unicode)
-                self.pos_cursor[0] = min(self.pos_cursor[0] + 1, int(self.rect.width / self.char))
-            if self.text.rect.width >= self.rect.width:
-                self.pos[0] = self.rect.width - self.text.rect.width
+                if self.pos_cursor[0] >= int(self.rect.width / self.char) and -self.pos[0] <= self.text.rect.width - \
+                        self.rect.width:
+                    self.pos[0] -= self.char
             self.render()
         try:
             if self.rect.collidepoint(*event.pos) and event.type == pg.MOUSEBUTTONUP and event.button == 1:
@@ -60,7 +79,6 @@ class LineInput:
         self.tick = (self.tick + 1) % (2 * FPS + 1)
         display.blit(self.surface, self.rect)
         if self.flag and self.tick <= FPS:
-            print(self.text.width // self.char - self.pos_cursor[0])
             pg.draw.rect(
                 display, pg.Color(self.font_color),
                 (
