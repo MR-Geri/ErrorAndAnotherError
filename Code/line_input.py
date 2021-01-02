@@ -32,11 +32,12 @@ class LineInput:
             elif event.key == pg.K_BACKSPACE:
                 self.text.set_text(self.text.text[:-1])
             elif event.key == pg.K_LEFT:
-                self.pos_cursor[0] -= 1
+                self.pos_cursor[0] = max(self.pos_cursor[0] - 1, 0)
             elif event.key == pg.K_RIGHT:
-                self.pos_cursor[0] += 1
+                self.pos_cursor[0] = min(self.pos_cursor[0] + 1, int(self.rect.width / self.char))
             else:
                 self.text.set_text(self.text.text + event.unicode)
+                self.pos_cursor[0] = min(self.pos_cursor[0] + 1, int(self.rect.width / self.char))
             if self.text.rect.width >= self.rect.width:
                 self.pos[0] = self.rect.width - self.text.rect.width
             self.render()
@@ -59,12 +60,11 @@ class LineInput:
         self.tick = (self.tick + 1) % (2 * FPS + 1)
         display.blit(self.surface, self.rect)
         if self.flag and self.tick <= FPS:
-            max_width = self.rect.x + self.rect.width - int(round(self.text.rect.height / 10, 0))
-            width = self.rect.x + self.text.rect.width
+            print(self.text.width // self.char - self.pos_cursor[0])
             pg.draw.rect(
                 display, pg.Color(self.font_color),
                 (
-                    min(width + (self.pos_cursor[0] * self.char), max_width + (self.pos_cursor[0] * self.char)),
+                    self.rect.x + self.pos_cursor[0] * self.char + int(round(self.text.rect.height / 10, 0)),
                     self.rect.y + self.text.rect.y,
                     int(round(self.text.rect.height / 10, 0)), self.rect.height
                 )
