@@ -50,7 +50,7 @@ class Slider:
                     )
                     self.slider.set_value(value)
                     # print(self.slider.value)
-                    self.func.event(self.slider.value)
+                    self.func.update(self.slider.value)
                 if event.type == pg.MOUSEBUTTONDOWN and event.button == 1 and not self.flag_click:
                     self.flag_click = True
             else:
