@@ -1,4 +1,5 @@
 from Code.interface_utils import Interface
+from Code.line_input import LineInput
 from Code.settings import *
 
 from typing import Tuple
@@ -162,9 +163,9 @@ class MenuWindow(Window):
         quit()
 
     def render(self) -> None:
-        self.background.render(self.display)  # матрица
-        self.buttons.render(self.display)
-        self.running_line.render(self.display)
+        self.background.draw(self.display)  # матрица
+        self.buttons.draw(self.display)
+        self.running_line.draw(self.display)
 
     def update(self) -> None:
         pg.display.set_caption(str(self.clock.get_fps()))  # нужно для отладки. FPS в заголовок окна!
@@ -183,10 +184,11 @@ class SettingsWindow(Window):
     def __init__(self, controller: object, size_display: Tuple[int, int], caption: str) -> None:
         super().__init__(controller, size_display, caption)
         self.sliders = Sliders()
-        self.init_slider()
+        self.init_sliders()
+        self.input = LineInput(pos=(100, 140), width=500, height=30, font_type=PT_MONO)
         #
 
-    def init_slider(self) -> None:
+    def init_sliders(self) -> None:
         volume_slider = Slider(
             pos=(100, 100), width=500, height=30,
             color_no_use=COLOR_SLIDER_NO_USE,
@@ -201,11 +203,13 @@ class SettingsWindow(Window):
         pg.display.set_caption(str(self.clock.get_fps()))  # нужно для отладки. FPS в заголовок окна!
 
     def render(self) -> None:
-        self.sliders.render(self.display)
+        self.sliders.draw(self.display)
+        self.input.draw(self.display)
 
     def event(self) -> None:
         for en in pg.event.get():
             self.sliders.update(en)
+            self.input.update(en)
             if en.type == pg.QUIT:
                 pg.quit()
                 quit()

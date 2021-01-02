@@ -34,11 +34,11 @@ class Matrix:
             prerendered_chars.update(prerendered_char)
         return prerendered_chars
 
-    def render(self, display: pg.Surface):
+    def draw(self, display: pg.Surface):
         frames = pg.time.get_ticks()
         self.change_chars(frames)
         self.shift_column(frames)
-        self.draw()
+        self.render()
         display.blit(self.surface, self.rect)
 
     def shift_column(self, frames):
@@ -52,7 +52,7 @@ class Matrix:
         new_chars = np.random.choice(self.katakana, mask.shape[0])
         self.matrix[mask[:, 0], mask[:, 1]] = new_chars
 
-    def draw(self):
+    def render(self):
         self.surface.fill(pg.Color('black'))
         for y, row in enumerate(self.matrix):
             for x, char in enumerate(row):

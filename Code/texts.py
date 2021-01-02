@@ -36,7 +36,7 @@ class Text:
         self.__init__(text=text, pos=self.pos, font_color=self.font_color, font_type=self.font_type,
                       font_size=self.font_size)
 
-    def render(self, surface: pg.Surface) -> None:
+    def draw(self, surface: pg.Surface) -> None:
         surface.blit(self.surface, self.rect)
 
 
@@ -63,7 +63,7 @@ class TextMaxSize:
     def set_text(self, text: str) -> None:
         self.__init__(text, self.width, self.height, self.pos, self.font_color, self.font_type)
 
-    def render(self, surface: pg.Surface) -> None:
+    def draw(self, surface: pg.Surface) -> None:
         surface.blit(self.surface, self.rect)
 
 

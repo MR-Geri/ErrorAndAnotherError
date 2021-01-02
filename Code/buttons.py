@@ -36,6 +36,9 @@ class Button:
         self.surface.fill(pg.Color(self.color))
         self.surface.blit(self.text.surface, self.text.rect)
 
+    def draw(self, surface: pg.Surface) -> None:
+        surface.blit(self.surface, self.rect)
+
     def update_text(self) -> None:
         pass
 
@@ -80,9 +83,9 @@ class Buttons:
         for button in self.buttons:
             button.update(event)
 
-    def render(self, display: pg.Surface) -> None:
+    def draw(self, surface: pg.Surface) -> None:
         for button in self.buttons:
-            display.blit(button.surface, button.rect)
+            button.draw(surface)
 
     def update_text(self) -> None:
         for button in self.buttons:

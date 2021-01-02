@@ -15,12 +15,12 @@ class Entities:
             self.entities_sector[y][x].crash.play()
         self.entities_sector[y][x] = entity
 
-    def render(self, surface: pg.Surface) -> None:
+    def draw(self, surface: pg.Surface) -> None:
         for y in self.entities_sector:
             for x in self.entities_sector[y]:
                 entity = self.entities_sector[y][x]
                 if entity is not None:
-                    surface.blit(entity.surface, entity.pos_draw)
+                    entity.draw(surface)
 
     def scale(self, size_cell: int) -> None:
         for y in self.entities_sector:

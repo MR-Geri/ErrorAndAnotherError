@@ -99,9 +99,9 @@ class LeftPanel(Panel):
         self.surface = pg.Surface((self.rect.width, self.rect.height))
         self.surface.fill(self.color_background)
         #
-        self.running_line.render(self.surface)
-        self.system_time.render(self.surface)
-        self.buttons.render(self.surface)
+        self.running_line.draw(self.surface)
+        self.system_time.draw(self.surface)
+        self.buttons.draw(self.surface)
 
     def event(self, event: pg.event.Event) -> None:
         self.buttons.update(event)

@@ -78,6 +78,9 @@ class Slider:
             (self.radius_main + w_value, self.padding + self.radius_mini), self.radius_main
         )
 
+    def draw(self, surface: pg.Surface) -> None:
+        surface.blit(self.surface, self.rect)
+
 
 class Sliders:
     def __init__(self) -> None:
@@ -90,6 +93,6 @@ class Sliders:
         for slider in self.sliders:
             slider.update(event)
 
-    def render(self, display: pg.Surface) -> None:
+    def draw(self, surface: pg.Surface) -> None:
         for slider in self.sliders:
-            display.blit(slider.surface, slider.rect)
+            slider.draw(surface)
