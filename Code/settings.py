@@ -1,4 +1,4 @@
-from typing import Union
+from typing import Union, Tuple
 from os import walk
 import pygame as pg
 
@@ -45,11 +45,11 @@ MAX_SIZE_SWAMP = (20, 20)
 MAX_QUANTITY_SWAMP = 5
 MIN_QUANTITY_SWAMP_CELL = 8
 # Типизация
+COLOR = Union[Tuple[int, int, int], str]
 from Code.running_line import RunningLineMaxSizeCenter
 from Code.Map.cell import Plain, Swamp, Mountain
 from Code.texts import Text, TextMaxSize, TextMaxSizeCenter, TextCenter
 ALL_TEXT = Union[Text, TextMaxSize, TextMaxSizeCenter, TextCenter]
 ALL_RUNNING_LINE = Union[RunningLineMaxSizeCenter]
 ALL_CELL = Union[Plain, Swamp, Mountain]
-COLOR = Union[tuple, str]
 #

@@ -39,7 +39,7 @@ class Slider:
         self.flag_click = False
         self.render()
 
-    def update(self, event: pg.event.Event) -> None:
+    def event(self, event: pg.event.Event) -> None:
         try:
             if self.rect.collidepoint(*event.pos):
                 if event.type == pg.MOUSEBUTTONUP and event.button == 1:
@@ -50,7 +50,7 @@ class Slider:
                     )
                     self.slider.set_value(value)
                     # print(self.slider.value)
-                    self.func.update(self.slider.value)
+                    self.func.event(self.slider.value)
                 if event.type == pg.MOUSEBUTTONDOWN and event.button == 1 and not self.flag_click:
                     self.flag_click = True
             else:
@@ -89,9 +89,9 @@ class Sliders:
     def add(self, button: Slider) -> None:
         self.sliders.append(button)
 
-    def update(self, event: pg.event.Event) -> None:
+    def event(self, event: pg.event.Event) -> None:
         for slider in self.sliders:
-            slider.update(event)
+            slider.event(event)
 
     def draw(self, surface: pg.Surface) -> None:
         for slider in self.sliders:

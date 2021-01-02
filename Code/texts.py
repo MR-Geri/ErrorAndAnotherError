@@ -22,6 +22,7 @@ def max_size_list_text(texts: list, width: int, height: int, font_type: str = No
 class Text:
     def __init__(self, text: str, pos: Tuple[int, int] = (0, 0), font_color: Tuple[int, int, int] = (255, 255, 255),
                  font_type: str = None, font_size: int = 20) -> None:
+        self.text = text
         self.pos = tuple(pos)
         self.font_color = font_color
         self.font_type = font_type
@@ -33,6 +34,7 @@ class Text:
         self.rect.x, self.rect.y = self.pos
 
     def set_text(self, text: str) -> None:
+        self.text = text
         self.__init__(text=text, pos=self.pos, font_color=self.font_color, font_type=self.font_type,
                       font_size=self.font_size)
 
@@ -45,6 +47,7 @@ class TextMaxSize:
                  font_color: Tuple[int, int, int] = (255, 255, 255), font_type: str = None) -> None:
         self.width = int(width) if width is not None else None
         self.height = int(height) if height is not None else None
+        self.text = text
         self.pos = tuple(pos)
         self.font_color = font_color
         self.font_type = font_type
@@ -61,6 +64,7 @@ class TextMaxSize:
             self.font_size += 1
 
     def set_text(self, text: str) -> None:
+        self.text = text
         self.__init__(text, self.width, self.height, self.pos, self.font_color, self.font_type)
 
     def draw(self, surface: pg.Surface) -> None:

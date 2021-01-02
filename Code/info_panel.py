@@ -104,7 +104,7 @@ class LeftPanel(Panel):
         self.buttons.draw(self.surface)
 
     def event(self, event: pg.event.Event) -> None:
-        self.buttons.update(event)
+        self.buttons.event(event)
 
 
 class RightPanel(Panel):

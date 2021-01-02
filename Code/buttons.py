@@ -16,7 +16,7 @@ class Button:
         self.flag_click = False
         self.render()
 
-    def update(self, event: pg.event.Event) -> None:
+    def event(self, event: pg.event.Event) -> None:
         try:
             if self.rect.collidepoint(*event.pos):
                 self.color = self.color_active
@@ -52,7 +52,7 @@ class ButtonTwoStates(Button):
         super().__init__(pos=pos, width=width, height=height, color_disabled=color_disabled, color_active=color_active,
                          text=self.text, func=func)
 
-    def update(self, event: pg.event.Event) -> None:
+    def event(self, event: pg.event.Event) -> None:
         try:
             if self.rect.collidepoint(*event.pos):
                 self.color = self.color_active
@@ -79,9 +79,9 @@ class Buttons:
     def add(self, button: Button) -> None:
         self.buttons.append(button)
 
-    def update(self, event: pg.event.Event) -> None:
+    def event(self, event: pg.event.Event) -> None:
         for button in self.buttons:
-            button.update(event)
+            button.event(event)
 
     def draw(self, surface: pg.Surface) -> None:
         for button in self.buttons:

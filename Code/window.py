@@ -174,7 +174,7 @@ class MenuWindow(Window):
 
     def event(self) -> None:
         for en in pg.event.get():
-            self.buttons.update(en)
+            self.buttons.event(en)
             if en.type == pg.QUIT:
                 pg.quit()
                 quit()
@@ -185,7 +185,7 @@ class SettingsWindow(Window):
         super().__init__(controller, size_display, caption)
         self.sliders = Sliders()
         self.init_sliders()
-        self.input = LineInput(pos=(100, 140), width=500, height=30, font_type=PT_MONO)
+        self.input = LineInput(pos=(100, 140), width=500, height=30, font_type=PT_MONO, background_color='#000000')
         #
 
     def init_sliders(self) -> None:
@@ -208,8 +208,8 @@ class SettingsWindow(Window):
 
     def event(self) -> None:
         for en in pg.event.get():
-            self.sliders.update(en)
-            self.input.update(en)
+            self.sliders.event(en)
+            self.input.event(en)
             if en.type == pg.QUIT:
                 pg.quit()
                 quit()

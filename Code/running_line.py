@@ -1,13 +1,14 @@
+from Code.settings import CLOCK, FPS, COLOR
+
 from typing import Tuple
 import pygame as pg
 
-from Code.settings import CLOCK, FPS
 from Code.texts import TextMaxSizeCenter
 
 
 class RunningLineMaxSizeCenter:
     def __init__(self, text: str, width: int, height: int, pos: Tuple[int, int], speed: int,
-                 font_color: Tuple[int, int, int] = (255, 255, 255), font_type: str = None) -> None:
+                 font_color: COLOR = (255, 255, 255), font_type: str = None) -> None:
         self.text = text
         self.cl_text = TextMaxSizeCenter(
             f'  {self.text}  ', width=None, height=height, font_color=font_color, font_type=font_type
