@@ -6,6 +6,7 @@ from typing import Tuple
 import pygame as pg
 
 from Code.Graphics.matrix import Matrix
+from Code.sound import Sound
 from Code.сamera import Camera
 from Code.buttons import Button, Buttons, ButtonTwoStates
 from Code.Map.sector import Sector
@@ -222,7 +223,9 @@ class GameWindow(Window):
         super().__init__(controller, size_display, caption)
         self.size_cell = CELL_SIZE
         # sector нужно ЗАГРУЖАТЬ если это НЕ НОВАЯ игра
-        self.sector = Sector(number_x=SECTOR_X_NUMBER, number_y=SECTOR_Y_NUMBER, size_cell=self.size_cell)
+        self.sound = Sound()
+        self.sector = Sector(number_x=SECTOR_X_NUMBER, number_y=SECTOR_Y_NUMBER,
+                             size_cell=self.size_cell, sound=self.sound)
         self.left_panel = LeftPanel(INFO_PANEL_WIDTH, WIN_HEIGHT, pos=(0, 0), music=self.music)
         self.right_panel = RightPanel(INFO_PANEL_WIDTH, WIN_HEIGHT, pos=(WIN_WIDTH - INFO_PANEL_WIDTH, 0))
         self.camera = Camera(
@@ -272,6 +275,8 @@ class GameWindow(Window):
     def update(self) -> None:
         pg.display.set_caption(str(self.clock.get_fps()))  # нужно для отладки. FPS в заголовок окна!
         self.camera.move(self.camera_left, self.camera_right, self.camera_up, self.camera_down)
+        #
+        self.sound.play()
         # Обновление панели каждую секунду
         self.right_panel.update()
         self.left_panel.update()

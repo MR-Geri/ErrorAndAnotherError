@@ -14,9 +14,9 @@ class Robot:
         self.dmg = 0
         self.hp = 100
         #
-        self.crash = pg.mixer.Sound(PATH_CRASHES + 'robot.wav')
+        self.crash = PATH_CRASHES + 'robot.wav'
         #
-        self.rect = pg.Rect(*self.pos, self.size_cell, self.size_cell)
+        self.rect = pg.Rect(*self.pos_draw, self.size_cell, self.size_cell)
         self.surface = pg.Surface((self.size_cell, self.size_cell), pg.SRCALPHA)
         #
         self.render()

@@ -25,6 +25,9 @@ class Cell(pg.sprite.Sprite):
         #     (0.25 * self.size_cell, 0.25 * self.size_cell, 0.5 * self.size_cell, 0.5 * self.size_cell)
         # )
 
+    def draw(self, surface: pg.Surface) -> None:
+        surface.blit(self.image, self.rect)
+
 
 class Plain(Cell):
     def __init__(self, number_x: int, number_y: int, size_cell: int):

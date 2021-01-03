@@ -1,15 +1,15 @@
-from Code.sector_objects.entities import Entities
-from Code.sector_objects.robots import Robot
+from Code.sector_objects.entities import Robots
 from Code.settings import *
 
 from typing import Tuple
 import pygame as pg
 
 from Code.Map.biomes import GeneratorBiomes
+from Code.sound import Sound
 
 
 class Sector:
-    def __init__(self, number_x: int, number_y: int, size_cell: int) -> None:
+    def __init__(self, number_x: int, number_y: int, size_cell: int, sound: Sound) -> None:
         self.number_x, self.number_y = number_x, number_y  # Длина и высота сектора в единицах
         self.size_cell = size_cell
         self.size_sector = (number_x * size_cell, number_y * size_cell)
@@ -18,7 +18,7 @@ class Sector:
         # Инициализация
         self.gen_board()
         #
-        self.entities = Entities((self.number_x, self.number_y))
+        self.entities = Robots((self.number_x, self.number_y), sound)
         #
         self.render()
 
@@ -49,6 +49,6 @@ class Sector:
         self.surface = pg.Surface(self.size_sector)
         for cells in self.board:
             for cell in cells:
-                cell.draw(size_cell)
+                cell.render(size_cell)
         self.entities.scale(size_cell=size_cell)
         self.render()

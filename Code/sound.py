@@ -65,4 +65,12 @@ class Music:
 
 class Sound:
     def __init__(self) -> None:
-        self.crashing = []
+        self.paths_sounds = set()
+
+    def play(self) -> None:
+        for path in self.paths_sounds:
+            pg.mixer.Sound(path).play()
+        self.paths_sounds = set()
+
+    def add(self, sound) -> None:
+        self.paths_sounds.add(sound)
