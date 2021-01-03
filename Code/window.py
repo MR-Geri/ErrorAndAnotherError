@@ -1,3 +1,4 @@
+from Code.escape_menu import EscMenu
 from Code.interface_utils import Interface
 from Code.line_input import LineInput
 from Code.settings import *
@@ -234,6 +235,7 @@ class GameWindow(Window):
             INFO_PANEL_WIDTH,
             INFO_PANEL_WIDTH
         )
+        self.esc_menu = EscMenu(pos=(WIN_WIDTH // 4, WIN_HEIGHT // 4), width=WIN_WIDTH // 2, height=WIN_HEIGHT // 2)
         #
         self.camera_left, self.camera_right, self.camera_up, self.camera_down = False, False, False, False
         self.l_ctrl = False
@@ -268,9 +270,9 @@ class GameWindow(Window):
         self.left_panel.render()
         self.right_panel.render()
         #
-        self.display.blit(self.sector.surface, self.camera.get_cord())
-        self.display.blit(self.left_panel.surface, self.left_panel.rect)
-        self.display.blit(self.right_panel.surface, self.right_panel.rect)
+        self.sector.draw(self.display, self.camera.get_cord())
+        self.left_panel.draw(self.display)
+        self.right_panel.draw(self.display)
 
     def update(self) -> None:
         pg.display.set_caption(str(self.clock.get_fps()))  # нужно для отладки. FPS в заголовок окна!

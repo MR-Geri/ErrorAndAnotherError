@@ -26,6 +26,9 @@ class Panel:
     def render(self) -> None:
         pass
 
+    def draw(self, surface: pg.Surface) -> None:
+        surface.blit(self.surface, self.rect)
+
     def update(self) -> None:
         pass
 

@@ -52,3 +52,6 @@ class Sector:
                 cell.render(size_cell)
         self.entities.scale(size_cell=size_cell)
         self.render()
+
+    def draw(self, surface: pg.Surface, pos: Tuple[int, int]) -> None:
+        surface.blit(self.surface, pos)
