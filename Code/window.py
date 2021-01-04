@@ -21,6 +21,7 @@ class Window:
     def __init__(self, controller: object, size_display: Tuple[int, int], caption: str) -> None:
         self.caption = caption
         self.is_run = False
+        self.last_window = None
         self.controller = controller
         self.volume = self.controller.volume
         self.music = self.controller.music
@@ -41,20 +42,21 @@ class Window:
                 pg.quit()
                 quit()
 
-    def render(self) -> None:
+    def draw(self) -> None:
         pass
 
     def update(self) -> None:
         pass
 
-    def run(self) -> None:
+    def run(self, last: str = None) -> None:
+        self.last_window = last
         pg.event.clear()
         self.is_run = True
         while self.is_run:
             self.clock.tick(FPS)
             self.display.blit(self.bd, (0, 0))
             self.event()
-            self.render()
+            self.draw()
             self.update()
             #
             pg.display.update()
@@ -92,37 +94,19 @@ class MenuWindow(Window):
     def init_button(self) -> None:
         width, height = self.interface.width, self.interface.height
         width3 = int(round(width / 3, 0))
+        data = [('Новая игра', self.new_game), ('Загрузить игру', self.load_game), ('Настройки', self.settings),
+                ('Выйти', self.exit)]
         size = max_size_list_text(
             ['Новая игра', 'Загрузить игру', 'Настройки', 'Выйти'], width, height, PT_MONO
         )
-        button = Button(
-            pos=self.interface.pos, width=width, height=height, func=self.new_game,
-            color_disabled=(30, 30, 30), color_active=(40, 40, 40),
-            text=TextCenter(text='Новая игра', width=width, height=height, font_type=PT_MONO, font_size=size)
-        )
-        self.buttons.add(button)
-        self.interface.move(0)
-        button = Button(
-            pos=self.interface.pos, width=width, height=height, func=self.load_game,
-            color_disabled=(30, 30, 30), color_active=(40, 40, 40),
-            text=TextCenter(text='Загрузить игру', width=width, height=height, font_type=PT_MONO, font_size=size)
-        )
-        self.buttons.add(button)
-        self.interface.move(0)
-        button = Button(
-            pos=self.interface.pos, width=width, height=height, func=self.settings,
-            color_disabled=(30, 30, 30), color_active=(40, 40, 40),
-            text=TextCenter(text='Настройки', width=width, height=height, font_type=PT_MONO, font_size=size)
-        )
-        self.buttons.add(button)
-        self.interface.move(0)
-        button = Button(
-            pos=self.interface.pos, width=width, height=height, func=self.exit,
-            color_disabled=(30, 30, 30), color_active=(40, 40, 40),
-            text=TextCenter(text='Выйти', width=width, height=height, font_type=PT_MONO, font_size=size)
-        )
-        self.buttons.add(button)
-        self.interface.move(0)
+        for text, func in data:
+            button = Button(
+                pos=self.interface.pos, width=width, height=height, func=func,
+                color_disabled=(30, 30, 30), color_active=(40, 40, 40),
+                text=TextCenter(text=text, width=width, height=height, font_type=PT_MONO, font_size=size)
+            )
+            self.buttons.add(button)
+            self.interface.move(0)
         button = Button(
             pos=self.interface.pos, width=width3, height=height, func=self.music.previous,
             color_disabled=(30, 30, 30), color_active=(40, 40, 40),
@@ -164,7 +148,7 @@ class MenuWindow(Window):
         pg.quit()
         quit()
 
-    def render(self) -> None:
+    def draw(self) -> None:
         self.background.draw(self.display)  # матрица
         self.buttons.draw(self.display)
         self.running_line.draw(self.display)
@@ -204,7 +188,7 @@ class SettingsWindow(Window):
     def update(self) -> None:
         pg.display.set_caption(str(self.clock.get_fps()))  # нужно для отладки. FPS в заголовок окна!
 
-    def render(self) -> None:
+    def draw(self) -> None:
         self.sliders.draw(self.display)
         self.input.draw(self.display)
 
@@ -216,7 +200,7 @@ class SettingsWindow(Window):
                 pg.quit()
                 quit()
             if en.type == pg.KEYUP and en.key == pg.K_ESCAPE:
-                self.controller.action_window('menu')
+                self.controller.action_window(self.last_window)
 
 
 class GameWindow(Window):
@@ -235,7 +219,8 @@ class GameWindow(Window):
             INFO_PANEL_WIDTH,
             INFO_PANEL_WIDTH
         )
-        self.esc_menu = EscMenu(pos=(WIN_WIDTH // 4, WIN_HEIGHT // 4), width=WIN_WIDTH // 2, height=WIN_HEIGHT // 2)
+        self.esc_menu = EscMenu(pos=(WIN_WIDTH // 4, WIN_HEIGHT // 4), width=WIN_WIDTH // 2, height=WIN_HEIGHT // 2,
+                                controller=self.controller)
         #
         self.camera_left, self.camera_right, self.camera_up, self.camera_down = False, False, False, False
         self.l_ctrl = False
@@ -266,22 +251,24 @@ class GameWindow(Window):
         if pos[0] > self.right_panel.rect.x:
             print('Клик по правой панели информации')
 
-    def render(self) -> None:
+    def draw(self) -> None:
         self.left_panel.render()
         self.right_panel.render()
         #
         self.sector.draw(self.display, self.camera.get_cord())
         self.left_panel.draw(self.display)
         self.right_panel.draw(self.display)
+        self.esc_menu.draw(self.display)
 
     def update(self) -> None:
         pg.display.set_caption(str(self.clock.get_fps()))  # нужно для отладки. FPS в заголовок окна!
-        self.camera.move(self.camera_left, self.camera_right, self.camera_up, self.camera_down)
-        #
-        self.sound.play()
-        # Обновление панели каждую секунду
-        self.right_panel.update()
-        self.left_panel.update()
+        if not self.esc_menu.if_active:
+            self.camera.move(self.camera_left, self.camera_right, self.camera_up, self.camera_down)
+            #
+            self.sound.play()
+            # Обновление панели каждую секунду
+            self.right_panel.update()
+            self.left_panel.update()
 
     def read_file(self) -> None:
         sector = self.sector
@@ -301,42 +288,45 @@ class GameWindow(Window):
 
     def event(self) -> None:
         for en in pg.event.get():
-            self.left_panel.event(en)
-            self.right_panel.event(en)
             if en.type == pg.QUIT:
                 pg.quit()
                 quit()
-            if en.type == pg.MOUSEBUTTONUP and en.button == 1:
-                self.click(pos=en.pos)
-            if en.type == pg.MOUSEBUTTONUP and en.button == 3:
-                self.read_file()
             if en.type == pg.KEYUP and en.key == pg.K_ESCAPE:
-                self.controller.action_window('menu')
-            #
-            if en.type == pg.KEYDOWN and en.key == pg.K_LCTRL:
-                self.l_ctrl = True
-            if en.type == pg.KEYUP and en.key == pg.K_LCTRL:
-                self.l_ctrl = False
-            #
-            if self.l_ctrl and en.type == pg.MOUSEBUTTONUP and en.button == 4:
-                self.scale(COEFFICIENT_SCALE)
-            if self.l_ctrl and en.type == pg.MOUSEBUTTONUP and en.button == 5:
-                self.scale(-COEFFICIENT_SCALE)
-            #
-            if en.type == pg.KEYDOWN and en.key == pg.K_w:
-                self.camera_up = True
-            if en.type == pg.KEYDOWN and en.key == pg.K_s:
-                self.camera_down = True
-            if en.type == pg.KEYDOWN and en.key == pg.K_d:
-                self.camera_right = True
-            if en.type == pg.KEYDOWN and en.key == pg.K_a:
-                self.camera_left = True
-            #
-            if en.type == pg.KEYUP and en.key == pg.K_w:
-                self.camera_up = False
-            if en.type == pg.KEYUP and en.key == pg.K_s:
-                self.camera_down = False
-            if en.type == pg.KEYUP and en.key == pg.K_d:
-                self.camera_right = False
-            if en.type == pg.KEYUP and en.key == pg.K_a:
-                self.camera_left = False
+                self.esc_menu.changes_active()
+            if self.esc_menu.if_active:
+                self.esc_menu.event(en)
+            else:
+                self.left_panel.event(en)
+                self.right_panel.event(en)
+                if en.type == pg.MOUSEBUTTONUP and en.button == 1:
+                    self.click(pos=en.pos)
+                if en.type == pg.MOUSEBUTTONUP and en.button == 3:
+                    self.read_file()
+                #
+                if en.type == pg.KEYDOWN and en.key == pg.K_LCTRL:
+                    self.l_ctrl = True
+                if en.type == pg.KEYUP and en.key == pg.K_LCTRL:
+                    self.l_ctrl = False
+                #
+                if self.l_ctrl and en.type == pg.MOUSEBUTTONUP and en.button == 4:
+                    self.scale(COEFFICIENT_SCALE)
+                if self.l_ctrl and en.type == pg.MOUSEBUTTONUP and en.button == 5:
+                    self.scale(-COEFFICIENT_SCALE)
+                #
+                if en.type == pg.KEYDOWN and en.key == pg.K_w:
+                    self.camera_up = True
+                if en.type == pg.KEYDOWN and en.key == pg.K_s:
+                    self.camera_down = True
+                if en.type == pg.KEYDOWN and en.key == pg.K_d:
+                    self.camera_right = True
+                if en.type == pg.KEYDOWN and en.key == pg.K_a:
+                    self.camera_left = True
+                #
+                if en.type == pg.KEYUP and en.key == pg.K_w:
+                    self.camera_up = False
+                if en.type == pg.KEYUP and en.key == pg.K_s:
+                    self.camera_down = False
+                if en.type == pg.KEYUP and en.key == pg.K_d:
+                    self.camera_right = False
+                if en.type == pg.KEYUP and en.key == pg.K_a:
+                    self.camera_left = False
