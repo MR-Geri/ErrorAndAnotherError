@@ -26,7 +26,7 @@ CELL_MAX_SIZE = 50  # Нужно для масштабирования (ZOOM)
 SECTOR_Y_NUMBER = 50  # Размер сектора
 SECTOR_X_NUMBER = 50  # Размер сектора
 #
-INFO_PANEL_WIDTH = WIN_WIDTH // 5
+INFO_PANEL_K = 5
 # Path
 PT_MONO = '../Data/Font/PT Mono.ttf'
 MS_MINCHO = '../Data/Font/MS Mincho.ttf'

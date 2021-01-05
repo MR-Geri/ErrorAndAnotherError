@@ -18,11 +18,26 @@ class Controller:
         #
         self.windows = {'menu': self.menu, 'settings': self.settings, 'game': self.game}
 
+    def init(self, size: Tuple[int, int] = DISPLAY_SIZE) -> None:
+        del self.menu
+        del self.settings
+        del self.game
+        del self.windows
+        self.menu = MenuWindow(self, size, MENU_TITLE)
+        self.settings = SettingsWindow(self, size, MENU_TITLE)
+        self.game = GameWindow(self, size, MENU_TITLE)
+        #
+        self.windows = {'menu': self.menu, 'settings': self.settings, 'game': self.game}
+
     def action_window(self, window_act: str) -> None:
         for window in self.windows.keys():
             if self.windows[window].is_run:
                 self.windows[window].join()
                 self.windows[window_act].run(last=window)
+
+    def all_off(self) -> None:
+        for window in self.windows.keys():
+            self.windows[window].join()
 
 
 if __name__ == '__main__':

@@ -5,12 +5,13 @@ import pygame as pg
 
 
 class Camera:
-    def __init__(self, width: int, height: int, left: int, right: int) -> None:
+    def __init__(self, width: int, height: int, left: int, right: int, win_width: int, win_height: int) -> None:
         self.width = width
         self.height = height
         self.left = left
         self.right = right
-        self.rect = pg.Rect((WIN_WIDTH - self.width) // 2, (WIN_HEIGHT - self.height) // 2, width, height)
+        self.win_width, self.win_height = win_width, win_height
+        self.rect = pg.Rect((self.win_width - self.width) // 2, (self.win_height - self.height) // 2, width, height)
         self.speed_x, self.speed_y = 0, 0
 
     def get_cord(self) -> Tuple[int, int]:
@@ -18,7 +19,7 @@ class Camera:
 
     def move(self, left: bool, right: bool, up: bool, down: bool) -> None:
         self.speed_x, self.speed_y = 0, 0
-        max_width, max_height = WIN_WIDTH - self.width, WIN_HEIGHT - self.height
+        max_width, max_height = self.win_width - self.width, self.win_height - self.height
         if left:
             self.speed_x += CAMERA_SPEED_X
         if right:

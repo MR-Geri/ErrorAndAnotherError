@@ -1,3 +1,4 @@
+from Code import settings
 from Code.escape_menu import EscMenu
 from Code.interface_utils import Interface
 from Code.line_input import LineInput
@@ -25,6 +26,7 @@ class Window:
         self.controller = controller
         self.volume = self.controller.volume
         self.music = self.controller.music
+        self.win_width, self.win_height = size_display
         #
         if FULL_SCREEN:
             self.display = pg.display.set_mode(size_display, pg.FULLSCREEN)
@@ -68,15 +70,16 @@ class Window:
 class MenuWindow(Window):
     def __init__(self, controller: object, size_display: Tuple[int, int], caption: str) -> None:
         super(MenuWindow, self).__init__(controller, size_display, caption)
-        width3 = int(round(WIN_WIDTH / 3, 0))
+        width3 = int(round(self.win_width / 3, 0))
         self.interface = Interface(
-            pos=(WIN_WIDTH // 100, WIN_HEIGHT // 6 + WIN_HEIGHT // 100), max_width=WIN_WIDTH, max_height=WIN_HEIGHT,
-            indent=(0, WIN_HEIGHT // 100), size=(width3, WIN_HEIGHT // 10)
+            pos=(self.win_width // 100, self.win_height // 6 + self.win_height // 100), max_width=self.win_width,
+            max_height=self.win_height,
+            indent=(0, self.win_height // 100), size=(width3, self.win_height // 10)
         )
         self.background = Matrix(
             (width3 + 2 * self.interface.x, self.interface.y),
             2 * width3 - self.interface.x - 2 * self.interface.x,
-            2 * (WIN_HEIGHT // 3), MENU_BACKGROUND
+            2 * (self.win_height // 3), MENU_BACKGROUND
         )
         #
         self.buttons = Buttons()
@@ -196,6 +199,10 @@ class SettingsWindow(Window):
         for en in pg.event.get():
             self.sliders.event(en)
             self.input.event(en)
+            if en.type == pg.KEYUP and en.key == pg.K_SPACE:
+                self.controller.all_off()
+                self.controller.init((1280, 720))
+                self.controller.menu.run()
             if en.type == pg.QUIT:
                 pg.quit()
                 quit()
@@ -211,16 +218,19 @@ class GameWindow(Window):
         self.sound = Sound()
         self.sector = Sector(number_x=SECTOR_X_NUMBER, number_y=SECTOR_Y_NUMBER,
                              size_cell=self.size_cell, sound=self.sound)
-        self.left_panel = LeftPanel(INFO_PANEL_WIDTH, WIN_HEIGHT, pos=(0, 0), music=self.music)
-        self.right_panel = RightPanel(INFO_PANEL_WIDTH, WIN_HEIGHT, pos=(WIN_WIDTH - INFO_PANEL_WIDTH, 0))
+        panel_width = self.win_width // INFO_PANEL_K
+        self.left_panel = LeftPanel(panel_width, self.win_height, pos=(0, 0), music=self.music)
+        self.right_panel = RightPanel(panel_width, self.win_height, pos=(self.win_width - panel_width, 0))
         self.camera = Camera(
             SECTOR_X_NUMBER * self.size_cell,
             SECTOR_Y_NUMBER * self.size_cell,
-            INFO_PANEL_WIDTH,
-            INFO_PANEL_WIDTH
+            self.left_panel.rect.width,
+            self.left_panel.rect.width,
+            self.win_width,
+            self.win_height
         )
-        self.esc_menu = EscMenu(pos=(WIN_WIDTH // 4, WIN_HEIGHT // 4), width=WIN_WIDTH // 2, height=WIN_HEIGHT // 2,
-                                controller=self.controller)
+        self.esc_menu = EscMenu(pos=(self.win_width // 4, self.win_height // 4), width=self.win_width // 2,
+                                height=self.win_height // 2, controller=self.controller)
         #
         self.camera_left, self.camera_right, self.camera_up, self.camera_down = False, False, False, False
         self.l_ctrl = False
@@ -234,8 +244,10 @@ class GameWindow(Window):
             self.camera = Camera(
                 SECTOR_X_NUMBER * self.size_cell,
                 SECTOR_Y_NUMBER * self.size_cell,
-                INFO_PANEL_WIDTH,
-                INFO_PANEL_WIDTH
+                self.left_panel.rect.width,
+                self.left_panel.rect.width,
+                self.win_width,
+                self.win_height
             )
 
     def get_number_cell(self, mouse_pos: Tuple[int, int]) -> Tuple[int, int]:
@@ -243,10 +255,10 @@ class GameWindow(Window):
         return int((-x + mouse_pos[0]) // self.size_cell), int((-y + mouse_pos[1]) // self.size_cell)
 
     def click(self, pos) -> None:
-        if self.right_panel.rect.x > pos[0] > INFO_PANEL_WIDTH:
+        if self.right_panel.rect.x > pos[0] > self.left_panel.rect.width:
             x, y = self.get_number_cell(pos)
             print('Клик по полю:\n', x, y)
-        if pos[0] < INFO_PANEL_WIDTH:
+        if pos[0] < self.left_panel.rect.width:
             print('Клик по левой панели информации.')
         if pos[0] > self.right_panel.rect.x:
             print('Клик по правой панели информации')
