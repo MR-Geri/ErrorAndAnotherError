@@ -49,7 +49,7 @@ class Sector:
         self.surface = pg.Surface(self.size_sector)
         for cells in self.board:
             for cell in cells:
-                cell.render(size_cell)
+                cell.scale(size_cell)
         self.entities.scale(size_cell=size_cell)
         self.render()
 
