@@ -1,3 +1,4 @@
+from Code.edit_permission import Permission
 from Code.settings import *
 
 import pygame as pg
@@ -11,6 +12,7 @@ class Controller:
     def __init__(self) -> None:
         self.volume = Numbers(0, 1, 0.01)
         self.music = Music(path=ALL_BACKGROUND_MUSIC, volume=self.volume.value)
+        self.permission = Permission(active=DISPLAY_SIZE)
         #
         self.menu = MenuWindow(self, DISPLAY_SIZE, MENU_TITLE)
         self.settings = SettingsWindow(self, DISPLAY_SIZE, MENU_TITLE)
@@ -18,14 +20,14 @@ class Controller:
         #
         self.windows = {'menu': self.menu, 'settings': self.settings, 'game': self.game}
 
-    def init(self, size: Tuple[int, int] = DISPLAY_SIZE) -> None:
+    def init(self) -> None:
         del self.menu
         del self.settings
         del self.game
         del self.windows
-        self.menu = MenuWindow(self, size, MENU_TITLE)
-        self.settings = SettingsWindow(self, size, MENU_TITLE)
-        self.game = GameWindow(self, size, MENU_TITLE)
+        self.menu = MenuWindow(self, self.permission.active, MENU_TITLE)
+        self.settings = SettingsWindow(self, self.permission.active, MENU_TITLE)
+        self.game = GameWindow(self, self.permission.active, MENU_TITLE)
         #
         self.windows = {'menu': self.menu, 'settings': self.settings, 'game': self.game}
 

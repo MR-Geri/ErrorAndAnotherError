@@ -1,4 +1,3 @@
-from Code import settings
 from Code.escape_menu import EscMenu
 from Code.interface_utils import Interface
 from Code.line_input import LineInput
@@ -26,6 +25,7 @@ class Window:
         self.controller = controller
         self.volume = self.controller.volume
         self.music = self.controller.music
+        self.permission = self.controller.permission
         self.win_width, self.win_height = size_display
         #
         if FULL_SCREEN:
@@ -201,7 +201,8 @@ class SettingsWindow(Window):
             self.input.event(en)
             if en.type == pg.KEYUP and en.key == pg.K_SPACE:
                 self.controller.all_off()
-                self.controller.init((1280, 720))
+                self.permission.next()
+                self.controller.init()
                 self.controller.menu.run()
             if en.type == pg.QUIT:
                 pg.quit()
