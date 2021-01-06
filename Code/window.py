@@ -251,21 +251,31 @@ class SettingsWindow(Window):
 class GameWindow(Window):
     def __init__(self, controller: object, size_display: Tuple[int, int], caption: str) -> None:
         super().__init__(controller, size_display, caption)
-        self.size_cell = CELL_SIZE
+        # Панели
+        panel_width = self.win_width // INFO_PANEL_K
+        self.left_panel = LeftPanel(panel_width, self.win_height, pos=(0, 0), music=self.music)
+        self.right_panel = RightPanel(panel_width, self.win_height, pos=(self.win_width - panel_width, 0))
+        # Масштабирование
+        self.size_cell_min = int(
+            min(self.win_width - 2 * panel_width, self.win_height) / max(SECTOR_X_NUMBER, SECTOR_Y_NUMBER))
+        self.size_cell_max = self.size_cell_min * 5
+        self.coefficient_scale = int((self.size_cell_max - self.size_cell_min) / 9)
+        #
+        self.size_cell = int(self.size_cell_min)
         # sector нужно ЗАГРУЖАТЬ если это НЕ НОВАЯ игра
         self.sound = Sound()
         self.sector = Sector(number_x=SECTOR_X_NUMBER, number_y=SECTOR_Y_NUMBER,
                              size_cell=self.size_cell, sound=self.sound)
-        panel_width = self.win_width // INFO_PANEL_K
-        self.left_panel = LeftPanel(panel_width, self.win_height, pos=(0, 0), music=self.music)
-        self.right_panel = RightPanel(panel_width, self.win_height, pos=(self.win_width - panel_width, 0))
+        #
         self.camera = Camera(
             SECTOR_X_NUMBER * self.size_cell,
             SECTOR_Y_NUMBER * self.size_cell,
             self.left_panel.rect.width,
             self.left_panel.rect.width,
             self.win_width,
-            self.win_height
+            self.win_height,
+            int(self.size_cell / CAMERA_K_SPEED_X),
+            int(self.size_cell / CAMERA_K_SPEED_Y)
         )
         self.esc_menu = EscMenu(pos=(self.win_width // 4, self.win_height // 4), width=self.win_width // 2,
                                 height=self.win_height // 2, controller=self.controller)
@@ -275,8 +285,10 @@ class GameWindow(Window):
 
     def scale(self, coeff_scale: float):
         # Масштабирование sector с ограничениями
-        if (coeff_scale > 0 and self.size_cell < CELL_MAX_SIZE) or (coeff_scale < 0 and self.size_cell > CELL_MIN_SIZE):
+        if (coeff_scale > 0 and self.size_cell < self.size_cell_max) or \
+                (coeff_scale < 0 and self.size_cell > self.size_cell_min):
             self.size_cell += coeff_scale
+
             self.sector.scale(self.size_cell)
             # Ограничение перемещения камеры|СОЗДАЁМ ЗАНОВО
             self.camera = Camera(
@@ -285,7 +297,9 @@ class GameWindow(Window):
                 self.left_panel.rect.width,
                 self.left_panel.rect.width,
                 self.win_width,
-                self.win_height
+                self.win_height,
+                int(self.size_cell / CAMERA_K_SPEED_X),
+                int(self.size_cell / CAMERA_K_SPEED_Y)
             )
 
     def get_number_cell(self, mouse_pos: Tuple[int, int]) -> Tuple[int, int]:
@@ -359,9 +373,9 @@ class GameWindow(Window):
                     self.l_ctrl = False
                 #
                 if self.l_ctrl and en.type == pg.MOUSEBUTTONUP and en.button == 4:
-                    self.scale(COEFFICIENT_SCALE)
+                    self.scale(self.coefficient_scale)
                 if self.l_ctrl and en.type == pg.MOUSEBUTTONUP and en.button == 5:
-                    self.scale(-COEFFICIENT_SCALE)
+                    self.scale(-self.coefficient_scale)
                 #
                 if en.type == pg.KEYDOWN and en.key == pg.K_w:
                     self.camera_up = True

@@ -17,12 +17,8 @@ COLOR_SLIDER_USE = '#25B2B9'
 COLOR_SLIDER_NO_USE = '#D5F0F8'
 COLOR_SLIDER_CIRCLE = 'white'
 # Камера
-CAMERA_SPEED_X, CAMERA_SPEED_Y = 2, 2
+CAMERA_K_SPEED_X, CAMERA_K_SPEED_Y = 5, 5
 # Ячейки
-COEFFICIENT_SCALE = 5
-CELL_SIZE = 10  # Стартовое значение мастаба (MIN ZOOM)
-CELL_MIN_SIZE = 10  # Нужно для масштабирования (ZOOM)
-CELL_MAX_SIZE = 50  # Нужно для масштабирования (ZOOM)
 SECTOR_Y_NUMBER = 50  # Размер сектора
 SECTOR_X_NUMBER = 50  # Размер сектора
 #
