@@ -1,4 +1,5 @@
-from Code.sector_objects.entities import Robots
+from Code.sector_objects.base import Base
+from Code.sector_objects.entities import Entities
 from Code.settings import *
 
 from typing import Tuple
@@ -15,10 +16,12 @@ class Sector:
         self.size_sector = (number_x * size_cell, number_y * size_cell)
         self.surface = pg.Surface(self.size_sector)
         self.board = None
+        # Данные
+        self.is_base: bool = False
         # Инициализация
         self.gen_board()
         #
-        self.entities = Robots((self.number_x, self.number_y), sound)
+        self.entities = Entities((self.number_x, self.number_y), sound)
         #
         self.render()
 
@@ -35,6 +38,20 @@ class Sector:
             [biomes.get_cell(x, y) for x in range(self.number_x)]
             for y in range(self.number_y)
         ]
+
+    def place_base(self, pos: Tuple[int, int]) -> None:
+        print(type(self.board[pos[1]][pos[0]]), NOT_BASE)
+        print(type(self.board[pos[1]][pos[0]]) not in NOT_BASE)
+        print(1)
+        if type(self.board[pos[1]][pos[0]]) not in NOT_BASE and not self.is_base:
+            self.is_base = True
+            self.entities.add(Base(pos=pos, size_cell=self.size_cell))
+        else:
+            # Нужно писать в блок информации что произошло
+            if self.is_base:
+                print('База уже существует!')
+            else:
+                print('Неподходящая поверхность для базы')
 
     def render(self) -> None:
         self.surface.fill(pg.Color(COLOR_BACKGROUND))

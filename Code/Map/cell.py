@@ -41,11 +41,11 @@ class Plain(Cell):
 
 class Swamp(Cell):
     def __init__(self, number_x: int, number_y: int, size_cell: int) -> None:
-        self.color = pg.Color('#0000FF')
+        self.color = pg.Color('#32160D')
         super().__init__(number_x, number_y, size_cell)
 
 
 class Mountain(Cell):
     def __init__(self, number_x: int, number_y: int, size_cell: int) -> None:
-        self.color = pg.Color('#FF0000')
+        self.color = pg.Color('#818394')
         super().__init__(number_x, number_y, size_cell)

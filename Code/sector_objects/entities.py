@@ -4,7 +4,7 @@ import pygame as pg
 from Code.sound import Sound
 
 
-class Robots:
+class Entities:
     def __init__(self, sector_size: Tuple[int, int], sound: Sound) -> None:
         self.sound = sound
         self.sector_size = sector_size
