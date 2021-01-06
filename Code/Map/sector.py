@@ -40,9 +40,6 @@ class Sector:
         ]
 
     def place_base(self, pos: Tuple[int, int]) -> None:
-        print(type(self.board[pos[1]][pos[0]]), NOT_BASE)
-        print(type(self.board[pos[1]][pos[0]]) not in NOT_BASE)
-        print(1)
         if type(self.board[pos[1]][pos[0]]) not in NOT_BASE and not self.is_base:
             self.is_base = True
             self.entities.add(Base(pos=pos, size_cell=self.size_cell))

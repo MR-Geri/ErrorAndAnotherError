@@ -32,7 +32,6 @@ class Controller:
         self.windows = {'menu': self.menu, 'settings': self.settings, 'game': self.game}
 
     def action_window(self, window_act: str) -> None:
-        print(window_act)
         for window in self.windows.keys():
             if self.windows[window].is_run:
                 self.windows[window].join()

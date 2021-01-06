@@ -1,3 +1,4 @@
+from Code.Map.minimaps import Minimap
 from Code.buttons import Buttons, Button, ButtonTwoStates
 from Code.interface_utils import Interface
 from Code.settings import *
@@ -40,6 +41,9 @@ class LeftPanel(Panel):
     def __init__(self, width: int, height: int, pos: Tuple[int, int], music: Music = None) -> None:
         super().__init__(width, height, pos)
         self.music = music
+        # Миникарта
+        self.minimap = Minimap((0, self.rect.height - self.rect.width), self.rect.width, self.rect.width)
+        self.interface.max_height -= self.rect.width
         # Интерфейс
         self.system_time = TextMaxSizeCenter(
             text=f"{datetime.datetime.now().strftime('%d/%m/%y %H:%M:%S')}", width=self.interface.width,
@@ -105,6 +109,7 @@ class LeftPanel(Panel):
         self.running_line.draw(self.surface)
         self.system_time.draw(self.surface)
         self.buttons.draw(self.surface)
+        self.minimap.draw(self.surface)
 
     def event(self, event: pg.event.Event) -> None:
         self.buttons.event(event)
