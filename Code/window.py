@@ -1,6 +1,5 @@
 from Code.escape_menu import EscMenu
 from Code.interface_utils import Interface
-from Code.line_input import LineInput
 from Code.settings import *
 
 from typing import Tuple
