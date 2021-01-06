@@ -172,14 +172,53 @@ class MenuWindow(Window):
 class SettingsWindow(Window):
     def __init__(self, controller: object, size_display: Tuple[int, int], caption: str) -> None:
         super().__init__(controller, size_display, caption)
+        self.interface = Interface(
+            pos=(10, 100), max_width=self.win_width - 20, max_height=self.win_height - 200,
+            indent=(0, self.win_height // 100), size=(self.win_width - 20, (self.win_height - 200) // 10))
         self.sliders = Sliders()
+        self.buttons = Buttons()
         self.init_sliders()
-        self.input = LineInput(pos=(100, 140), width=500, height=30, font_type=PT_MONO, background_color='#000000')
+        self.init_permission()
+        self.interface.move(0)
         #
+
+    def permission_previous(self) -> None:
+        self.controller.all_off()
+        self.permission.previous()
+        self.controller.init()
+        self.controller.settings.run('menu')
+
+    def permission_next(self) -> None:
+        self.controller.all_off()
+        self.permission.next()
+        self.controller.init()
+        self.controller.settings.run('menu')
+
+    def init_permission(self) -> None:
+        width10, height = self.interface.width // 10, self.interface.height
+        button = Button(
+            pos=self.interface.pos, width=width10, height=height, func=self.permission_previous,
+            color_disabled=(30, 30, 30), color_active=(40, 40, 40),
+            text=TextMaxSizeCenter(text='<', width=width10, height=height, font_type=PT_MONO)
+        )
+        self.buttons.add(button)
+        self.interface.move(width10, 0, is_indent=(False, False))
+        self.text_permission = TextMaxSizeCenter(
+            f'', width=self.interface.width - 2 * width10, height=self.interface.height,
+            pos=self.interface.pos, font_type=PT_MONO
+        )
+        self.interface.move(self.interface.width - 2 * width10, 0, is_indent=(False, False))
+        button = Button(
+            pos=self.interface.pos, width=width10, height=height, func=self.permission_next,
+            color_disabled=(30, 30, 30), color_active=(40, 40, 40),
+            text=TextMaxSizeCenter(text='>', width=width10, height=height, font_type=PT_MONO)
+        )
+        self.buttons.add(button)
+        self.interface.move(width10, is_indent=(False, False))
 
     def init_sliders(self) -> None:
         volume_slider = Slider(
-            pos=(100, 100), width=500, height=30,
+            pos=self.interface.pos, width=self.interface.width, height=self.interface.height,
             color_no_use=COLOR_SLIDER_NO_USE,
             color_use=COLOR_SLIDER_USE,
             color_circle=COLOR_SLIDER_CIRCLE,
@@ -187,23 +226,22 @@ class SettingsWindow(Window):
             func=self.music
         )
         self.sliders.add(volume_slider)
+        self.interface.move(0)
 
     def update(self) -> None:
         pg.display.set_caption(str(self.clock.get_fps()))  # нужно для отладки. FPS в заголовок окна!
+        if self.text_permission.text != f'{self.permission.active[0]} x {self.permission.active[1]}':
+            self.text_permission.set_text(f'{self.permission.active[0]} x {self.permission.active[1]}')
 
     def draw(self) -> None:
         self.sliders.draw(self.display)
-        self.input.draw(self.display)
+        self.text_permission.draw(self.display)
+        self.buttons.draw(self.display)
 
     def event(self) -> None:
         for en in pg.event.get():
             self.sliders.event(en)
-            self.input.event(en)
-            if en.type == pg.KEYUP and en.key == pg.K_SPACE:
-                self.controller.all_off()
-                self.permission.next()
-                self.controller.init()
-                self.controller.menu.run()
+            self.buttons.event(en)
             if en.type == pg.QUIT:
                 pg.quit()
                 quit()
