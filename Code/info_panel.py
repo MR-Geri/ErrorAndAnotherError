@@ -42,7 +42,8 @@ class LeftPanel(Panel):
         super().__init__(width, height, pos)
         self.music = music
         # Миникарта
-        self.minimap = Minimap((0, self.rect.height - self.rect.width), self.rect.width, self.rect.width)
+        self.minimap = Minimap(
+            (10, self.rect.height - self.rect.width + 10), self.rect.width - 20, self.rect.width - 20)
         self.interface.max_height -= self.rect.width
         # Интерфейс
         self.system_time = TextMaxSizeCenter(
@@ -101,6 +102,13 @@ class LeftPanel(Panel):
         self.running_line.update(self.music.get_text())
         self.system_time.set_text(f"{datetime.datetime.now().strftime('%d/%m/%y %H:%M:%S')}")
         self.buttons.update_text()
+
+    def render_minimap(self, surface: pg.Surface) -> None:
+        self.minimap.render(surface)
+        self.render()
+
+    def update_minimap(self, rect: pg.Rect) -> None:
+        print(rect)
 
     def render(self) -> None:
         self.surface = pg.Surface((self.rect.width, self.rect.height))
