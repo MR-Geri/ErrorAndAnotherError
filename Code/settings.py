@@ -4,7 +4,7 @@ import pygame as pg
 
 
 # Настройки окна
-WIN_WIDTH, WIN_HEIGHT = 1920 // 2, 1080 // 2
+WIN_WIDTH, WIN_HEIGHT = 1280, 720
 DISPLAY_SIZE = (WIN_WIDTH, WIN_HEIGHT)
 FULL_SCREEN = False
 MENU_TITLE = 'Название игры'
@@ -38,9 +38,11 @@ COLOR = Union[Tuple[int, int, int], str]
 from Code.running_line import RunningLineMaxSizeCenter
 from Code.Map.cell import Plain, Swamp, Mountain
 from Code.texts import Text, TextMaxSize, TextMaxSizeCenter, TextCenter
+from Code.sector_objects.robots import MK0
 ALL_TEXT = Union[Text, TextMaxSize, TextMaxSizeCenter, TextCenter]
 ALL_RUNNING_LINE = Union[RunningLineMaxSizeCenter]
 ALL_CELL = Union[Plain, Swamp, Mountain]
+ALL_ROBOT = Union[MK0]
 # Биомы
 MAX_SIZE_MOUNTAIN = (10, 10)
 MAX_QUANTITY_MOUNTAIN = 3
@@ -48,5 +50,5 @@ MIN_QUANTITY_MOUNTAIN_CELL = 4
 MAX_SIZE_SWAMP = (20, 20)
 MAX_QUANTITY_SWAMP = 5
 MIN_QUANTITY_SWAMP_CELL = 8
-NOT_BASE = [Mountain]
+SELL_BLOCKED = [Mountain]
 #

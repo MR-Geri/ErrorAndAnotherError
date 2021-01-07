@@ -59,9 +59,12 @@ class LeftPanel(Panel):
         self.buttons = Buttons()
         self.init_button()
         self.interface.move(0)
-        #
-        self.update()
-        self.render()
+        self.pos_cursor = TextMaxSizeCenter(
+            text='', width=self.interface.width, height=self.interface.height, pos=self.interface.pos, font_type=PT_MONO
+        )
+        self.interface.move(0)
+        # self.update()
+        # self.render()
 
     def init_button(self) -> None:
         size = max_size_list_text(
@@ -96,12 +99,16 @@ class LeftPanel(Panel):
             )
         )
         self.buttons.add(button)
-        self.interface.move(- self.interface.width, is_indent=(False, False))
+        self.interface.move(- 2 * width3, is_indent=(False, False))
 
     def update(self) -> None:
         self.running_line.update(self.music.get_text())
         self.system_time.set_text(f"{datetime.datetime.now().strftime('%d/%m/%y %H:%M:%S')}")
         self.buttons.update_text()
+
+    def update_cursor(self, pos_cursor: Tuple[int, int]) -> None:
+        if pos_cursor and pos_cursor[0] >= 0 and pos_cursor[1] >= 0:
+            self.pos_cursor.set_text(f'(x: {pos_cursor[0]}, y: {pos_cursor[1]})')
 
     def render_minimap(self, surface: pg.Surface, pos: Tuple[int, int] = None,
                        width: int = None, height: int = None) -> None:
@@ -116,6 +123,7 @@ class LeftPanel(Panel):
         self.system_time.draw(self.surface)
         self.buttons.draw(self.surface)
         self.minimap.draw(self.surface)
+        self.pos_cursor.draw(self.surface)
 
     def event(self, event: pg.event.Event) -> None:
         self.buttons.event(event)

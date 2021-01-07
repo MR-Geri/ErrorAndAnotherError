@@ -16,6 +16,7 @@ class Sector:
         self.size_sector = (number_x * size_cell, number_y * size_cell)
         self.surface = pg.Surface(self.size_sector)
         self.board = None
+        self.base = None
         # Данные
         self.is_base: bool = False
         # Инициализация
@@ -40,9 +41,10 @@ class Sector:
         ]
 
     def place_base(self, pos: Tuple[int, int]) -> None:
-        if type(self.board[pos[1]][pos[0]]) not in NOT_BASE and not self.is_base:
+        if type(self.board[pos[1]][pos[0]]) not in SELL_BLOCKED and not self.is_base:
             self.is_base = True
-            self.entities.add(Base(pos=pos, size_cell=self.size_cell))
+            self.base = Base(pos=pos, size_cell=self.size_cell, board=self.board, entities=self.entities)
+            self.entities.add(self.base)
         else:
             # Нужно писать в блок информации что произошло
             if self.is_base:

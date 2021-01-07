@@ -4,7 +4,7 @@ from typing import Tuple
 import pygame as pg
 
 
-class Robot:
+class MK0:
     def __init__(self, pos: Tuple[int, int], size_cell: int) -> None:
         self.pos = list(pos)
         self.size_cell = size_cell

@@ -13,7 +13,7 @@ from Code.Map.sector import Sector
 from Code.info_panel import LeftPanel, RightPanel
 from Code.texts import max_size_list_text, TextCenter
 from Code.slider import Slider, Sliders
-from Code.sector_objects.robots import Robot
+from Code.sector_objects.robots import MK0
 
 
 class Window:
@@ -302,8 +302,12 @@ class GameWindow(Window):
             )
 
     def get_number_cell(self, mouse_pos: Tuple[int, int]) -> Tuple[int, int]:
-        x, y = self.camera.get_cord()
-        return int((-x + mouse_pos[0]) // self.size_cell), int((-y + mouse_pos[1]) // self.size_cell)
+        if self.right_panel.rect.x > mouse_pos[0] > self.left_panel.rect.width:
+            x, y = self.camera.get_cord()
+            x, y = int((-x + mouse_pos[0]) // self.size_cell), int((-y + mouse_pos[1]) // self.size_cell)
+            x = x if x < SECTOR_X_NUMBER else -1
+            y = y if y < SECTOR_Y_NUMBER else -1
+            return x, y
 
     def click(self, pos) -> None:
         if self.right_panel.rect.x > pos[0] > self.left_panel.rect.width:
@@ -345,6 +349,7 @@ class GameWindow(Window):
 
     def read_file(self) -> None:
         sector = self.sector
+        base = self.sector.base
         with open(PLAYER_CODE + 'main.py') as commands:
             try:
                 r = commands.read().split('\n')
@@ -370,6 +375,7 @@ class GameWindow(Window):
                 self.esc_menu.event(en)
             else:
                 self.left_panel.event(en)
+                self.left_panel.update_cursor(self.get_number_cell(en.pos))
                 self.right_panel.event(en)
                 if en.type == pg.MOUSEBUTTONUP and en.button == 1:
                     self.click(pos=en.pos)
