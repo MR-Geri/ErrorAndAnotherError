@@ -103,12 +103,10 @@ class LeftPanel(Panel):
         self.system_time.set_text(f"{datetime.datetime.now().strftime('%d/%m/%y %H:%M:%S')}")
         self.buttons.update_text()
 
-    def render_minimap(self, surface: pg.Surface) -> None:
-        self.minimap.render(surface)
+    def render_minimap(self, surface: pg.Surface, pos: Tuple[int, int] = None,
+                       width: int = None, height: int = None) -> None:
+        self.minimap.render(surface, pos, width, height)
         self.render()
-
-    def update_minimap(self, rect: pg.Rect) -> None:
-        print(rect)
 
     def render(self) -> None:
         self.surface = pg.Surface((self.rect.width, self.rect.height))

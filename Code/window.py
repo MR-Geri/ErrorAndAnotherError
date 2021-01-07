@@ -282,8 +282,6 @@ class GameWindow(Window):
         #
         self.camera_left, self.camera_right, self.camera_up, self.camera_down = False, False, False, False
         self.l_ctrl = False
-        #
-        self.left_panel.render_minimap(self.sector.surface)
 
     def scale(self, coeff_scale: float):
         # Масштабирование sector с ограничениями
@@ -329,7 +327,16 @@ class GameWindow(Window):
         pg.display.set_caption(str(self.clock.get_fps()))  # нужно для отладки. FPS в заголовок окна!
         if not self.esc_menu.if_active:
             self.camera.move(self.camera_left, self.camera_right, self.camera_up, self.camera_down)
-            self.left_panel.update_minimap(self.camera.rect)
+            if self.size_cell > self.size_cell_min:
+                pos_l = self.get_number_cell((self.left_panel.rect.width, 0))
+                pos_r = self.get_number_cell((self.right_panel.rect.x, self.win_height))
+                self.left_panel.render_minimap(
+                    self.sector.surface,
+                    pos=(pos_l[0] * self.size_cell, pos_l[1] * self.size_cell),
+                    width=(pos_r[0] - pos_l[0]) * self.size_cell,
+                    height=(pos_r[1] - pos_l[1]) * self.size_cell)
+            else:
+                self.left_panel.render_minimap(self.sector.surface)
             #
             self.sound.play()
             # Обновление панели каждую секунду
@@ -349,7 +356,6 @@ class GameWindow(Window):
                     except Exception as e:
                         print(e)
                 self.sector.render()
-                self.left_panel.render_minimap(self.sector.surface)
             except Exception as e:
                 print(e)
 
