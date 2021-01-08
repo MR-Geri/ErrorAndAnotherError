@@ -10,7 +10,7 @@ from Code.sound import Sound
 
 
 class Sector:
-    def __init__(self, number_x: int, number_y: int, size_cell: int, sound: Sound) -> None:
+    def __init__(self, number_x: int, number_y: int, size_cell: int, sound: Sound, info) -> None:
         self.number_x, self.number_y = number_x, number_y  # Длина и высота сектора в единицах
         self.size_cell = size_cell
         self.size_sector = (number_x * size_cell, number_y * size_cell)

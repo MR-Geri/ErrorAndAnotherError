@@ -6,11 +6,12 @@ from Code.sector_objects.entities import Entities
 
 
 class Base:
-    def __init__(self, pos: Tuple[int, int], size_cell: int, board: list, entities: Entities) -> None:
+    def __init__(self, pos: Tuple[int, int], size_cell: int, board: list, entities: Entities, info) -> None:
         self.pos = list(pos)
         self.size_cell = size_cell
         self.board = board
         self.entities = entities
+        self.info = info
         #
         self.energy = 1000
         self.hp = 1000

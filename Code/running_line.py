@@ -25,7 +25,8 @@ class RunningLineMaxSizeCenter:
             self.surface.blit(self.cl_text.surface, (self.pos[0] + self.cl_text.rect.width, self.pos[1]))
         display.blit(self.surface, self.rect)
 
-    def update(self, text) -> None:
+    def update(self, text=None) -> None:
+        text = self.text if text is None else text
         if text != self.text:
             self.text = text
             self.cl_text.set_text(f'  {self.text}')

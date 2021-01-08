@@ -374,11 +374,11 @@ class GameWindow(Window):
             if self.esc_menu.if_active:
                 self.esc_menu.event(en)
             else:
-                self.left_panel.event(en)
                 try:
                     self.left_panel.update_cursor(self.get_number_cell(en.pos))
                 except Exception as e:
                     pass
+                self.left_panel.event(en)
                 self.right_panel.event(en)
                 if en.type == pg.MOUSEBUTTONUP and en.button == 1:
                     self.click(pos=en.pos)

@@ -62,7 +62,7 @@ class LeftPanel(Panel):
         self.pos_cursor = TextMaxSizeCenter(
             text='', width=self.interface.width, height=self.interface.height, pos=self.interface.pos, font_type=PT_MONO
         )
-        # self.interface.move(0)
+        self.interface.move(0)
         self.update()
         self.render()
 
@@ -99,7 +99,7 @@ class LeftPanel(Panel):
             )
         )
         self.buttons.add(button)
-        self.interface.move(- 2 * width3, is_indent=(False, False))
+        self.interface.move(- self.interface.width + width3, is_indent=(False, False))
 
     def update(self) -> None:
         self.running_line.update(self.music.get_text())
@@ -134,14 +134,19 @@ class RightPanel(Panel):
     def __init__(self, width: int, height: int, pos: Tuple[int, int]) -> None:
         super().__init__(width, height, pos)
         # Интерфейс
+        self.info = RunningLineMaxSizeCenter(
+            'тесовый текст', width=self.interface.width, height=self.interface.height,
+            pos=self.interface.pos, speed=30, font_type=PT_MONO
+        )
         #
         self.update()
         self.render()
 
     def update(self) -> None:
-        pass
+        self.info.update()
 
     def render(self) -> None:
         self.surface = pg.Surface((self.rect.width, self.rect.height))
         self.surface.fill(self.color_background)
         #
+        self.info.draw(self.surface)
