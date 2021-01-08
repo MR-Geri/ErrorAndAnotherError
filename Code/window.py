@@ -263,8 +263,8 @@ class GameWindow(Window):
         self.coefficient_scale = int((self.size_cell_max - self.size_cell_min) / 9)
         #
         self.size_cell = int(self.size_cell_min)
-        self.dialog_info = DialogInfo(pos=(self.win_width // 3, self.win_height // 3),
-                                      width=self.win_width // 3, height=self.win_height // 3)
+        self.dialog_info = DialogInfo(pos=(self.win_width // 4, self.win_height // 3),
+                                      width=self.win_width // 2, height=self.win_height // 3)
         # sector нужно ЗАГРУЖАТЬ если это НЕ НОВАЯ игра
         self.sound = Sound()
         self.sector = Sector(number_x=SECTOR_X_NUMBER, number_y=SECTOR_Y_NUMBER,
@@ -361,6 +361,8 @@ class GameWindow(Window):
                         eval(str(t))
                     except SyntaxError:
                         exec(str(t))
+                    except NameError:
+                        self.dialog_info.show([f'Не существует такого объекта'])
                     except Exception as e:
                         print(e)
                 self.sector.render()
@@ -373,7 +375,10 @@ class GameWindow(Window):
                 pg.quit()
                 quit()
             if en.type == pg.KEYUP and en.key == pg.K_ESCAPE:
-                self.esc_menu.changes_active()
+                if self.dialog_info.if_active:
+                    self.dialog_info.hide()
+                else:
+                    self.esc_menu.changes_active()
             if self.esc_menu.if_active:
                 self.esc_menu.event(en)
             elif self.dialog_info.if_active:

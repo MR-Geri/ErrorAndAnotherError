@@ -49,12 +49,10 @@ class Sector:
                              entities=self.entities, dialog_info=self.dialog_info)
             self.entities.add(self.base)
         else:
-            # Нужно писать в блок информации что произошло
-            # if self.is_base:
-            #     self.info.update('База уже существует!')
-            # else:
-            #     self.info.update('Неподходящая поверхность для базы')
-            pass
+            if self.is_base:
+                self.dialog_info.show(['База уже существует'])
+            else:
+                self.dialog_info.show(['Неподходящая поверхность для базы'])
 
     def render(self) -> None:
         self.surface.fill(pg.Color(COLOR_BACKGROUND))

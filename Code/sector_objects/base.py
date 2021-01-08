@@ -45,5 +45,4 @@ class Base:
                         type(x) not in SELL_BLOCKED and self.entities.entities_sector[i_y][i_x] is None:
                     self.entities.add(robot(pos=(i_x, i_y), size_cell=self.size_cell))
                     return
-        # Нужно писать в блок информации что произошло
         self.dialog_info.show(['Вокруг базы нет места', 'для нового объекта'])
