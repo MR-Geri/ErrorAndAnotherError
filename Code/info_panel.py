@@ -62,9 +62,9 @@ class LeftPanel(Panel):
         self.pos_cursor = TextMaxSizeCenter(
             text='', width=self.interface.width, height=self.interface.height, pos=self.interface.pos, font_type=PT_MONO
         )
-        self.interface.move(0)
-        # self.update()
-        # self.render()
+        # self.interface.move(0)
+        self.update()
+        self.render()
 
     def init_button(self) -> None:
         size = max_size_list_text(
@@ -107,7 +107,8 @@ class LeftPanel(Panel):
         self.buttons.update_text()
 
     def update_cursor(self, pos_cursor: Tuple[int, int]) -> None:
-        if pos_cursor and pos_cursor[0] >= 0 and pos_cursor[1] >= 0:
+        self.pos_cursor.set_text('')
+        if pos_cursor and SECTOR_X_NUMBER > pos_cursor[0] >= 0 and SECTOR_Y_NUMBER > pos_cursor[1] >= 0:
             self.pos_cursor.set_text(f'(x: {pos_cursor[0]}, y: {pos_cursor[1]})')
 
     def render_minimap(self, surface: pg.Surface, pos: Tuple[int, int] = None,

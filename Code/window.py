@@ -302,12 +302,12 @@ class GameWindow(Window):
             )
 
     def get_number_cell(self, mouse_pos: Tuple[int, int]) -> Tuple[int, int]:
-        if self.right_panel.rect.x > mouse_pos[0] > self.left_panel.rect.width:
+        try:
             x, y = self.camera.get_cord()
-            x, y = int((-x + mouse_pos[0]) // self.size_cell), int((-y + mouse_pos[1]) // self.size_cell)
-            x = x if x < SECTOR_X_NUMBER else -1
-            y = y if y < SECTOR_Y_NUMBER else -1
-            return x, y
+            return int((-x + mouse_pos[0]) // self.size_cell), int((-y + mouse_pos[1]) // self.size_cell)
+        except Exception as e:
+            print(f'get_number_cell Exception: {e}')
+            return -1, -1
 
     def click(self, pos) -> None:
         if self.right_panel.rect.x > pos[0] > self.left_panel.rect.width:
@@ -375,7 +375,10 @@ class GameWindow(Window):
                 self.esc_menu.event(en)
             else:
                 self.left_panel.event(en)
-                self.left_panel.update_cursor(self.get_number_cell(en.pos))
+                try:
+                    self.left_panel.update_cursor(self.get_number_cell(en.pos))
+                except Exception as e:
+                    pass
                 self.right_panel.event(en)
                 if en.type == pg.MOUSEBUTTONUP and en.button == 1:
                     self.click(pos=en.pos)
