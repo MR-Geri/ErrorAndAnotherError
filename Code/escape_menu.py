@@ -13,7 +13,7 @@ class EscMenu:
         self.rect = pg.Rect(*pos, width, height)
         self.surface = pg.Surface((self.rect.width, self.rect.height), pg.SRCALPHA)
         self.surface.fill(pg.Color('#25B2B9'))
-        self.if_active = False
+        self.if_active: bool = False
         self.controller = controller
         self.interface = Interface(
             pos=(self.rect.x, self.rect.y), max_width=self.rect.width, max_height=self.rect.height,

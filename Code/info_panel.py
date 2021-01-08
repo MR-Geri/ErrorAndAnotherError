@@ -107,9 +107,10 @@ class LeftPanel(Panel):
         self.buttons.update_text()
 
     def update_cursor(self, pos_cursor: Tuple[int, int]) -> None:
-        self.pos_cursor.set_text('')
-        if pos_cursor and SECTOR_X_NUMBER > pos_cursor[0] >= 0 and SECTOR_Y_NUMBER > pos_cursor[1] >= 0:
-            self.pos_cursor.set_text(f'(x: {pos_cursor[0]}, y: {pos_cursor[1]})')
+        text = f'(x: {pos_cursor[0]}, y: {pos_cursor[1]})'
+        if pos_cursor and text != self.pos_cursor.text and \
+                SECTOR_X_NUMBER > pos_cursor[0] >= 0 and SECTOR_Y_NUMBER > pos_cursor[1] >= 0:
+            self.pos_cursor.set_text(text)
 
     def render_minimap(self, surface: pg.Surface, pos: Tuple[int, int] = None,
                        width: int = None, height: int = None) -> None:
@@ -134,19 +135,14 @@ class RightPanel(Panel):
     def __init__(self, width: int, height: int, pos: Tuple[int, int]) -> None:
         super().__init__(width, height, pos)
         # Интерфейс
-        self.info = RunningLineMaxSizeCenter(
-            'тесовый текст', width=self.interface.width, height=self.interface.height,
-            pos=self.interface.pos, speed=30, font_type=PT_MONO
-        )
         #
         self.update()
         self.render()
 
     def update(self) -> None:
-        self.info.update()
+        pass
 
     def render(self) -> None:
         self.surface = pg.Surface((self.rect.width, self.rect.height))
         self.surface.fill(self.color_background)
         #
-        self.info.draw(self.surface)

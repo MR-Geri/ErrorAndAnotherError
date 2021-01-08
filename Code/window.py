@@ -1,3 +1,4 @@
+from Code.dialogs import DialogInfo
 from Code.escape_menu import EscMenu
 from Code.interface_utils import Interface
 from Code.settings import *
@@ -262,10 +263,12 @@ class GameWindow(Window):
         self.coefficient_scale = int((self.size_cell_max - self.size_cell_min) / 9)
         #
         self.size_cell = int(self.size_cell_min)
+        self.dialog_info = DialogInfo(pos=(self.win_width // 3, self.win_height // 3),
+                                      width=self.win_width // 3, height=self.win_height // 3)
         # sector нужно ЗАГРУЖАТЬ если это НЕ НОВАЯ игра
         self.sound = Sound()
         self.sector = Sector(number_x=SECTOR_X_NUMBER, number_y=SECTOR_Y_NUMBER,
-                             size_cell=self.size_cell, sound=self.sound)
+                             size_cell=self.size_cell, sound=self.sound, dialog_info=self.dialog_info)
         #
         self.camera = Camera(
             SECTOR_X_NUMBER * self.size_cell,
@@ -311,8 +314,7 @@ class GameWindow(Window):
 
     def click(self, pos) -> None:
         if self.right_panel.rect.x > pos[0] > self.left_panel.rect.width:
-            x, y = self.get_number_cell(pos)
-            print('Клик по полю:\n', x, y)
+            self.left_panel.update_cursor(self.get_number_cell(pos))
         if pos[0] < self.left_panel.rect.width:
             print('Клик по левой панели информации.')
         if pos[0] > self.right_panel.rect.x:
@@ -326,10 +328,11 @@ class GameWindow(Window):
         self.left_panel.draw(self.display)
         self.right_panel.draw(self.display)
         self.esc_menu.draw(self.display)
+        self.dialog_info.draw(self.display)
 
     def update(self) -> None:
         pg.display.set_caption(str(self.clock.get_fps()))  # нужно для отладки. FPS в заголовок окна!
-        if not self.esc_menu.if_active:
+        if not self.esc_menu.if_active and not self.dialog_info.if_active:
             self.camera.move(self.camera_left, self.camera_right, self.camera_up, self.camera_down)
             if self.size_cell > self.size_cell_min:
                 pos_l = self.get_number_cell((self.left_panel.rect.width, 0))
@@ -373,11 +376,9 @@ class GameWindow(Window):
                 self.esc_menu.changes_active()
             if self.esc_menu.if_active:
                 self.esc_menu.event(en)
+            elif self.dialog_info.if_active:
+                self.dialog_info.event(en)
             else:
-                try:
-                    self.left_panel.update_cursor(self.get_number_cell(en.pos))
-                except Exception as e:
-                    pass
                 self.left_panel.event(en)
                 self.right_panel.event(en)
                 if en.type == pg.MOUSEBUTTONUP and en.button == 1:

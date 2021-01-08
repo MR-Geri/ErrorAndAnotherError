@@ -1,3 +1,4 @@
+from Code.dialogs import DialogInfo
 from Code.sector_objects.base import Base
 from Code.sector_objects.entities import Entities
 from Code.settings import *
@@ -10,13 +11,14 @@ from Code.sound import Sound
 
 
 class Sector:
-    def __init__(self, number_x: int, number_y: int, size_cell: int, sound: Sound, info) -> None:
+    def __init__(self, number_x: int, number_y: int, size_cell: int, sound: Sound, dialog_info: DialogInfo) -> None:
         self.number_x, self.number_y = number_x, number_y  # Длина и высота сектора в единицах
         self.size_cell = size_cell
         self.size_sector = (number_x * size_cell, number_y * size_cell)
         self.surface = pg.Surface(self.size_sector)
         self.board = None
         self.base = None
+        self.dialog_info = dialog_info
         # Данные
         self.is_base: bool = False
         # Инициализация
@@ -43,14 +45,16 @@ class Sector:
     def place_base(self, pos: Tuple[int, int]) -> None:
         if type(self.board[pos[1]][pos[0]]) not in SELL_BLOCKED and not self.is_base:
             self.is_base = True
-            self.base = Base(pos=pos, size_cell=self.size_cell, board=self.board, entities=self.entities)
+            self.base = Base(pos=pos, size_cell=self.size_cell, board=self.board,
+                             entities=self.entities, dialog_info=self.dialog_info)
             self.entities.add(self.base)
         else:
             # Нужно писать в блок информации что произошло
-            if self.is_base:
-                print('База уже существует!')
-            else:
-                print('Неподходящая поверхность для базы')
+            # if self.is_base:
+            #     self.info.update('База уже существует!')
+            # else:
+            #     self.info.update('Неподходящая поверхность для базы')
+            pass
 
     def render(self) -> None:
         self.surface.fill(pg.Color(COLOR_BACKGROUND))

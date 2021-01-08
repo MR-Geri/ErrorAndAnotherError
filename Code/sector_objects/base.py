@@ -1,3 +1,4 @@
+from Code.dialogs import DialogInfo
 from Code.settings import *
 
 import pygame as pg
@@ -6,12 +7,13 @@ from Code.sector_objects.entities import Entities
 
 
 class Base:
-    def __init__(self, pos: Tuple[int, int], size_cell: int, board: list, entities: Entities, info) -> None:
+    def __init__(self, pos: Tuple[int, int], size_cell: int, board: list,
+                 entities: Entities, dialog_info: DialogInfo) -> None:
         self.pos = list(pos)
         self.size_cell = size_cell
         self.board = board
         self.entities = entities
-        self.info = info
+        self.dialog_info = dialog_info
         #
         self.energy = 1000
         self.hp = 1000
@@ -44,4 +46,4 @@ class Base:
                     self.entities.add(robot(pos=(i_x, i_y), size_cell=self.size_cell))
                     return
         # Нужно писать в блок информации что произошло
-        print('Вокруг базы нет места для нового объекта')
+        self.dialog_info.show(['Вокруг базы нет места', 'для нового объекта'])
