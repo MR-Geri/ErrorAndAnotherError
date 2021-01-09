@@ -21,6 +21,8 @@ class Base:
         self.energy = 1000
         self.hp = 1000
         self.distance_create = 1
+        # Установленные предметы
+        self.generator = None
         #
         self.rect = pg.Rect(self.pos[0] * self.size_cell, self.pos[1] * self.size_cell, self.size_cell, self.size_cell)
         self.surface = pg.Surface((self.size_cell, self.size_cell), pg.SRCALPHA)
@@ -36,17 +38,12 @@ class Base:
 
     def info(self) -> None:
         self.panel.info_update = self.info
-        self.panel.clear_line()
         energy = f'Энергии: {self.energy}'
         hp = f'Прочности: {self.hp}'
         distance = f'Дистанция базы: {self.distance_create}'
-        size = max_size_list_text(
-            [self.name, energy, hp, distance],
-            self.panel.interface.width, self.panel.interface.height, PT_MONO)
-        self.panel.line_0.set_text(self.name, size)
-        self.panel.line_1.set_text(energy, size)
-        self.panel.line_2.set_text(hp, size)
-        self.panel.line_3.set_text(distance, size)
+        texts = [self.name, energy, hp, distance]
+        size = max_size_list_text(texts, self.panel.interface.width, self.panel.interface.height, PT_MONO)
+        self.panel.update_text(texts, size)
 
     def scale(self, size_cell: int) -> None:
         self.size_cell = size_cell

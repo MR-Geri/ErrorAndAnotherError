@@ -118,7 +118,6 @@ class LeftPanel(Panel):
         self.render()
 
     def render(self) -> None:
-        self.surface = pg.Surface((self.rect.width, self.rect.height))
         self.surface.fill(self.color_background)
         #
         self.running_line.draw(self.surface)
@@ -137,56 +136,14 @@ class RightPanel(Panel):
         # Интерфейс
         self.info_update = None
         #
-        self.line_0 = TextCenter(
-            text='0', width=self.interface.width, height=self.interface.height, pos=self.interface.pos,
-            font_type=PT_MONO
-        )
-        self.interface.move(0)
-        self.line_1 = TextCenter(
-            text='1', width=self.interface.width, height=self.interface.height, pos=self.interface.pos,
-            font_type=PT_MONO
-        )
-        self.interface.move(0)
-        self.line_2 = TextCenter(
-            text='2', width=self.interface.width, height=self.interface.height, pos=self.interface.pos,
-            font_type=PT_MONO
-        )
-        self.interface.move(0)
-        self.line_3 = TextCenter(
-            text='3', width=self.interface.width, height=self.interface.height, pos=self.interface.pos,
-            font_type=PT_MONO
-        )
-        self.interface.move(0)
-        self.line_4 = TextCenter(
-            text='4', width=self.interface.width, height=self.interface.height, pos=self.interface.pos,
-            font_type=PT_MONO
-        )
-        self.interface.move(0)
-        self.line_5 = TextCenter(
-            text='5', width=self.interface.width, height=self.interface.height, pos=self.interface.pos,
-            font_type=PT_MONO
-        )
-        self.interface.move(0)
-        self.line_6 = TextCenter(
-            text='6', width=self.interface.width, height=self.interface.height, pos=self.interface.pos,
-            font_type=PT_MONO
-        )
-        self.interface.move(0)
-        self.line_7 = TextCenter(
-            text='7', width=self.interface.width, height=self.interface.height, pos=self.interface.pos,
-            font_type=PT_MONO
-        )
-        self.interface.move(0)
-        self.line_8 = TextCenter(
-            text='8', width=self.interface.width, height=self.interface.height, pos=self.interface.pos,
-            font_type=PT_MONO
-        )
-        self.interface.move(0)
-        self.line_9 = TextCenter(
-            text='9', width=self.interface.width, height=self.interface.height, pos=self.interface.pos,
-            font_type=PT_MONO
-        )
-        self.interface.move(0)
+        self.counter_line = 10
+        self.lines = []
+        for i in range(self.counter_line):
+            self.lines.append(TextCenter(
+                text='', width=self.interface.width, height=self.interface.height, pos=self.interface.pos,
+                font_type=PT_MONO
+            ))
+            self.interface.move(0)
         #
         self.update()
         self.render()
@@ -194,29 +151,20 @@ class RightPanel(Panel):
     def update(self) -> None:
         pass
 
-    def clear_line(self):
-        self.line_0.set_text('')
-        self.line_1.set_text('')
-        self.line_2.set_text('')
-        self.line_3.set_text('')
-        self.line_4.set_text('')
-        self.line_5.set_text('')
-        self.line_6.set_text('')
-        self.line_7.set_text('')
-        self.line_8.set_text('')
-        self.line_9.set_text('')
+    def update_text(self, texts: list = None, size: int = None) -> None:
+        last = -1
+        texts = list() if texts is None else texts
+        for ind, text in enumerate(texts):
+            if self.lines[ind].text != text:
+                self.lines[ind].set_text(text, size)
+            last = ind
+        for ind in range(last + 1, self.counter_line):
+            if self.lines[ind].text != '':
+                self.lines[ind].set_text('')
+        self.render()
 
     def render(self) -> None:
-        self.surface = pg.Surface((self.rect.width, self.rect.height))
         self.surface.fill(self.color_background)
         #
-        self.line_0.draw(self.surface)
-        self.line_1.draw(self.surface)
-        self.line_2.draw(self.surface)
-        self.line_3.draw(self.surface)
-        self.line_4.draw(self.surface)
-        self.line_5.draw(self.surface)
-        self.line_6.draw(self.surface)
-        self.line_7.draw(self.surface)
-        self.line_8.draw(self.surface)
-        self.line_9.draw(self.surface)
+        for line in self.lines:
+            line.draw(self.surface)

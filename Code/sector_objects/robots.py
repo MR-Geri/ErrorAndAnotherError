@@ -27,15 +27,11 @@ class MK0:
 
     def info(self) -> None:
         self.panel.info_update = self.info
-        self.panel.clear_line()
         energy = f'Энергии: {self.energy}'
         hp = f'Прочности: {self.hp}'
-        size = max_size_list_text(
-            [self.name, energy, hp],
-            self.panel.interface.width, self.panel.interface.height, PT_MONO)
-        self.panel.line_0.set_text(self.name, size)
-        self.panel.line_1.set_text(energy, size)
-        self.panel.line_2.set_text(hp, size)
+        texts = [self.name, energy, hp]
+        size = max_size_list_text(texts, self.panel.interface.width, self.panel.interface.height, PT_MONO)
+        self.panel.update_text(texts, size)
 
     def render(self) -> None:
         self.surface = pg.Surface((self.size_cell, self.size_cell), pg.SRCALPHA)

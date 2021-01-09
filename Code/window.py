@@ -261,7 +261,7 @@ class GameWindow(Window):
         # Масштабирование
         self.size_cell_min = int(
             min(self.win_width - 2 * panel_width, self.win_height) / max(SECTOR_X_NUMBER, SECTOR_Y_NUMBER))
-        self.size_cell_max = self.size_cell_min * 5
+        self.size_cell_max = self.size_cell_min * MAX_SCALE
         self.coefficient_scale = int((self.size_cell_max - self.size_cell_min) / 9)
         #
         self.size_cell = int(self.size_cell_min)
@@ -325,7 +325,7 @@ class GameWindow(Window):
                     print(f'window -> click Exception: {e}')
             else:
                 self.right_panel.info_update = None
-                self.right_panel.clear_line()
+                self.right_panel.update_text()
         if pos[0] < self.left_panel.rect.width:
             print('Клик по левой панели информации.')
         if pos[0] > self.right_panel.rect.x:
@@ -333,7 +333,7 @@ class GameWindow(Window):
 
     def draw(self) -> None:
         self.left_panel.render()
-        self.right_panel.render()
+        # self.right_panel.render()
         #
         self.sector.draw(self.display, self.camera.get_cord())
         self.left_panel.draw(self.display)
