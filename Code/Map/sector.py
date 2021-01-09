@@ -11,7 +11,8 @@ from Code.sound import Sound
 
 
 class Sector:
-    def __init__(self, number_x: int, number_y: int, size_cell: int, sound: Sound, dialog_info: DialogInfo) -> None:
+    def __init__(self, number_x: int, number_y: int, size_cell: int, sound: Sound, dialog_info: DialogInfo,
+                 panel) -> None:
         self.number_x, self.number_y = number_x, number_y  # Длина и высота сектора в единицах
         self.size_cell = size_cell
         self.size_sector = (number_x * size_cell, number_y * size_cell)
@@ -19,6 +20,7 @@ class Sector:
         self.board = None
         self.base = None
         self.dialog_info = dialog_info
+        self.panel = panel
         # Данные
         self.is_base: bool = False
         # Инициализация
@@ -46,7 +48,7 @@ class Sector:
         if type(self.board[pos[1]][pos[0]]) not in SELL_BLOCKED and not self.is_base:
             self.is_base = True
             self.base = Base(pos=pos, size_cell=self.size_cell, board=self.board,
-                             entities=self.entities, dialog_info=self.dialog_info)
+                             entities=self.entities, dialog_info=self.dialog_info, panel=self.panel)
             self.entities.add(self.base)
         else:
             if self.is_base:

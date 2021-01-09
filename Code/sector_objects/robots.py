@@ -3,13 +3,18 @@ from Code.settings import *
 from typing import Tuple
 import pygame as pg
 
+from Code.texts import max_size_list_text
+
 
 class MK0:
-    def __init__(self, pos: Tuple[int, int], size_cell: int) -> None:
+    def __init__(self, pos: Tuple[int, int], size_cell: int, panel) -> None:
         self.pos = list(pos)
         self.size_cell = size_cell
+        self.panel = panel
         #
+        self.name = 'Робот MK0'
         self.energy = 0
+        self.energy_create = 100
         self.dmg = 0
         self.hp = 100
         #
@@ -19,6 +24,18 @@ class MK0:
         self.surface = pg.Surface((self.size_cell, self.size_cell), pg.SRCALPHA)
         #
         self.render()
+
+    def info(self) -> None:
+        self.panel.info_update = self.info
+        self.panel.clear_line()
+        energy = f'Энергии: {self.energy}'
+        hp = f'Прочности: {self.hp}'
+        size = max_size_list_text(
+            [self.name, energy, hp],
+            self.panel.interface.width, self.panel.interface.height, PT_MONO)
+        self.panel.line_0.set_text(self.name, size)
+        self.panel.line_1.set_text(energy, size)
+        self.panel.line_2.set_text(hp, size)
 
     def render(self) -> None:
         self.surface = pg.Surface((self.size_cell, self.size_cell), pg.SRCALPHA)

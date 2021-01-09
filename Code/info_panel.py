@@ -135,6 +135,8 @@ class RightPanel(Panel):
     def __init__(self, width: int, height: int, pos: Tuple[int, int]) -> None:
         super().__init__(width, height, pos)
         # Интерфейс
+        self.info_update = None
+        #
         self.line_0 = TextCenter(
             text='0', width=self.interface.width, height=self.interface.height, pos=self.interface.pos,
             font_type=PT_MONO
@@ -191,6 +193,18 @@ class RightPanel(Panel):
 
     def update(self) -> None:
         pass
+
+    def clear_line(self):
+        self.line_0.set_text('')
+        self.line_1.set_text('')
+        self.line_2.set_text('')
+        self.line_3.set_text('')
+        self.line_4.set_text('')
+        self.line_5.set_text('')
+        self.line_6.set_text('')
+        self.line_7.set_text('')
+        self.line_8.set_text('')
+        self.line_9.set_text('')
 
     def render(self) -> None:
         self.surface = pg.Surface((self.rect.width, self.rect.height))

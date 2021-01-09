@@ -9,12 +9,13 @@ from Code.texts import max_size_list_text
 
 class Base:
     def __init__(self, pos: Tuple[int, int], size_cell: int, board: list,
-                 entities: Entities, dialog_info: DialogInfo) -> None:
+                 entities: Entities, dialog_info: DialogInfo, panel) -> None:
         self.pos = list(pos)
         self.size_cell = size_cell
         self.board = board
         self.entities = entities
         self.dialog_info = dialog_info
+        self.panel = panel
         #
         self.name = 'База MK0'
         self.energy = 1000
@@ -33,11 +34,19 @@ class Base:
     def draw(self, surface: pg.Surface) -> None:
         surface.blit(self.surface, self.rect)
 
-    def info(self, panel) -> None:
+    def info(self) -> None:
+        self.panel.info_update = self.info
+        self.panel.clear_line()
+        energy = f'Энергии: {self.energy}'
+        hp = f'Прочности: {self.hp}'
+        distance = f'Дистанция базы: {self.distance_create}'
         size = max_size_list_text(
-            [self.name],
-            panel.interface.width, panel.interface.height, PT_MONO)
-        panel.line_0.set_text(self.name, size)
+            [self.name, energy, hp, distance],
+            self.panel.interface.width, self.panel.interface.height, PT_MONO)
+        self.panel.line_0.set_text(self.name, size)
+        self.panel.line_1.set_text(energy, size)
+        self.panel.line_2.set_text(hp, size)
+        self.panel.line_3.set_text(distance, size)
 
     def scale(self, size_cell: int) -> None:
         self.size_cell = size_cell
@@ -51,6 +60,12 @@ class Base:
             for i_x, x in enumerate(y):
                 if k_y > i_y >= n_y and k_x > i_x >= n_x and \
                         type(x) not in SELL_BLOCKED and self.entities.entities_sector[i_y][i_x] is None:
-                    self.entities.add(robot(pos=(i_x, i_y), size_cell=self.size_cell))
+                    robot_ = robot(pos=(i_x, i_y), size_cell=self.size_cell, panel=self.panel)
+                    if self.energy >= robot_.energy_create:
+                        self.energy -= robot_.energy_create
+                        self.entities.add(robot_)
+                        # Происходит обновление базы -> обновим панель
+                        if self.panel.info_update == self.info:
+                            self.info()
                     return
         self.dialog_info.show(['Вокруг базы нет места', 'для нового объекта'])

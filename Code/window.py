@@ -1,6 +1,7 @@
 from Code.dialogs import DialogInfo
 from Code.escape_menu import EscMenu
 from Code.interface_utils import Interface
+from Code.processor import Processor
 from Code.settings import *
 
 from typing import Tuple
@@ -252,6 +253,7 @@ class SettingsWindow(Window):
 class GameWindow(Window):
     def __init__(self, controller: object, size_display: Tuple[int, int], caption: str) -> None:
         super().__init__(controller, size_display, caption)
+        self.processor = Processor()
         # Панели
         panel_width = self.win_width // INFO_PANEL_K
         self.left_panel = LeftPanel(panel_width, self.win_height, pos=(0, 0), music=self.music)
@@ -267,8 +269,8 @@ class GameWindow(Window):
                                       width=self.win_width // 2, height=self.win_height // 3)
         # sector нужно ЗАГРУЖАТЬ если это НЕ НОВАЯ игра
         self.sound = Sound()
-        self.sector = Sector(number_x=SECTOR_X_NUMBER, number_y=SECTOR_Y_NUMBER,
-                             size_cell=self.size_cell, sound=self.sound, dialog_info=self.dialog_info)
+        self.sector = Sector(number_x=SECTOR_X_NUMBER, number_y=SECTOR_Y_NUMBER, size_cell=self.size_cell,
+                             sound=self.sound, dialog_info=self.dialog_info, panel=self.right_panel)
         #
         self.camera = Camera(
             SECTOR_X_NUMBER * self.size_cell,
@@ -318,10 +320,12 @@ class GameWindow(Window):
             self.left_panel.update_cursor((x, y))
             if self.sector.entities.entities_sector[y][x] is not None:
                 try:
-                    self.sector.entities.entities_sector[y][x].info(self.right_panel)
-                    self.right_panel.render()
+                    self.sector.entities.entities_sector[y][x].info()
                 except Exception as e:
                     print(f'window -> click Exception: {e}')
+            else:
+                self.right_panel.info_update = None
+                self.right_panel.clear_line()
         if pos[0] < self.left_panel.rect.width:
             print('Клик по левой панели информации.')
         if pos[0] > self.right_panel.rect.x:
@@ -339,6 +343,7 @@ class GameWindow(Window):
 
     def update(self) -> None:
         pg.display.set_caption(str(self.clock.get_fps()))  # нужно для отладки. FPS в заголовок окна!
+        self.processor.ticked()
         if not self.esc_menu.if_active and not self.dialog_info.if_active:
             self.camera.move(self.camera_left, self.camera_right, self.camera_up, self.camera_down)
             if self.size_cell > self.size_cell_min:
