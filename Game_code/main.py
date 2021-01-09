@@ -2,5 +2,5 @@
 # sector.entities.add(robot1)
 # robot2 = Robot(pos=(2, 1), size_cell=self.size_cell)
 # sector.entities.add(robot2)
-# sector.place_base(pos=(8, 12))
-base.create_robot(MK0)
+sector.place_base(pos=(18, 12))
+# base.create_robot(MK0)

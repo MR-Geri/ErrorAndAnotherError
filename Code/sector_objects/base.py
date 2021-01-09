@@ -4,6 +4,7 @@ from Code.settings import *
 import pygame as pg
 from typing import Tuple
 from Code.sector_objects.entities import Entities
+from Code.texts import max_size_list_text
 
 
 class Base:
@@ -15,6 +16,7 @@ class Base:
         self.entities = entities
         self.dialog_info = dialog_info
         #
+        self.name = 'База MK0'
         self.energy = 1000
         self.hp = 1000
         self.distance_create = 1
@@ -30,6 +32,12 @@ class Base:
 
     def draw(self, surface: pg.Surface) -> None:
         surface.blit(self.surface, self.rect)
+
+    def info(self, panel) -> None:
+        size = max_size_list_text(
+            [self.name],
+            panel.interface.width, panel.interface.height, PT_MONO)
+        panel.line_0.set_text(self.name, size)
 
     def scale(self, size_cell: int) -> None:
         self.size_cell = size_cell

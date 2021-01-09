@@ -314,7 +314,14 @@ class GameWindow(Window):
 
     def click(self, pos) -> None:
         if self.right_panel.rect.x > pos[0] > self.left_panel.rect.width:
-            self.left_panel.update_cursor(self.get_number_cell(pos))
+            x, y = self.get_number_cell(pos)
+            self.left_panel.update_cursor((x, y))
+            if self.sector.entities.entities_sector[y][x] is not None:
+                try:
+                    self.sector.entities.entities_sector[y][x].info(self.right_panel)
+                    self.right_panel.render()
+                except Exception as e:
+                    print(f'window -> click Exception: {e}')
         if pos[0] < self.left_panel.rect.width:
             print('Клик по левой панели информации.')
         if pos[0] > self.right_panel.rect.x:

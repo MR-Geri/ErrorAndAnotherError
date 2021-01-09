@@ -135,6 +135,56 @@ class RightPanel(Panel):
     def __init__(self, width: int, height: int, pos: Tuple[int, int]) -> None:
         super().__init__(width, height, pos)
         # Интерфейс
+        self.line_0 = TextCenter(
+            text='0', width=self.interface.width, height=self.interface.height, pos=self.interface.pos,
+            font_type=PT_MONO
+        )
+        self.interface.move(0)
+        self.line_1 = TextCenter(
+            text='1', width=self.interface.width, height=self.interface.height, pos=self.interface.pos,
+            font_type=PT_MONO
+        )
+        self.interface.move(0)
+        self.line_2 = TextCenter(
+            text='2', width=self.interface.width, height=self.interface.height, pos=self.interface.pos,
+            font_type=PT_MONO
+        )
+        self.interface.move(0)
+        self.line_3 = TextCenter(
+            text='3', width=self.interface.width, height=self.interface.height, pos=self.interface.pos,
+            font_type=PT_MONO
+        )
+        self.interface.move(0)
+        self.line_4 = TextCenter(
+            text='4', width=self.interface.width, height=self.interface.height, pos=self.interface.pos,
+            font_type=PT_MONO
+        )
+        self.interface.move(0)
+        self.line_5 = TextCenter(
+            text='5', width=self.interface.width, height=self.interface.height, pos=self.interface.pos,
+            font_type=PT_MONO
+        )
+        self.interface.move(0)
+        self.line_6 = TextCenter(
+            text='6', width=self.interface.width, height=self.interface.height, pos=self.interface.pos,
+            font_type=PT_MONO
+        )
+        self.interface.move(0)
+        self.line_7 = TextCenter(
+            text='7', width=self.interface.width, height=self.interface.height, pos=self.interface.pos,
+            font_type=PT_MONO
+        )
+        self.interface.move(0)
+        self.line_8 = TextCenter(
+            text='8', width=self.interface.width, height=self.interface.height, pos=self.interface.pos,
+            font_type=PT_MONO
+        )
+        self.interface.move(0)
+        self.line_9 = TextCenter(
+            text='9', width=self.interface.width, height=self.interface.height, pos=self.interface.pos,
+            font_type=PT_MONO
+        )
+        self.interface.move(0)
         #
         self.update()
         self.render()
@@ -146,3 +196,13 @@ class RightPanel(Panel):
         self.surface = pg.Surface((self.rect.width, self.rect.height))
         self.surface.fill(self.color_background)
         #
+        self.line_0.draw(self.surface)
+        self.line_1.draw(self.surface)
+        self.line_2.draw(self.surface)
+        self.line_3.draw(self.surface)
+        self.line_4.draw(self.surface)
+        self.line_5.draw(self.surface)
+        self.line_6.draw(self.surface)
+        self.line_7.draw(self.surface)
+        self.line_8.draw(self.surface)
+        self.line_9.draw(self.surface)
