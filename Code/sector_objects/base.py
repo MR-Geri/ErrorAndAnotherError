@@ -1,4 +1,5 @@
 from Code.dialogs import DialogInfo
+from Code.info_panel import RightPanel
 from Code.sector_objects.generates_electrical import RadioisotopeGenerator
 from Code.settings import *
 
@@ -10,7 +11,7 @@ from Code.texts import max_size_list_text
 
 class Base:
     def __init__(self, pos: Tuple[int, int], size_cell: int, board: list,
-                 entities: Entities, dialog_info: DialogInfo, panel) -> None:
+                 entities: Entities, dialog_info: DialogInfo, panel: RightPanel) -> None:
         self.pos = list(pos)
         self.size_cell = size_cell
         self.board = board
@@ -41,7 +42,7 @@ class Base:
     def info(self) -> None:
         self.panel.info_update = self.info
         energy = f'Энергии: {self.energy}'
-        hp = f'Прочности: {self.hp}'
+        hp = f'Прочность: {self.hp}'
         distance = f'Дистанция базы: {self.distance_create}'
         texts = [self.name, energy, hp, distance]
         size = max_size_list_text(texts, self.panel.interface.width, self.panel.interface.height, PT_MONO)
@@ -52,7 +53,7 @@ class Base:
         self.rect = pg.Rect(self.pos[0] * self.size_cell, self.pos[1] * self.size_cell, self.size_cell, self.size_cell)
         self.render()
 
-    def increase_energy(self, energy):
+    def increase_energy(self, energy: int):
         self.energy += energy if self.energy + energy <= self.energy_max else 0
         if self.panel.info_update == self.info:
             self.info()

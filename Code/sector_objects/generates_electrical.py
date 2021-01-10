@@ -5,7 +5,7 @@ class RadioisotopeGenerator:
         self.energy_tick = 8
         self.resource = 10 ** 6
 
-    def update(self, tick) -> None:
+    def update(self, tick: int) -> None:
         if not tick % self.energy_tick and self.resource:
             self.resource -= self.energy_generate
             self.increase_energy(self.energy_generate)

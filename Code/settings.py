@@ -38,13 +38,13 @@ ALL_BACKGROUND_MUSIC = [[root + i for i in files] for root, _, files in walk('..
 PLAYER_CODE = '../Game_code/'
 # Типизация
 COLOR = Union[Tuple[int, int, int], str]
-from Code.running_line import RunningLineMaxSizeCenter
-from Code.Map.cell import Plain, Swamp, Mountain
 from Code.texts import Text, TextMaxSize, TextMaxSizeCenter, TextCenter
-from Code.sector_objects.robots import MK0
 ALL_TEXT = Union[Text, TextMaxSize, TextMaxSizeCenter, TextCenter]
+from Code.running_line import RunningLineMaxSizeCenter
 ALL_RUNNING_LINE = Union[RunningLineMaxSizeCenter]
+from Code.Map.cell import Plain, Swamp, Mountain
 ALL_CELL = Union[Plain, Swamp, Mountain]
+from Code.sector_objects.robots import MK0
 ALL_ROBOT = Union[MK0]
 # Биомы
 MAX_SIZE_MOUNTAIN = (10, 10)

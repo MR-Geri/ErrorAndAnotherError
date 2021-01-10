@@ -1,11 +1,17 @@
+from Code.settings import *
+
 import pygame as pg
+
+from Code.info_panel import RightPanel
+from Code.texts import max_size_list_text
 
 
 class Cell(pg.sprite.Sprite):
-    def __init__(self, number_x: int, number_y: int, size_cell: int) -> None:
+    def __init__(self, number_x: int, number_y: int, size_cell: int, panel: RightPanel) -> None:
         super().__init__()
         self.number_x, self.number_y = number_x, number_y
         self.size_cell = size_cell
+        self.panel = panel
         self.x = number_x * self.size_cell
         self.y = number_y * self.size_cell
         self.rect = pg.Rect(self.x, self.y, self.size_cell, self.size_cell)
@@ -23,7 +29,10 @@ class Cell(pg.sprite.Sprite):
         # )
 
     def info(self) -> None:
-        pass
+        self.panel.info_update = self.info
+        texts = [self.name]
+        size = max_size_list_text(texts, self.panel.interface.width, self.panel.interface.height, PT_MONO)
+        self.panel.update_text(texts, size)
 
     def scale(self, size_cell: int) -> None:
         self.size_cell = size_cell
@@ -37,18 +46,21 @@ class Cell(pg.sprite.Sprite):
 
 
 class Plain(Cell):
-    def __init__(self, number_x: int, number_y: int, size_cell: int) -> None:
+    def __init__(self, number_x: int, number_y: int, size_cell: int, panel: RightPanel) -> None:
         self.color = pg.Color('#194D0F')
-        super().__init__(number_x, number_y, size_cell)
+        self.name = 'Равнина'
+        super().__init__(number_x, number_y, size_cell, panel)
 
 
 class Swamp(Cell):
-    def __init__(self, number_x: int, number_y: int, size_cell: int) -> None:
+    def __init__(self, number_x: int, number_y: int, size_cell: int, panel: RightPanel) -> None:
         self.color = pg.Color('#32160D')
-        super().__init__(number_x, number_y, size_cell)
+        self.name = 'Болото'
+        super().__init__(number_x, number_y, size_cell, panel)
 
 
 class Mountain(Cell):
-    def __init__(self, number_x: int, number_y: int, size_cell: int) -> None:
+    def __init__(self, number_x: int, number_y: int, size_cell: int, panel: RightPanel) -> None:
         self.color = pg.Color('#818394')
-        super().__init__(number_x, number_y, size_cell)
+        self.name = 'Горы'
+        super().__init__(number_x, number_y, size_cell, panel)

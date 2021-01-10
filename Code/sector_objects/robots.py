@@ -1,3 +1,4 @@
+from Code.info_panel import RightPanel
 from Code.settings import *
 
 from typing import Tuple
@@ -7,7 +8,7 @@ from Code.texts import max_size_list_text
 
 
 class MK0:
-    def __init__(self, pos: Tuple[int, int], size_cell: int, panel) -> None:
+    def __init__(self, pos: Tuple[int, int], size_cell: int, panel: RightPanel) -> None:
         self.pos = list(pos)
         self.size_cell = size_cell
         self.panel = panel

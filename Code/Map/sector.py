@@ -1,7 +1,9 @@
+from Code.settings import *
+
 from Code.dialogs import DialogInfo
+from Code.info_panel import RightPanel
 from Code.sector_objects.base import Base
 from Code.sector_objects.entities import Entities
-from Code.settings import *
 
 from typing import Tuple
 import pygame as pg
@@ -12,7 +14,7 @@ from Code.sound import Sound
 
 class Sector:
     def __init__(self, number_x: int, number_y: int, size_cell: int, sound: Sound, dialog_info: DialogInfo,
-                 panel) -> None:
+                 panel: RightPanel) -> None:
         self.number_x, self.number_y = number_x, number_y  # Длина и высота сектора в единицах
         self.size_cell = size_cell
         self.size_sector = (number_x * size_cell, number_y * size_cell)
@@ -37,7 +39,8 @@ class Sector:
         biomes = GeneratorBiomes(
             number_x=self.number_x,
             number_y=self.number_y,
-            size_cell=self.size_cell
+            size_cell=self.size_cell,
+            panel=self.panel
         )
         self.board = [
             [biomes.get_cell(x, y) for x in range(self.number_x)]

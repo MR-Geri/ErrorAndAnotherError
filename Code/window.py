@@ -314,7 +314,7 @@ class GameWindow(Window):
             print(f'get_number_cell Exception: {e}')
             return -1, -1
 
-    def click(self, pos) -> None:
+    def click(self, pos: Tuple[int, int]) -> None:
         if self.right_panel.rect.x > pos[0] > self.left_panel.rect.width:
             x, y = self.get_number_cell(pos)
             self.left_panel.update_cursor((x, y))
@@ -326,7 +326,6 @@ class GameWindow(Window):
             else:
                 self.right_panel.info_update = None
                 self.sector.board[y][x].info()
-                self.right_panel.update_text()
         if pos[0] < self.left_panel.rect.width:
             print('Клик по левой панели информации.')
         if pos[0] > self.right_panel.rect.x:
