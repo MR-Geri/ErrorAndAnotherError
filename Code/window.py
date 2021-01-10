@@ -253,7 +253,6 @@ class SettingsWindow(Window):
 class GameWindow(Window):
     def __init__(self, controller: object, size_display: Tuple[int, int], caption: str) -> None:
         super().__init__(controller, size_display, caption)
-        self.processor = Processor()
         # Панели
         panel_width = self.win_width // INFO_PANEL_K
         self.left_panel = LeftPanel(panel_width, self.win_height, pos=(0, 0), music=self.music)
@@ -287,6 +286,7 @@ class GameWindow(Window):
         #
         self.camera_left, self.camera_right, self.camera_up, self.camera_down = False, False, False, False
         self.l_ctrl = False
+        self.processor = Processor(entities=self.sector.entities.entities_sector)
 
     def scale(self, coeff_scale: float):
         # Масштабирование sector с ограничениями
@@ -325,6 +325,7 @@ class GameWindow(Window):
                     print(f'window -> click Exception: {e}')
             else:
                 self.right_panel.info_update = None
+                self.sector.board[y][x].info()
                 self.right_panel.update_text()
         if pos[0] < self.left_panel.rect.width:
             print('Клик по левой панели информации.')
@@ -373,7 +374,8 @@ class GameWindow(Window):
                         eval(str(t))
                     except SyntaxError:
                         exec(str(t))
-                    except NameError:
+                    except NameError as e:
+                        print(e)
                         self.dialog_info.show([f'Не существует такого объекта'])
                     except Exception as e:
                         print(e)

@@ -22,6 +22,9 @@ class Cell(pg.sprite.Sprite):
         #     (0.25 * self.size_cell, 0.25 * self.size_cell, 0.5 * self.size_cell, 0.5 * self.size_cell)
         # )
 
+    def info(self) -> None:
+        pass
+
     def scale(self, size_cell: int) -> None:
         self.size_cell = size_cell
         self.x = self.number_x * size_cell

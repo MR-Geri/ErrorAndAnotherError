@@ -55,3 +55,7 @@ MAX_QUANTITY_SWAMP = 5
 MIN_QUANTITY_SWAMP_CELL = 8
 SELL_BLOCKED = [Mountain]
 #
+from Code.sector_objects.base import Base
+ROBOTS = [MK0]
+BASES = [Base]
+#

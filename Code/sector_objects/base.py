@@ -1,4 +1,5 @@
 from Code.dialogs import DialogInfo
+from Code.sector_objects.generates_electrical import RadioisotopeGenerator
 from Code.settings import *
 
 import pygame as pg
@@ -19,10 +20,11 @@ class Base:
         #
         self.name = 'База MK0'
         self.energy = 1000
+        self.energy_max = 1500
         self.hp = 1000
         self.distance_create = 1
         # Установленные предметы
-        self.generator = None
+        self.generator = RadioisotopeGenerator(self.increase_energy)
         #
         self.rect = pg.Rect(self.pos[0] * self.size_cell, self.pos[1] * self.size_cell, self.size_cell, self.size_cell)
         self.surface = pg.Surface((self.size_cell, self.size_cell), pg.SRCALPHA)
@@ -49,6 +51,11 @@ class Base:
         self.size_cell = size_cell
         self.rect = pg.Rect(self.pos[0] * self.size_cell, self.pos[1] * self.size_cell, self.size_cell, self.size_cell)
         self.render()
+
+    def increase_energy(self, energy):
+        self.energy += energy if self.energy + energy <= self.energy_max else 0
+        if self.panel.info_update == self.info:
+            self.info()
 
     def create_robot(self, robot: ALL_ROBOT) -> None:
         n_x, k_x = self.pos[0] - self.distance_create, self.pos[0] + self.distance_create + 1
