@@ -343,8 +343,8 @@ class GameWindow(Window):
 
     def update(self) -> None:
         pg.display.set_caption(str(self.clock.get_fps()))  # нужно для отладки. FPS в заголовок окна!
-        self.processor.ticked()
         if not self.esc_menu.if_active and not self.dialog_info.if_active:
+            self.processor.ticked()
             self.camera.move(self.camera_left, self.camera_right, self.camera_up, self.camera_down)
             if self.size_cell > self.size_cell_min:
                 pos_l = self.get_number_cell((self.left_panel.rect.width, 0))
