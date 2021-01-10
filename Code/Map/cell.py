@@ -28,6 +28,10 @@ class Cell:
         #     (0.25 * self.size_cell, 0.25 * self.size_cell, 0.5 * self.size_cell, 0.5 * self.size_cell)
         # )
 
+    def info(self) -> None:
+        self.panel.info_update = self.info
+        self.panel.update_text(self.texts)
+
     def scale(self, size_cell: int) -> None:
         self.size_cell = size_cell
         self.x = self.number_x * size_cell
@@ -42,29 +46,19 @@ class Cell:
 class Plain(Cell):
     def __init__(self, number_x: int, number_y: int, size_cell: int, panel: RightPanel) -> None:
         self.color = pg.Color('#194D0F')
-        self.name = 'Равнина'
+        self.name = ' Равнина '
         self.energy_passage = 10
+        self.texts = [self.name, f' Для перемещения ', f' энергии > {self.energy_passage} ']
         super().__init__(number_x, number_y, size_cell, panel)
-
-    def info(self) -> None:
-        self.panel.info_update = self.info
-        texts = [self.name]
-        size = max_size_list_text(texts, self.panel.interface.width, self.panel.interface.height, PT_MONO)
-        self.panel.update_text(texts, size)
 
 
 class Swamp(Cell):
     def __init__(self, number_x: int, number_y: int, size_cell: int, panel: RightPanel) -> None:
         self.color = pg.Color('#32160D')
-        self.name = 'Болото'
+        self.name = ' Болото '
         self.energy_passage = 19
+        self.texts = [self.name, f' Для перемещения ', f' энергии > {self.energy_passage} ']
         super().__init__(number_x, number_y, size_cell, panel)
-
-    def info(self) -> None:
-        self.panel.info_update = self.info
-        texts = [self.name]
-        size = max_size_list_text(texts, self.panel.interface.width, self.panel.interface.height, PT_MONO)
-        self.panel.update_text(texts, size)
 
 
 class Mountain(Cell):
@@ -72,10 +66,5 @@ class Mountain(Cell):
         self.color = pg.Color('#818394')
         self.name = 'Горы'
         self.energy_passage = 20
+        self.texts = [self.name, f' Для перемещения ', f' энергии > {self.energy_passage} ']
         super().__init__(number_x, number_y, size_cell, panel)
-
-    def info(self) -> None:
-        self.panel.info_update = self.info
-        texts = [self.name]
-        size = max_size_list_text(texts, self.panel.interface.width, self.panel.interface.height, PT_MONO)
-        self.panel.update_text(texts, size)

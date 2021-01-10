@@ -35,18 +35,19 @@ class Base:
     def render(self) -> None:
         self.surface = pg.Surface((self.size_cell, self.size_cell), pg.SRCALPHA)
         self.surface.fill('#00FFC9')
+        if self.generator:
+            self.generator.draw(self.surface, self.rect)
 
     def draw(self, surface: pg.Surface) -> None:
         surface.blit(self.surface, self.rect)
 
     def info(self) -> None:
         self.panel.info_update = self.info
-        energy = f'Энергии: {self.energy}'
-        hp = f'Прочность: {self.hp}'
-        distance = f'Дистанция базы: {self.distance_create}'
+        energy = f' Энергии > {self.energy} '
+        hp = f' Прочность > {self.hp} '
+        distance = f' Дистанция базы > {self.distance_create} '
         texts = [self.name, energy, hp, distance]
-        size = max_size_list_text(texts, self.panel.interface.width, self.panel.interface.height, PT_MONO)
-        self.panel.update_text(texts, size)
+        self.panel.update_text(texts)
 
     def scale(self, size_cell: int) -> None:
         self.size_cell = size_cell

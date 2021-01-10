@@ -139,10 +139,14 @@ class RightPanel(Panel):
         self.counter_line = 10
         self.lines = []
         for i in range(self.counter_line):
-            self.lines.append(TextCenter(
+            self.lines.append(TextMaxSizeCenter(
                 text='', width=self.interface.width, height=self.interface.height, pos=self.interface.pos,
                 font_type=PT_MONO
             ))
+            # self.lines.append(TextCenter(
+            #     text='', width=self.interface.width, height=self.interface.height, pos=self.interface.pos,
+            #     font_type=PT_MONO
+            # ))
             self.interface.move(0)
         #
         self.update()
@@ -151,12 +155,12 @@ class RightPanel(Panel):
     def update(self) -> None:
         pass
 
-    def update_text(self, texts: list = None, size: int = None) -> None:
+    def update_text(self, texts: list = None) -> None:
         last = -1
         texts = list() if texts is None else texts
         for ind, text in enumerate(texts):
             if self.lines[ind].text != text:
-                self.lines[ind].set_text(text, size)
+                self.lines[ind].set_text(text)
             last = ind
         for ind in range(last + 1, self.counter_line):
             if self.lines[ind].text != '':
