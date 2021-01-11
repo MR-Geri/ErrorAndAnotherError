@@ -1,7 +1,5 @@
 from Code.settings import *
 
-import pygame as pg
-
 
 class RadioisotopeGenerator:
     def __init__(self, generation_energy) -> None:

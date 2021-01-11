@@ -1,11 +1,10 @@
 from Code.settings import *
 
 from Code.dialogs import DialogInfo
-from Code.info_panel import RightPanel, LeftPanel
+from Code.info_panel import RightPanel
 from Code.sector_objects.base import Base
 from Code.sector_objects.entities import Entities
 
-from typing import Tuple
 import pygame as pg
 
 from Code.Map.biomes import GeneratorBiomes

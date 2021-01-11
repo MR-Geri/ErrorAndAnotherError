@@ -1,6 +1,3 @@
-from typing import Tuple, List
-import pygame as pg
-
 from Code.settings import *
 
 

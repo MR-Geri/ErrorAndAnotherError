@@ -1,9 +1,8 @@
-from Code.info_panel import RightPanel
 from Code.settings import *
+from Code.info_panel import RightPanel
 
 import random
 from collections import defaultdict
-from typing import Tuple
 
 
 class Biome:

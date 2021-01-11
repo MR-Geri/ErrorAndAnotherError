@@ -1,8 +1,5 @@
 from Code.settings import *
 
-import pygame as pg
-from typing import Tuple
-
 
 class Minimap:
     def __init__(self, pos: Tuple[int, int], width: int, height: int) -> None:

@@ -1,10 +1,9 @@
+from Code.settings import *
 from Code.dialogs import DialogInfo, DialogFile
 from Code.escape_menu import EscMenu
 from Code.interface_utils import Interface
 from Code.processor import Processor
-from Code.settings import *
 
-from typing import Tuple
 import pygame as pg
 
 from Code.Graphics.matrix import Matrix

@@ -1,9 +1,5 @@
 from Code.settings import *
-
-import pygame as pg
-
 from Code.info_panel import RightPanel
-from Code.texts import max_size_list_text
 
 
 class Cell:

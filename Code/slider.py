@@ -1,7 +1,4 @@
-from Code.settings import COLOR
-
-from typing import Tuple, Union
-import pygame as pg
+from Code.settings import *
 
 
 class Numbers:

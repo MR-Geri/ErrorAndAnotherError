@@ -1,10 +1,8 @@
+from Code.settings import *
 from Code.Map.minimaps import Minimap
 from Code.buttons import Buttons, Button, ButtonTwoStates
 from Code.interface_utils import Interface
-from Code.settings import *
 
-from typing import Tuple
-import pygame as pg
 import datetime
 
 from Code.sound import Music

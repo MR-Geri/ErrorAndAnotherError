@@ -1,7 +1,5 @@
-from Code.edit_permission import Permission
 from Code.settings import *
-
-import pygame as pg
+from Code.edit_permission import Permission
 
 from Code.slider import Numbers
 from Code.sound import Music

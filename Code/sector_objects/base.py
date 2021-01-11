@@ -1,12 +1,10 @@
-from Code.dialogs import DialogInfo
-from Code.info_panel import RightPanel, LeftPanel
-from Code.sector_objects.generates_electrical import RadioisotopeGenerator
 from Code.settings import *
+from Code.dialogs import DialogInfo
+from Code.info_panel import RightPanel
+from Code.sector_objects.generates_electrical import RadioisotopeGenerator
 
 import pygame as pg
-from typing import Tuple
 from Code.sector_objects.entities import Entities
-from Code.texts import max_size_list_text
 
 
 class Base:

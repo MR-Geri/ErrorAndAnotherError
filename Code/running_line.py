@@ -1,8 +1,4 @@
-from Code.settings import CLOCK, FPS, COLOR
-
-from typing import Tuple
-import pygame as pg
-
+from Code.settings import *
 from Code.texts import TextMaxSizeCenter
 
 

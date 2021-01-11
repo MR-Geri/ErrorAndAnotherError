@@ -1,9 +1,7 @@
+from Code.settings import *
 from Code.buttons import Button
 from Code.interface_utils import Interface
-from Code.settings import *
-
-import pygame as pg
-from typing import Tuple
+from Code.line_input import LineInput
 
 from Code.texts import max_size_list_text
 
@@ -69,23 +67,35 @@ class DialogInfo:
 class DialogFile:
     def __init__(self, pos: Tuple[int, int], width: int, height: int) -> None:
         self.rect = pg.Rect(*pos, width, height)
-        self.surface = pg.Surface((self.rect.width, self.rect.height), pg.SRCALPHA)
-        self.surface.fill(pg.Color('#25B2B9'))
+        self.fon = pg.Surface((self.rect.width, self.rect.height), pg.SRCALPHA)
+        self.fon.fill(pg.Color('#25B2B9'))
         self.if_active: bool = False
+        #
+        self.interface = Interface(pos=(pos[0] + width // 100, pos[1] + height // 50), max_width=width,
+                                   max_height=height, indent=(0, height // 50),
+                                   size=(int(0.98 * width), int(0.96 * height / 10)))
+        self.line_input = LineInput(pos=self.interface.pos, width=self.interface.width, height=self.interface.height,
+                                    font_type=PT_MONO)
+        self.line_text = TextMaxSizeCenter(text='Введите сюда полный путь до папки с кодом',
+                                           pos=self.interface.pos, width=self.interface.width,
+                                           height=self.interface.height, font_type=PT_MONO)
 
     def hide(self) -> None:
         self.if_active = False
-        self.surface = pg.Surface((self.rect.width, self.rect.height), pg.SRCALPHA)
-        self.surface.fill(pg.Color('#25B2B9'))
 
     def event(self, event: pg.event.Event) -> None:
         if self.if_active:
-            # self.button.event(event)
-            pass
+            self.line_input.event(event)
 
     def show(self) -> None:
         self.if_active = True
+        self.line_input = LineInput(pos=self.interface.pos, width=self.interface.width, height=self.interface.height,
+                                    font_type=PT_MONO)
+        self.line_input.if_active = True
 
     def draw(self, surface: pg.Surface) -> None:
         if self.if_active:
-            surface.blit(self.surface, self.rect)
+            surface.blit(self.fon, self.rect)
+            self.line_input.draw(surface)
+            if self.line_input.text.text == '':
+                self.line_text.draw(surface)

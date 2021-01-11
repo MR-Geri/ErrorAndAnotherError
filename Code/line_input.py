@@ -13,7 +13,7 @@ class LineInput:
         self.pos = [0, 0]
         self.pos_cursor = [0, 0]
         #
-        self.flag = False
+        self.if_active = False
         self.tick = 0
         #
         self.font_color = font_color
@@ -30,11 +30,11 @@ class LineInput:
         Если эта дичь не работает. ГОСПАДЕ перепиши сам по братски.
         СЯБ!
         """
-        if event.type == pg.KEYDOWN and self.flag:
+        if event.type == pg.KEYDOWN and self.if_active:
             cur = int((-self.pos[0] / self.char) + self.pos_cursor[0])
             text = [self.text.text[:cur], self.text.text[cur:]]
             if event.key == pg.K_RETURN:
-                self.flag = False
+                self.if_active = False
                 self.tick = 0
             elif event.key == pg.K_BACKSPACE or event.key == pg.K_LEFT:
                 if event.key == pg.K_BACKSPACE:
@@ -61,10 +61,10 @@ class LineInput:
             self.render()
         try:
             if self.rect.collidepoint(*event.pos) and event.type == pg.MOUSEBUTTONUP and event.button == 1:
-                self.flag = True
+                self.if_active = True
                 self.tick = 0
             elif event.type == pg.MOUSEBUTTONUP and event.button == 1:
-                self.flag = False
+                self.if_active = False
                 self.tick = 0
         except AttributeError:
             pass
@@ -77,7 +77,7 @@ class LineInput:
     def draw(self, display: pg.Surface) -> None:
         self.tick = (self.tick + 1) % (2 * FPS + 1)
         display.blit(self.surface, self.rect)
-        if self.flag and self.tick <= FPS:
+        if self.if_active and self.tick <= FPS:
             pg.draw.rect(
                 display, pg.Color(self.font_color),
                 (

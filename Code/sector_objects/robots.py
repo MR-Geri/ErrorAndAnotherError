@@ -1,7 +1,6 @@
-from Code.info_panel import RightPanel, LeftPanel
 from Code.settings import *
+from Code.info_panel import RightPanel
 
-from typing import Tuple
 import pygame as pg
 
 from Code.texts import max_size_list_text

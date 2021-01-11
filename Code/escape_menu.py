@@ -1,9 +1,6 @@
-from Code.settings import COLOR_BACKGROUND, PT_MONO
+from Code.settings import *
 from Code.buttons import Button, Buttons
 from Code.interface_utils import Interface
-from typing import Tuple
-
-import pygame as pg
 
 from Code.texts import max_size_list_text, TextCenter
 

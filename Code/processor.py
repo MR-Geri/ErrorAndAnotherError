@@ -1,7 +1,5 @@
 from Code.settings import *
 
-import pygame as pg
-
 
 class Processor:
     def __init__(self, entities: dict) -> None:

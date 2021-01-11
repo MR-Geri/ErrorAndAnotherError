@@ -1,8 +1,5 @@
 from Code.settings import *
 
-from typing import Tuple
-import pygame as pg
-
 
 class Camera:
     def __init__(self, width: int, height: int, left: int, right: int, win_width: int, win_height: int,
