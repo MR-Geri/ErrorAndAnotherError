@@ -3,8 +3,6 @@ from Code.info_panel import RightPanel
 
 import pygame as pg
 
-from Code.texts import max_size_list_text
-
 
 class MK0:
     def __init__(self, pos: Tuple[int, int], size_cell: int, dialog_file, right_panel: RightPanel) -> None:

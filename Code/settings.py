@@ -46,6 +46,8 @@ from Code.Map.cell import Plain, Swamp, Mountain
 ALL_CELL = Union[Plain, Swamp, Mountain]
 from Code.sector_objects.robots import MK0
 ALL_ROBOT = Union[MK0]
+from Code.buttons import Button, ButtonTwoStates
+BUTTONS = [Button, ButtonTwoStates]
 # Биомы
 MAX_SIZE_MOUNTAIN = (10, 10)
 MAX_QUANTITY_MOUNTAIN = 3

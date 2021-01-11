@@ -1,3 +1,4 @@
+from Code.scroll import Scroll
 from Code.settings import *
 from Code.buttons import Button
 from Code.interface_utils import Interface
@@ -76,9 +77,12 @@ class DialogFile:
                                    size=(int(0.98 * width), int(0.96 * height / 10)))
         self.line_input = LineInput(pos=self.interface.pos, width=self.interface.width, height=self.interface.height,
                                     font_type=PT_MONO)
+        self.interface.move(0)
         self.line_text = TextMaxSizeCenter(text='Введите сюда полный путь до папки с кодом',
                                            pos=self.interface.pos, width=self.interface.width,
                                            height=self.interface.height, font_type=PT_MONO)
+        self.scroll = Scroll(pos=self.interface.pos, width=self.interface.width, height=self.interface.height,
+                             color='#25B2B9', if_button=True)
 
     def hide(self) -> None:
         self.if_active = False
@@ -99,3 +103,7 @@ class DialogFile:
             self.line_input.draw(surface)
             if self.line_input.text.text == '':
                 self.line_text.draw(surface)
+            self.scroll.draw(surface)
+        if not self.line_input.if_active:
+            # Обновляем SCROLL
+            pass
