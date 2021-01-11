@@ -31,8 +31,7 @@ class DialogInfo:
         self.surface.fill(pg.Color('#25B2B9'))
 
     def event(self, event: pg.event.Event) -> None:
-        if self.if_active:
-            self.button.event(event)
+        self.button.event(event)
 
     def show(self, texts: list) -> None:
         self.if_active = True
@@ -65,3 +64,28 @@ class DialogInfo:
         if self.if_active:
             surface.blit(self.surface, self.rect)
             self.button.draw(surface)
+
+
+class DialogFile:
+    def __init__(self, pos: Tuple[int, int], width: int, height: int) -> None:
+        self.rect = pg.Rect(*pos, width, height)
+        self.surface = pg.Surface((self.rect.width, self.rect.height), pg.SRCALPHA)
+        self.surface.fill(pg.Color('#25B2B9'))
+        self.if_active: bool = False
+
+    def hide(self) -> None:
+        self.if_active = False
+        self.surface = pg.Surface((self.rect.width, self.rect.height), pg.SRCALPHA)
+        self.surface.fill(pg.Color('#25B2B9'))
+
+    def event(self, event: pg.event.Event) -> None:
+        if self.if_active:
+            # self.button.event(event)
+            pass
+
+    def show(self) -> None:
+        self.if_active = True
+
+    def draw(self, surface: pg.Surface) -> None:
+        if self.if_active:
+            surface.blit(self.surface, self.rect)

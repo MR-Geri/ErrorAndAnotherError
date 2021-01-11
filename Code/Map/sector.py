@@ -1,7 +1,7 @@
 from Code.settings import *
 
 from Code.dialogs import DialogInfo
-from Code.info_panel import RightPanel
+from Code.info_panel import RightPanel, LeftPanel
 from Code.sector_objects.base import Base
 from Code.sector_objects.entities import Entities
 
@@ -14,7 +14,7 @@ from Code.sound import Sound
 
 class Sector:
     def __init__(self, number_x: int, number_y: int, size_cell: int, sound: Sound, dialog_info: DialogInfo,
-                 panel: RightPanel) -> None:
+                 dialog_file, right_panel: RightPanel) -> None:
         self.number_x, self.number_y = number_x, number_y  # Длина и высота сектора в единицах
         self.size_cell = size_cell
         self.size_sector = (number_x * size_cell, number_y * size_cell)
@@ -22,7 +22,8 @@ class Sector:
         self.board = None
         self.base = None
         self.dialog_info = dialog_info
-        self.panel = panel
+        self.dialog_file = dialog_file
+        self.right_panel = right_panel
         # Данные
         self.is_base: bool = False
         # Инициализация
@@ -40,7 +41,7 @@ class Sector:
             number_x=self.number_x,
             number_y=self.number_y,
             size_cell=self.size_cell,
-            panel=self.panel
+            right_panel=self.right_panel
         )
         self.board = [
             [biomes.get_cell(x, y) for x in range(self.number_x)]
@@ -50,8 +51,8 @@ class Sector:
     def place_base(self, pos: Tuple[int, int]) -> None:
         if type(self.board[pos[1]][pos[0]]) not in SELL_BLOCKED and not self.is_base:
             self.is_base = True
-            self.base = Base(pos=pos, size_cell=self.size_cell, board=self.board,
-                             entities=self.entities, dialog_info=self.dialog_info, panel=self.panel)
+            self.base = Base(pos=pos, size_cell=self.size_cell, board=self.board, entities=self.entities,
+                             dialog_info=self.dialog_info, dialog_file=self.dialog_file, right_panel=self.right_panel)
             self.entities.add(self.base)
         else:
             if self.is_base:

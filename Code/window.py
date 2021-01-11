@@ -1,4 +1,4 @@
-from Code.dialogs import DialogInfo
+from Code.dialogs import DialogInfo, DialogFile
 from Code.escape_menu import EscMenu
 from Code.interface_utils import Interface
 from Code.processor import Processor
@@ -266,10 +266,13 @@ class GameWindow(Window):
         self.size_cell = int(self.size_cell_min)
         self.dialog_info = DialogInfo(pos=(self.win_width // 4, self.win_height // 3),
                                       width=self.win_width // 2, height=self.win_height // 3)
+        self.dialog_file = DialogFile(pos=(self.win_width // 8, self.win_height // 8),
+                                      width=int(self.win_width * (6 / 8)), height=int(self.win_height * (6 / 8)))
         # sector нужно ЗАГРУЖАТЬ если это НЕ НОВАЯ игра
         self.sound = Sound()
-        self.sector = Sector(number_x=SECTOR_X_NUMBER, number_y=SECTOR_Y_NUMBER, size_cell=self.size_cell,
-                             sound=self.sound, dialog_info=self.dialog_info, panel=self.right_panel)
+        self.sector = Sector(
+            number_x=SECTOR_X_NUMBER, number_y=SECTOR_Y_NUMBER, size_cell=self.size_cell, sound=self.sound,
+            dialog_info=self.dialog_info, dialog_file=self.dialog_file, right_panel=self.right_panel)
         #
         self.camera = Camera(
             SECTOR_X_NUMBER * self.size_cell,
@@ -306,6 +309,9 @@ class GameWindow(Window):
                 int(self.size_cell / CAMERA_K_SPEED_Y)
             )
 
+    def get_action_window(self) -> bool:
+        return self.esc_menu.if_active or self.dialog_info.if_active or self.dialog_file.if_active
+
     def get_number_cell(self, mouse_pos: Tuple[int, int]) -> Tuple[int, int]:
         try:
             x, y = self.camera.get_cord()
@@ -321,11 +327,16 @@ class GameWindow(Window):
             if self.sector.entities.entities_sector[y][x] is not None:
                 try:
                     self.sector.entities.entities_sector[y][x].info()
+                    self.left_panel.button_file.func = self.sector.entities.entities_sector[y][x].func_file
                 except Exception as e:
                     print(f'window -> click Exception: {e}')
             else:
-                self.right_panel.info_update = None
-                self.sector.board[y][x].info()
+                try:
+                    self.right_panel.info_update = None
+                    self.left_panel.button_file.func = None
+                    self.sector.board[y][x].info()
+                except Exception as e:
+                    print(f'window -> click Exception: {e}')
         if pos[0] < self.left_panel.rect.width:
             print('Клик по левой панели информации.')
         if pos[0] > self.right_panel.rect.x:
@@ -340,10 +351,11 @@ class GameWindow(Window):
         self.right_panel.draw(self.display)
         self.esc_menu.draw(self.display)
         self.dialog_info.draw(self.display)
+        self.dialog_file.draw(self.display)
 
     def update(self) -> None:
         pg.display.set_caption(str(self.clock.get_fps()))  # нужно для отладки. FPS в заголовок окна!
-        if not self.esc_menu.if_active and not self.dialog_info.if_active:
+        if not self.get_action_window():
             self.processor.ticked()
             self.camera.move(self.camera_left, self.camera_right, self.camera_up, self.camera_down)
             if self.size_cell > self.size_cell_min:
@@ -390,12 +402,16 @@ class GameWindow(Window):
             if en.type == pg.KEYUP and en.key == pg.K_ESCAPE:
                 if self.dialog_info.if_active:
                     self.dialog_info.hide()
+                elif self.dialog_file.if_active:
+                    self.dialog_file.hide()
                 else:
                     self.esc_menu.changes_active()
             if self.esc_menu.if_active:
                 self.esc_menu.event(en)
             elif self.dialog_info.if_active:
                 self.dialog_info.event(en)
+            elif self.dialog_file.if_active:
+                self.dialog_file.event(en)
             else:
                 self.left_panel.event(en)
                 self.right_panel.event(en)

@@ -8,13 +8,13 @@ from typing import Tuple
 
 class Biome:
     def __init__(self, number_x: int, number_y: int, max_size_biome: Tuple[int, int], min_quantity: int,
-                 size_cell: int, cell: ALL_CELL, panel: RightPanel) -> None:
+                 size_cell: int, cell: ALL_CELL, right_panel: RightPanel) -> None:
         self.number_x = number_x
         self.number_y = number_y
         self.max_size_biome = max_size_biome
         self.cell = cell
         self.size_cell = size_cell
-        self.panel = panel
+        self.right_panel = right_panel
         #
         self.number_xy = (random.randint(1, self.max_size_biome[0]), random.randint(1, self.max_size_biome[1]))
         self.size = random.randint(min_quantity, self.max_size_biome[0] * self.max_size_biome[1])
@@ -40,31 +40,31 @@ class Biome:
         for i in range(self.size):
             pos = random.choice(possible)
             possible = self.new_possible(possible, pos)
-            cells[pos[1]][pos[0]] = self.cell(*pos, self.size_cell, self.panel)
+            cells[pos[1]][pos[0]] = self.cell(*pos, self.size_cell, self.right_panel)
             cords_cells.add(pos)
         return cells, cords_cells
 
 
 class BiomeMountain(Biome):
     def __init__(self, number_x: int, number_y: int, max_size_biome: Tuple[int, int],
-                 min_quantity: int, size_cell: int, panel: RightPanel) -> None:
+                 min_quantity: int, size_cell: int, right_panel: RightPanel) -> None:
         super().__init__(number_x=number_x, number_y=number_y, max_size_biome=max_size_biome,
-                         min_quantity=min_quantity, size_cell=size_cell, cell=Mountain, panel=panel)
+                         min_quantity=min_quantity, size_cell=size_cell, cell=Mountain, right_panel=right_panel)
 
 
 class BiomeSwamp(Biome):
     def __init__(self, number_x: int, number_y: int, max_size_biome: Tuple[int, int],
-                 min_quantity: int, size_cell: int, panel: RightPanel) -> None:
+                 min_quantity: int, size_cell: int, right_panel: RightPanel) -> None:
         super().__init__(number_x=number_x, number_y=number_y, max_size_biome=max_size_biome,
-                         min_quantity=min_quantity, size_cell=size_cell, cell=Swamp, panel=panel)
+                         min_quantity=min_quantity, size_cell=size_cell, cell=Swamp, right_panel=right_panel)
 
 
 class GeneratorBiomes:
-    def __init__(self, number_x: int, number_y: int, size_cell: int, panel: RightPanel):
+    def __init__(self, number_x: int, number_y: int, size_cell: int, right_panel: RightPanel):
         self.number_x = number_x
         self.number_y = number_y
         self.size_cell = size_cell
-        self.panel = panel
+        self.right_panel = right_panel
         #
         self.mountain = []
         self.swamp = []
@@ -82,7 +82,7 @@ class GeneratorBiomes:
             for biome_ in group:
                 if (x, y) in biome_.cords_cells:
                     return biome_.cells[y][x]
-        return Plain(x, y, self.size_cell, self.panel)
+        return Plain(x, y, self.size_cell, self.right_panel)
 
     def entering_biome(self, biome) -> bool:
         # Можно переделать на ХЕШ таблицы (словари)
@@ -97,7 +97,7 @@ class GeneratorBiomes:
             for i in range(quantity):
                 while True:
                     temp_biome = biome(self.number_x, self.number_y, max_size_biome, min_quantity, self.size_cell,
-                                       self.panel)
+                                       self.right_panel)
                     if self.entering_biome(temp_biome):
                         break
                 link_biome.append(temp_biome)

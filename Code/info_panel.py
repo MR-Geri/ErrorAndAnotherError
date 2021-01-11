@@ -63,6 +63,14 @@ class LeftPanel(Panel):
             text='', width=self.interface.width, height=self.interface.height, pos=self.interface.pos, font_type=PT_MONO
         )
         self.interface.move(0)
+        height2 = 2 * self.interface.height + self.interface.indent[1]
+        self.button_file = Button(
+            pos=self.interface.pos, width=self.interface.width, height=height2,
+            func=None, color_disabled=(30, 30, 30), color_active=(40, 40, 40),
+            text=TextMaxSizeCenter(text='Выбрать файл', width=self.interface.width,
+                                   height=height2, font_type=PT_MONO)
+        )
+        self.interface.move(0, height2)
         self.update()
         self.render()
 
@@ -123,11 +131,15 @@ class LeftPanel(Panel):
         self.running_line.draw(self.surface)
         self.system_time.draw(self.surface)
         self.buttons.draw(self.surface)
+        if self.button_file.func:
+            self.button_file.draw(self.surface)
         self.minimap.draw(self.surface)
         self.pos_cursor.draw(self.surface)
 
     def event(self, event: pg.event.Event) -> None:
         self.buttons.event(event)
+        if self.button_file.func:
+            self.button_file.event(event)
 
 
 class RightPanel(Panel):
@@ -138,15 +150,11 @@ class RightPanel(Panel):
         #
         self.counter_line = 10
         self.lines = []
-        for i in range(self.counter_line):
+        for _ in range(self.counter_line):
             self.lines.append(TextMaxSizeCenter(
-                text='', width=self.interface.width, height=self.interface.height, pos=self.interface.pos,
-                font_type=PT_MONO
+                text='', width=self.interface.width - self.interface.width // 50, height=self.interface.height,
+                pos=(self.interface.pos[0] + self.interface.width // 100, self.interface.pos[1]), font_type=PT_MONO
             ))
-            # self.lines.append(TextCenter(
-            #     text='', width=self.interface.width, height=self.interface.height, pos=self.interface.pos,
-            #     font_type=PT_MONO
-            # ))
             self.interface.move(0)
         #
         self.update()
