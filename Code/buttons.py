@@ -17,9 +17,12 @@ class Button:
         self.flag_click = False
         self.render()
 
-    def event(self, event: pg.event.Event) -> None:
+    def event(self, event: pg.event.Event, correction: Tuple[int, int] = None) -> None:
         try:
-            if self.click.collidepoint(*event.pos):
+            pos = event.pos[0], event.pos[1]
+            if correction:
+                pos = pos[0] + correction[0], pos[1] + correction[1]
+            if self.click.collidepoint(pos):
                 self.color = self.color_active
                 if event.type == pg.MOUSEBUTTONUP and event.button == 1 and self.flag_click:
                     self.flag_click = False
@@ -55,9 +58,12 @@ class ButtonTwoStates(Button):
         if offset:
             self.click.x, self.click.y = self.click.x + offset[0], self.click.y + offset[1]
 
-    def event(self, event: pg.event.Event) -> None:
+    def event(self, event: pg.event.Event, correction: Tuple[int, int] = None) -> None:
         try:
-            if self.click.collidepoint(*event.pos):
+            pos = event.pos[0], event.pos[1]
+            if correction:
+                pos = pos[0] + correction[0], pos[1] + correction[1]
+            if self.click.collidepoint(pos):
                 self.color = self.color_active
                 if event.type == pg.MOUSEBUTTONUP and event.button == 1 and self.flag_click:
                     self.flag_click = False
@@ -90,9 +96,12 @@ class ChoiceButton:
         self.flag_click = False
         self.render()
 
-    def event(self, event: pg.event.Event) -> None:
+    def event(self, event: pg.event.Event, correction: Tuple[int, int] = None) -> None:
         try:
-            if self.click.collidepoint(*event.pos):
+            pos = event.pos[0], event.pos[1]
+            if correction:
+                pos = pos[0] + correction[0], pos[1] + correction[1]
+            if self.click.collidepoint(pos):
                 self.color = self.color_active
                 if event.type == pg.MOUSEBUTTONUP and event.button == 1 and self.flag_click:
                     self.flag_click = False
@@ -124,9 +133,9 @@ class Buttons:
     def add(self, button: Union[Button, ButtonTwoStates, ChoiceButton]) -> None:
         self.buttons.append(button)
 
-    def event(self, event: pg.event.Event) -> None:
+    def event(self, event: pg.event.Event, correction: Tuple[int, int] = None) -> None:
         for button in self.buttons:
-            button.event(event)
+            button.event(event, correction)
 
     def draw(self, surface: pg.Surface) -> None:
         for button in self.buttons:

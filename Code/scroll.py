@@ -51,4 +51,4 @@ class Scroll:
 
     def event(self, event: pg.event.Event) -> None:
         self.slider.event(event)
-        self.buttons.event(event)
+        self.buttons.event(event, correction=(0, self.position.value))
