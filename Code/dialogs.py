@@ -1,7 +1,7 @@
 from Code.scroll import Scroll
 from Code.settings import *
 from Code.buttons import Button
-from Code.interface_utils import Interface
+from Code.interface_utils import Interface, SaveText
 from Code.line_input import LineInput
 
 from Code.texts import max_size_list_text
@@ -71,18 +71,21 @@ class DialogFile:
         self.fon = pg.Surface((self.rect.width, self.rect.height), pg.SRCALPHA)
         self.fon.fill(pg.Color('#25B2B9'))
         self.if_active: bool = False
+        self.path = None
+        self.files = []
+        self.line = SaveText('-')
         #
         self.interface = Interface(pos=(pos[0] + width // 100, pos[1] + height // 50), max_width=width,
                                    max_height=height, indent=(0, height // 50),
                                    size=(int(0.98 * width), int(0.96 * height / 10)))
         self.line_input = LineInput(pos=self.interface.pos, width=self.interface.width, height=self.interface.height,
                                     font_type=PT_MONO)
-        self.interface.move(0)
         self.line_text = TextMaxSizeCenter(text='Введите сюда полный путь до папки с кодом',
                                            pos=self.interface.pos, width=self.interface.width,
                                            height=self.interface.height, font_type=PT_MONO)
-        self.scroll = Scroll(pos=self.interface.pos, width=self.interface.width, height=self.interface.height,
-                             color='#25B2B9', if_button=True)
+        self.interface.move(0)
+        self.scroll = Scroll(pos=self.interface.pos, width=self.interface.width, one_line=self.interface.height,
+                             height=9 * self.interface.height, color='#25B2B9', if_button=True, line=self.line)
 
     def hide(self) -> None:
         self.if_active = False
@@ -90,11 +93,13 @@ class DialogFile:
     def event(self, event: pg.event.Event) -> None:
         if self.if_active:
             self.line_input.event(event)
+            self.scroll.event(event)
 
-    def show(self) -> None:
+    def show(self, line) -> None:
+        self.scroll = Scroll(pos=self.interface.pos, width=self.interface.width, one_line=self.interface.height,
+                             height=9 * self.interface.height, color='#25B2B9', if_button=True, line=line)
         self.if_active = True
-        self.line_input = LineInput(pos=self.interface.pos, width=self.interface.width, height=self.interface.height,
-                                    font_type=PT_MONO)
+        self.line_input.clear()
         self.line_input.if_active = True
 
     def draw(self, surface: pg.Surface) -> None:
@@ -104,6 +109,14 @@ class DialogFile:
             if self.line_input.text.text == '':
                 self.line_text.draw(surface)
             self.scroll.draw(surface)
-        if not self.line_input.if_active:
-            # Обновляем SCROLL
-            pass
+            if not self.line_input.if_active and self.line_input.text.text != '':
+                self.path = self.line_input.text.text
+                if self.path[-1] != r'\ '[0]:
+                    self.path += r'\ '[0]
+                files = [[i for i in files] for root, _, files in walk(self.path[:-1])][0]
+                if files != self.files:
+                    self.scroll.render([
+                        TextMaxSizeCenter(text=f, width=self.interface.width, height=self.interface.height,
+                                          font_type=PT_MONO)
+                        for f in files])
+                    self.files = list(files)

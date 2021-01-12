@@ -1,3 +1,4 @@
+from Code.interface_utils import SaveText
 from Code.settings import *
 from Code.dialogs import DialogInfo
 from Code.info_panel import RightPanel
@@ -18,6 +19,7 @@ class Base:
         self.dialog_file = dialog_file
         self.right_panel = right_panel
         #
+        self.path_user_code = SaveText('Пусто')
         self.name = 'База MK0'
         self.energy = 1000
         self.energy_max = 1500
@@ -61,7 +63,7 @@ class Base:
             self.info()
 
     def func_file(self) -> None:
-        self.dialog_file.show()
+        self.dialog_file.show(self.path_user_code)
 
     def create_robot(self, robot: ALL_ROBOT) -> None:
         n_x, k_x = self.pos[0] - self.distance_create, self.pos[0] + self.distance_create + 1

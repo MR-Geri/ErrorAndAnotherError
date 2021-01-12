@@ -17,11 +17,20 @@ class LineInput:
         self.tick = 0
         #
         self.font_color = font_color
+        self.font_type = font_type
         self.background_color = background_color
         #
         self.text = TextMaxSize('', width=None, height=height, font_color=font_color, font_type=font_type)
         self.char = TextMaxSize('F', width=None, height=height, font_color=font_color, font_type=font_type).rect.width
         self.surface = pg.Surface((self.rect.width, self.rect.height))
+        self.render()
+
+    def clear(self) -> None:
+        self.text = TextMaxSize('', width=None, height=self.rect.height, font_color=self.font_color,
+                                font_type=self.font_type)
+        self.pos = [0, 0]
+        self.pos_cursor = [0, 0]
+        self.if_active = False
         self.render()
 
     def event(self, event: pg.event.Event) -> None:

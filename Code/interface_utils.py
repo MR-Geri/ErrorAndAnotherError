@@ -6,8 +6,8 @@ class InterfaceError(Exception):
 
 
 class Interface:
-    def __init__(self, pos: Tuple[int, int], max_width: int, max_height: int,
-                 indent: Tuple[int, int], size: Tuple[int, int]):
+    def __init__(self, pos: Tuple[int, int], max_width: int = None, max_height: int = None,
+                 indent: Tuple[int, int] = None, size: Tuple[int, int] = None):
         self.start_pos = pos
         self.pos = list(pos)
         self.x, self.y = self.pos
@@ -21,16 +21,24 @@ class Interface:
         width = self.size[0] if width is None else width
         height = self.size[1] if height is None else height
         #
-        if self.pos[0] + width <= self.max_width + self.start_pos[0]:
+        if not self.max_width or self.pos[0] + width <= self.max_width + self.start_pos[0]:
             self.pos[0] += width
             self.pos[0] += self.indent[0] if is_indent[0] else 0
         else:
             raise InterfaceError("Выход за границы окна.")
         #
-        if self.pos[1] + height <= self.max_height + self.start_pos[1]:
+        if not self.max_height or self.pos[1] + height <= self.max_height + self.start_pos[1]:
             self.pos[1] += height
             self.pos[1] += self.indent[1] if is_indent[1] else 0
         else:
             raise InterfaceError("Выход за границы окна.")
         #
         self.x, self.y = self.pos
+
+
+class SaveText:
+    def __init__(self, text: str) -> None:
+        self.text = text
+
+    def set_text(self, text: str) -> None:
+        self.text = text
