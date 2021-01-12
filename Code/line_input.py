@@ -1,3 +1,5 @@
+import pyperclip
+
 from Code.settings import FPS, COLOR
 
 from typing import Tuple
@@ -13,6 +15,7 @@ class LineInput:
         self.pos = [0, 0]
         self.pos_cursor = [0, 0]
         #
+        self.l_ctrl = False
         self.if_active = False
         self.tick = 0
         #
@@ -39,6 +42,10 @@ class LineInput:
         Если эта дичь не работает. ГОСПАДЕ перепиши сам по братски.
         СЯБ!
         """
+        if event.type == pg.KEYDOWN and event.key == pg.K_LCTRL:
+            self.l_ctrl = True
+        if event.type == pg.KEYUP and event.key == pg.K_LCTRL:
+            self.l_ctrl = False
         if event.type == pg.KEYDOWN and self.if_active:
             cur = int((-self.pos[0] / self.char) + self.pos_cursor[0])
             text = [self.text.text[:cur], self.text.text[cur:]]
@@ -61,12 +68,16 @@ class LineInput:
                     self.pos[0] -= self.char
                 self.pos_cursor[0] = min(
                     self.pos_cursor[0] + 1, int(self.text.rect.width / self.char), int(self.rect.width / self.char))
-            elif event.unicode:
-                self.text.set_text(text[0] + event.unicode + text[1])
-                self.pos_cursor[0] = min(self.pos_cursor[0] + 1, int(self.rect.width / self.char))
+            elif self.l_ctrl and event.key == pg.K_v:
+                c_v = str(pyperclip.paste()).replace('\n', ' ')
+                if c_v:
+                    self.text.set_text(text[0] + c_v + text[1])
                 if self.pos_cursor[0] >= int(self.rect.width / self.char) and -self.pos[0] <= self.text.rect.width - \
                         self.rect.width:
-                    self.pos[0] -= self.char
+                    self.pos[0] -= self.char * len(c_v)
+                self.pos_cursor[0] = min(
+                    self.pos_cursor[0] + len(c_v),
+                    int(self.text.rect.width / self.char), int(self.rect.width / self.char))
             self.render()
         try:
             if self.rect.collidepoint(*event.pos) and event.type == pg.MOUSEBUTTONUP and event.button == 1:
