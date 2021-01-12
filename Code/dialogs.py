@@ -1,7 +1,7 @@
 from Code.scroll import Scroll
 from Code.settings import *
 from Code.buttons import Button
-from Code.interface_utils import Interface, SaveText
+from Code.interface_utils import Interface, Txt
 from Code.line_input import LineInput
 
 from Code.texts import max_size_list_text
@@ -73,7 +73,6 @@ class DialogFile:
         self.if_active: bool = False
         self.path = None
         self.files = []
-        self.line = SaveText('-')
         #
         self.interface = Interface(pos=(pos[0] + width // 100, pos[1] + height // 50), max_width=width,
                                    max_height=height, indent=(0, height // 50),
@@ -84,8 +83,7 @@ class DialogFile:
                                            pos=self.interface.pos, width=self.interface.width,
                                            height=self.interface.height, font_type=PT_MONO)
         self.interface.move(0)
-        self.scroll = Scroll(pos=self.interface.pos, width=self.interface.width, one_line=self.interface.height,
-                             height=9 * self.interface.height, color='#25B2B9', if_button=True, line=self.line)
+        self.scroll = None
 
     def hide(self) -> None:
         self.if_active = False
@@ -99,8 +97,8 @@ class DialogFile:
         self.scroll = Scroll(pos=self.interface.pos, width=self.interface.width, one_line=self.interface.height,
                              height=9 * self.interface.height, color='#25B2B9', if_button=True, line=line)
         self.if_active = True
-        self.line_input.clear()
         self.line_input.if_active = True
+        self.files = []
 
     def draw(self, surface: pg.Surface) -> None:
         if self.if_active:
@@ -110,13 +108,16 @@ class DialogFile:
                 self.line_text.draw(surface)
             self.scroll.draw(surface)
             if not self.line_input.if_active and self.line_input.text.text != '':
-                self.path = self.line_input.text.text
+                self.path = self.line_input.text.text.replace('/', r'\ '[0])
                 if self.path[-1] != r'\ '[0]:
                     self.path += r'\ '[0]
-                files = [[i for i in files] for root, _, files in walk(self.path[:-1])][0]
-                if files != self.files:
-                    self.scroll.render([
-                        TextMaxSizeCenter(text=f, width=self.interface.width, height=self.interface.height,
-                                          font_type=PT_MONO)
-                        for f in files])
-                    self.files = list(files)
+                try:
+                    files = [[i for i in files] for root, _, files in walk(self.path[:-1])][0]
+                    if files != self.files:
+                        self.scroll.update([
+                            TextMaxSizeCenter(text=f, width=self.interface.width, height=self.interface.height,
+                                              font_type=PT_MONO)
+                            for f in files])
+                        self.files = list(files)
+                except Exception as e:
+                    print(f'Load files users -> Exception: {e}')

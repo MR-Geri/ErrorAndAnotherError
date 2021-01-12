@@ -1,11 +1,14 @@
-from Code.interface_utils import SaveText
+from Code.interface_utils import Txt
 from Code.settings import *
 
 
 class Button:
     def __init__(self, pos: Tuple[int, int], width: int, height: int, color_disabled: COLOR, color_active: COLOR,
-                 text: ALL_TEXT,  func) -> None:
+                 text: ALL_TEXT,  func, offset: Tuple[int, int] = None) -> None:
         self.rect = pg.Rect(*pos, width, height)
+        self.click = pg.Rect(*pos, width, height)
+        if offset:
+            self.click.x, self.click.y = self.click.x + offset[0], self.click.y + offset[1]
         self.func = func
         self.text = text
         self.color_disabled = color_disabled
@@ -16,7 +19,7 @@ class Button:
 
     def event(self, event: pg.event.Event) -> None:
         try:
-            if self.rect.collidepoint(*event.pos):
+            if self.click.collidepoint(*event.pos):
                 self.color = self.color_active
                 if event.type == pg.MOUSEBUTTONUP and event.button == 1 and self.flag_click:
                     self.flag_click = False
@@ -43,16 +46,18 @@ class Button:
 
 class ButtonTwoStates(Button):
     def __init__(self, pos: Tuple[int, int], width: int, height: int, color_disabled: COLOR, color_active: COLOR,
-                 text: ALL_TEXT, texts: Tuple[str, str], get_state, func):
+                 text: ALL_TEXT, texts: Tuple[str, str], get_state, func, offset: Tuple[int, int] = None):
         self.texts = texts
         self.text = text
         self.get_state = get_state
         super().__init__(pos=pos, width=width, height=height, color_disabled=color_disabled, color_active=color_active,
                          text=self.text, func=func)
+        if offset:
+            self.click.x, self.click.y = self.click.x + offset[0], self.click.y + offset[1]
 
     def event(self, event: pg.event.Event) -> None:
         try:
-            if self.rect.collidepoint(*event.pos):
+            if self.click.collidepoint(*event.pos):
                 self.color = self.color_active
                 if event.type == pg.MOUSEBUTTONUP and event.button == 1 and self.flag_click:
                     self.flag_click = False
@@ -72,8 +77,11 @@ class ButtonTwoStates(Button):
 
 class ChoiceButton:
     def __init__(self, pos: Tuple[int, int], width: int, height: int, color_disabled: COLOR, color_active: COLOR,
-                 text: ALL_TEXT,  line: SaveText) -> None:
+                 text: ALL_TEXT, line: Txt, offset: Tuple[int, int] = None) -> None:
         self.rect = pg.Rect(*pos, width, height)
+        self.click = pg.Rect(*pos, width, height)
+        if offset:
+            self.click.x, self.click.y = self.click.x + offset[0], self.click.y + offset[1]
         self.line = line
         self.text = text
         self.color_disabled = color_disabled
@@ -84,7 +92,7 @@ class ChoiceButton:
 
     def event(self, event: pg.event.Event) -> None:
         try:
-            if self.rect.collidepoint(*event.pos):
+            if self.click.collidepoint(*event.pos):
                 self.color = self.color_active
                 if event.type == pg.MOUSEBUTTONUP and event.button == 1 and self.flag_click:
                     self.flag_click = False
@@ -113,7 +121,7 @@ class Buttons:
     def __init__(self) -> None:
         self.buttons = []
 
-    def add(self, button: Button) -> None:
+    def add(self, button: Union[Button, ButtonTwoStates, ChoiceButton]) -> None:
         self.buttons.append(button)
 
     def event(self, event: pg.event.Event) -> None:

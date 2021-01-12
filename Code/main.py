@@ -8,7 +8,7 @@ from Code.window import MenuWindow, SettingsWindow, GameWindow
 
 class Controller:
     def __init__(self) -> None:
-        self.volume = Numbers(0, 1, 0.01)
+        self.volume = Numbers(0, 1, 0.01, round(1 / 16, 3))
         self.music = Music(path=ALL_BACKGROUND_MUSIC, volume=self.volume.value)
         self.permission = Permission(active=DISPLAY_SIZE)
         #

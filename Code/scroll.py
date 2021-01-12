@@ -1,6 +1,7 @@
 from Code.interface_utils import Interface
 from Code.settings import *
-from Code.buttons import ChoiceButton
+from Code.buttons import ChoiceButton, Buttons
+from Code.slider import VerticalSlider, Numbers
 
 
 class Scroll:
@@ -17,26 +18,37 @@ class Scroll:
         self.one_line = one_line
         self.line = line
         #
-        self.lines = []
+        self.buttons = Buttons()
+        self.position = Numbers(0, 100, 1)
+        self.slider = VerticalSlider(
+            pos=(int(self.rect.width * 0.95), 0), width=int(self.rect.width * 0.05), height=self.rect.height,
+            color_no_use=COLOR_SLIDER_NO_USE,
+            color_use=COLOR_SLIDER_NO_USE,
+            color_circle=COLOR_SLIDER_CIRCLE,
+            slider=self.position,
+            func=None,
+            offset=(self.rect.x, self.rect.y)
+        )
 
-    def render(self, texts: list) -> None:
-        self.lines = []
-        height = self.one_line
-        pos_text = Interface(pos=(self.rect.x, self.rect.y), max_width=self.rect.width, max_height=None,
-                             size=(self.rect.width, height), indent=(0, height // 100))
+    def update(self, texts: list) -> None:
+        self.buttons = Buttons()
+        pos_text = Interface(
+            pos=(0, 0), max_width=self.rect.width, max_height=None, size=(int(self.rect.width * 0.94), self.one_line),
+            indent=(self.one_line // 10, self.one_line // 10))
         for text in texts:
-            button = ChoiceButton(
-                text=text, pos=pos_text.pos, width=pos_text.width, height=pos_text.height,
-                color_active=self.color_active, color_disabled=self.color_disabled, line=self.line)
-            self.lines.append(button)
-            pos_text.move(0)
+            self.buttons.add(ChoiceButton(
+                text=text, pos=pos_text.pos, width=pos_text.width, height=pos_text.height, line=self.line,
+                color_active=self.color_active, color_disabled=self.color_disabled, offset=(self.rect.x, self.rect.y)))
+            pos_text.move(0, is_indent=(False, True))
+        self.position.set(0, pos_text.pos[1] - self.rect.height)
 
     def draw(self, surface: pg.Surface) -> None:
+        self.surface.fill(self.color)
+        for button in self.buttons.buttons:
+            self.surface.blit(button.surface, (button.rect.x , button.rect.y - self.position.value))
+        self.slider.draw(self.surface)
         surface.blit(self.surface, self.rect)
-        for line in self.lines:
-            line.draw(surface)
 
     def event(self, event: pg.event.Event) -> None:
-        for line in self.lines:
-            if type(line) in BUTTONS:
-                line.event(event)
+        self.slider.event(event)
+        self.buttons.event(event)

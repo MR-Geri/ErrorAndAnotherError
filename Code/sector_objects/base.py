@@ -1,4 +1,4 @@
-from Code.interface_utils import SaveText
+from Code.interface_utils import Txt
 from Code.settings import *
 from Code.dialogs import DialogInfo
 from Code.info_panel import RightPanel
@@ -19,7 +19,7 @@ class Base:
         self.dialog_file = dialog_file
         self.right_panel = right_panel
         #
-        self.path_user_code = SaveText('Пусто')
+        self.path_user_code = Txt('Пусто')
         self.name = 'База MK0'
         self.energy = 1000
         self.energy_max = 1500
@@ -43,6 +43,7 @@ class Base:
         surface.blit(self.surface, self.rect)
 
     def info(self) -> None:
+        print(self.path_user_code.text)
         self.right_panel.info_update = self.info
         energy = f'Энергии > {self.energy}'
         hp = f'Прочность > {self.hp}'

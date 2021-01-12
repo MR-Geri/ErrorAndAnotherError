@@ -36,7 +36,7 @@ class Interface:
         self.x, self.y = self.pos
 
 
-class SaveText:
+class Txt:
     def __init__(self, text: str) -> None:
         self.text = text
 
