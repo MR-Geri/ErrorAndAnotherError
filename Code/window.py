@@ -322,20 +322,22 @@ class GameWindow(Window):
     def click(self, pos: Tuple[int, int]) -> None:
         if self.right_panel.rect.x > pos[0] > self.left_panel.rect.width:
             x, y = self.get_number_cell(pos)
-            self.left_panel.update_cursor((x, y))
-            if self.sector.entities.entities_sector[y][x] is not None:
-                try:
-                    self.sector.entities.entities_sector[y][x].info()
-                    self.left_panel.button_file.func = self.sector.entities.entities_sector[y][x].func_file
-                except Exception as e:
-                    print(f'window -> click Exception: {e}')
-            else:
-                try:
-                    self.right_panel.info_update = None
-                    self.left_panel.button_file.func = None
-                    self.sector.board[y][x].info()
-                except Exception as e:
-                    print(f'window -> click Exception: {e}')
+            if SECTOR_X_NUMBER > x >= 0 and SECTOR_Y_NUMBER > y >= 0:
+                self.left_panel.update_cursor((x, y))
+                if self.sector.entities.entities_sector[y][x] is not None:
+                    try:
+                        self.sector.entities.entities_sector[y][x].info()
+                        if self.sector.entities.entities_sector[y][x].func_file:
+                            self.left_panel.button_file.func = self.sector.entities.entities_sector[y][x].func_file
+                    except Exception as e:
+                        print(f'window -> click Exceptio    n: {e}')
+                else:
+                    try:
+                        self.right_panel.info_update = None
+                        self.left_panel.button_file.func = None
+                        self.sector.board[y][x].info()
+                    except Exception as e:
+                        print(f'window -> click Exception: {e}')
         if pos[0] < self.left_panel.rect.width:
             print('Клик по левой панели информации.')
         if pos[0] > self.right_panel.rect.x:

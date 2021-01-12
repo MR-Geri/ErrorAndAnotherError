@@ -114,8 +114,7 @@ class LeftPanel(Panel):
 
     def update_cursor(self, pos_cursor: Tuple[int, int]) -> None:
         text = f'(x: {pos_cursor[0]}, y: {pos_cursor[1]})'
-        if pos_cursor and text != self.pos_cursor.text and \
-                SECTOR_X_NUMBER > pos_cursor[0] >= 0 and SECTOR_Y_NUMBER > pos_cursor[1] >= 0:
+        if pos_cursor and text != self.pos_cursor.text:
             self.pos_cursor.set_text(text)
 
     def render_minimap(self, surface: pg.Surface, pos: Tuple[int, int] = None,

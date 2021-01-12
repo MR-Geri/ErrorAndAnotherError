@@ -1,4 +1,5 @@
 from Code.settings import *
+from Code.interface_utils import Txt
 from Code.info_panel import RightPanel
 
 import pygame as pg
@@ -11,6 +12,7 @@ class MK0:
         self.right_panel = right_panel
         self.dialog_file = dialog_file
         #
+        self.path_user_code = Txt('MK0')
         self.name = 'Робот MK0'
         self.energy = 0
         self.energy_create = 100
@@ -37,7 +39,7 @@ class MK0:
         pg.draw.circle(self.surface, pg.Color(0, 0, 0), (radius, radius), radius)
 
     def func_file(self) -> None:
-        self.dialog_file.show()
+        self.dialog_file.show(self.path_user_code)
 
     def draw(self, surface: pg.Surface) -> None:
         surface.blit(self.surface, self.rect)

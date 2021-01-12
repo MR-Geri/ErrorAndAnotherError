@@ -1,5 +1,5 @@
-from Code.interface_utils import Txt
 from Code.settings import *
+from Code.interface_utils import Txt
 from Code.dialogs import DialogInfo
 from Code.info_panel import RightPanel
 from Code.sector_objects.generates_electrical import RadioisotopeGenerator
@@ -19,7 +19,7 @@ class Base:
         self.dialog_file = dialog_file
         self.right_panel = right_panel
         #
-        self.path_user_code = Txt('Пусто')
+        self.path_user_code = Txt('Base')
         self.name = 'База MK0'
         self.energy = 1000
         self.energy_max = 1500
@@ -63,8 +63,8 @@ class Base:
         if self.right_panel.info_update == self.info:
             self.info()
 
-    def func_file(self) -> None:
-        self.dialog_file.show(self.path_user_code)
+    # def func_file(self) -> None:
+    #     self.dialog_file.show(self.path_user_code)  # Установка файла
 
     def create_robot(self, robot: ALL_ROBOT) -> None:
         n_x, k_x = self.pos[0] - self.distance_create, self.pos[0] + self.distance_create + 1

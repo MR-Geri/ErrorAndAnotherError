@@ -45,14 +45,14 @@ class Scroll:
     def draw(self, surface: pg.Surface) -> None:
         self.surface.fill(self.color)
         for button in self.buttons.buttons:
-            self.surface.blit(button.surface, (button.rect.x , button.rect.y - self.position.value))
+            self.surface.blit(button.surface, (button.rect.x, button.rect.y - self.position.value))
         self.slider.draw(self.surface)
         surface.blit(self.surface, self.rect)
 
     def event(self, event: pg.event.Event) -> None:
-        self.slider.event(event)
-        self.buttons.event(event, correction=(0, self.position.value))
         if event.type == pg.MOUSEBUTTONUP and event.button == 4:
             self.position.edit(-1)
         if event.type == pg.MOUSEBUTTONUP and event.button == 5:
             self.position.edit(1)
+        self.slider.event(event)
+        self.buttons.event(event, correction=(0, self.position.value))
