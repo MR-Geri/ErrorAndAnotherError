@@ -69,7 +69,7 @@ class DialogFile:
     def __init__(self, pos: Tuple[int, int], width: int, height: int) -> None:
         self.rect = pg.Rect(*pos, width, height)
         self.fon = pg.Surface((self.rect.width, self.rect.height), pg.SRCALPHA)
-        self.fon.fill(pg.Color('#25B2B9'))
+        self.fon.fill(pg.Color(COLOR_BACKGROUND))
         self.if_active: bool = False
         self.path = None
         self.files = []
@@ -78,7 +78,7 @@ class DialogFile:
                                    max_height=height, indent=(0, height // 50),
                                    size=(int(0.98 * width), int(0.96 * height / 10)))
         self.line_input = LineInput(pos=self.interface.pos, width=self.interface.width, height=self.interface.height,
-                                    font_type=PT_MONO)
+                                    font_type=PT_MONO, background_color=(60, 60, 60))
         self.line_text = TextMaxSizeCenter(text='Введите сюда полный путь до папки с кодом',
                                            pos=self.interface.pos, width=self.interface.width,
                                            height=self.interface.height, font_type=PT_MONO)
@@ -95,7 +95,8 @@ class DialogFile:
 
     def show(self, line) -> None:
         self.scroll = Scroll(pos=self.interface.pos, width=self.interface.width, one_line=self.interface.height,
-                             height=9 * self.interface.height, color='#25B2B9', if_button=True, line=line)
+                             height=9 * self.interface.height, color=COLOR_BACKGROUND, if_button=True, line=line,
+                             color_disabled=(128, 128, 128), color_active=(138, 138, 138))
         self.if_active = True
         self.line_input.if_active = True
         self.files = []

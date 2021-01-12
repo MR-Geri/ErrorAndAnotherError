@@ -19,7 +19,7 @@ class Scroll:
         self.line = line
         #
         self.buttons = Buttons()
-        self.position = Numbers(0, 100, 1)
+        self.position = Numbers(0, 100, self.one_line // 2)
         self.slider = VerticalSlider(
             pos=(int(self.rect.width * 0.95), 0), width=int(self.rect.width * 0.05), height=self.rect.height,
             color_no_use=COLOR_SLIDER_NO_USE,
@@ -52,3 +52,7 @@ class Scroll:
     def event(self, event: pg.event.Event) -> None:
         self.slider.event(event)
         self.buttons.event(event, correction=(0, self.position.value))
+        if event.type == pg.MOUSEBUTTONUP and event.button == 4:
+            self.position.edit(-1)
+        if event.type == pg.MOUSEBUTTONUP and event.button == 5:
+            self.position.edit(1)
