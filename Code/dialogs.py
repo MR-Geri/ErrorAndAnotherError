@@ -1,7 +1,7 @@
 from Code.scroll import Scroll
 from Code.settings import *
 from Code.buttons import Button
-from Code.interface_utils import Interface, Txt
+from Code.utils import Interface, Path
 from Code.line_input import LineInput
 
 from Code.texts import max_size_list_text

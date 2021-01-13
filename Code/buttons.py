@@ -1,4 +1,4 @@
-from Code.interface_utils import Txt
+from Code.utils import Path
 from Code.settings import *
 
 
@@ -83,7 +83,7 @@ class ButtonTwoStates(Button):
 
 class ChoiceButton:
     def __init__(self, pos: Tuple[int, int], width: int, height: int, color_disabled: COLOR, color_active: COLOR,
-                 text: ALL_TEXT, line: Txt, offset: Tuple[int, int] = None) -> None:
+                 text: ALL_TEXT, line: Path, offset: Tuple[int, int] = None) -> None:
         self.rect = pg.Rect(*pos, width, height)
         self.click = pg.Rect(*pos, width, height)
         if offset:

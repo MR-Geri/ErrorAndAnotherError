@@ -1,4 +1,4 @@
-from Code.interface_utils import Interface
+from Code.utils import Interface
 from Code.settings import *
 from Code.buttons import ChoiceButton, Buttons
 from Code.slider import VerticalSlider, Numbers

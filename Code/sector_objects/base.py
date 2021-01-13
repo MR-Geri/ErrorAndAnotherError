@@ -1,5 +1,5 @@
 from Code.settings import *
-from Code.interface_utils import Txt
+from Code.utils import Path
 from Code.dialogs import DialogInfo
 from Code.info_panel import RightPanel
 from Code.sector_objects.generates_electrical import RadioisotopeGenerator
@@ -19,7 +19,7 @@ class Base:
         self.dialog_file = dialog_file
         self.right_panel = right_panel
         #
-        self.path_user_code = Txt('Base')
+        self.path_user_code = Path('Base')
         self.name = 'База MK0'
         self.energy = 1000
         self.energy_max = 1500
@@ -43,7 +43,6 @@ class Base:
         surface.blit(self.surface, self.rect)
 
     def info(self) -> None:
-        print(self.path_user_code.text)
         self.right_panel.info_update = self.info
         energy = f'Энергии > {self.energy}'
         hp = f'Прочность > {self.hp}'
@@ -74,7 +73,7 @@ class Base:
                 if k_y > i_y >= n_y and k_x > i_x >= n_x and \
                         type(x) not in SELL_BLOCKED and self.entities.entities_sector[i_y][i_x] is None:
                     robot_ = robot(pos=(i_x, i_y), size_cell=self.size_cell, dialog_file=self.dialog_file,
-                                   right_panel=self.right_panel)
+                                   right_panel=self.right_panel, board=self.board, entities=self.entities)
                     if self.energy >= robot_.energy_create:
                         self.energy -= robot_.energy_create
                         self.entities.add(robot_)

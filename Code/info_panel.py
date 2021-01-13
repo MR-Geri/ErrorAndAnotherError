@@ -1,7 +1,7 @@
 from Code.settings import *
 from Code.Map.minimaps import Minimap
 from Code.buttons import Buttons, Button, ButtonTwoStates
-from Code.interface_utils import Interface
+from Code.utils import Interface
 
 import datetime
 

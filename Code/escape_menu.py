@@ -1,6 +1,6 @@
 from Code.settings import *
 from Code.buttons import Button, Buttons
-from Code.interface_utils import Interface
+from Code.utils import Interface
 
 from Code.texts import max_size_list_text, TextCenter
 

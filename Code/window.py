@@ -1,7 +1,7 @@
 from Code.settings import *
 from Code.dialogs import DialogInfo, DialogFile
 from Code.escape_menu import EscMenu
-from Code.interface_utils import Interface
+from Code.utils import Interface
 from Code.processor import Processor
 
 import pygame as pg
@@ -288,7 +288,7 @@ class GameWindow(Window):
         #
         self.camera_left, self.camera_right, self.camera_up, self.camera_down = False, False, False, False
         self.l_ctrl = False
-        self.processor = Processor(entities=self.sector.entities.entities_sector)
+        self.processor = Processor(sector=self.sector)
 
     def scale(self, coeff_scale: float):
         # Масштабирование sector с ограничениями

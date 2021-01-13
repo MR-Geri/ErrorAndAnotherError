@@ -1,36 +1,52 @@
 from Code.settings import *
-from Code.interface_utils import Txt
+from Code.sector_objects.entities import Entities
+from Code.utils import Path
 from Code.info_panel import RightPanel
-
-import pygame as pg
 
 
 class MK0:
-    def __init__(self, pos: Tuple[int, int], size_cell: int, dialog_file, right_panel: RightPanel) -> None:
+    def __init__(self, pos: Tuple[int, int], size_cell: int, dialog_file, right_panel: RightPanel, board: list,
+                 entities: Entities) -> None:
         self.pos = list(pos)
         self.size_cell = size_cell
         self.right_panel = right_panel
         self.dialog_file = dialog_file
+        self.board = board
+        self.entities = entities
+        # Functions Заменять можно только их!
+        self.move = lambda board, entities: None
         #
-        self.path_user_code = Txt('MK0')
+        self.path_user_code = Path('MK0')
         self.name = 'Робот MK0'
         self.energy = 0
         self.energy_create = 100
         self.dmg = 0
         self.hp = 100
+        self.distance_move = 1
+        self.sell_block = ['Mountain']
         #
-        self.crash = PATH_CRASHES + 'robot.wav'
+        self.sound_crash = PATH_CRASHES + 'MK0.wav'
+        self.sound_move = PATH_MOVES + 'MK0.wav'
         #
         self.rect = pg.Rect(self.pos[0] * self.size_cell, self.pos[1] * self.size_cell, self.size_cell, self.size_cell)
         self.surface = pg.Surface((self.size_cell, self.size_cell), pg.SRCALPHA)
         #
         self.render()
 
+    def update_pos(self, pos: Tuple[int, int]) -> None:
+        self.pos = list(pos)
+        self.rect = pg.Rect(self.pos[0] * self.size_cell, self.pos[1] * self.size_cell, self.size_cell, self.size_cell)
+
+    def move_my(self, board, entities) -> Union[None, Tuple[int, int]]:
+        return self.move(board, entities)
+
     def info(self) -> None:
+        print(self.path_user_code.text)
         self.right_panel.info_update = self.info
         energy = f'Энергии > {self.energy}'
         hp = f'Прочности > {self.hp}'
-        texts = [self.name, energy, hp]
+        move = f'Премещение > {self.distance_move}'
+        texts = [self.name, energy, hp, move]
         self.right_panel.update_text(texts)
 
     def render(self) -> None:

@@ -2,12 +2,16 @@ from Code.settings import *
 
 
 class Processor:
-    def __init__(self, entities: dict) -> None:
+    def __init__(self, sector) -> None:
         self.tick_complete = 0
         self.tick = 0
         self.tick_update = int(round(FPS / CHANGE_TICK, 0))  # 2 раза за секунду
         self.day = True
-        self.entities = entities
+        self.sector = sector
+        self.entities = sector.entities
+        self.board = sector.board
+        #
+        self.robots = []
 
     def ticked(self) -> None:
         self.tick = (self.tick + 1) % (self.tick_update + 1)
@@ -17,13 +21,38 @@ class Processor:
         if self.tick_complete % UPDATE_CHANGE_TIME:
             self.day = not self.day
 
+    def get_board(self) -> list:
+        board = [[x.__class__.__name__ for x in y] for y in self.board]
+        return board
+
+    def get_entities(self) -> list:
+        entities = self.entities.entities_sector
+        entities = [
+            [entities[y][x].__class__.__name__ if entities[y][x] is not None else None for x in entities[y]]
+            for y in entities
+        ]
+        return entities
+
     def update(self) -> None:
-        for y in self.entities:
-            for x in self.entities[y]:
-                entity = self.entities[y][x]
+        board = self.get_board()
+        self.robots = []
+        for y in self.entities.entities_sector:
+            for x in self.entities.entities_sector[y]:
+                entity = self.entities.entities_sector[y][x]
                 type_ = type(entity)
                 if type_ in ROBOTS:
-                    pass
+                    self.moves.append(entity)
                 elif type_ in BASES:
                     if entity.generator is not None:
                         entity.generator.update(self.tick_complete)
+        if self.robots:
+            for entity in self.robots:
+                entities = self.get_entities()
+                try:
+                    who_pos = entity.move_my(board=board, entities=entities)
+                    if
+                    if who_pos and board[who_pos[1]][who_pos[0]] not in entity.sell_block:
+                        self.entities.move_my(entity, who_pos)
+                except Exception as e:
+                    print(e)
+            self.sector.render()

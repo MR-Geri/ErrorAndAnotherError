@@ -1,4 +1,4 @@
-from typing import Tuple
+from Code.settings import *
 
 
 class InterfaceError(Exception):
@@ -36,9 +36,18 @@ class Interface:
         self.x, self.y = self.pos
 
 
-class Txt:
+class Path:
     def __init__(self, text: str) -> None:
         self.text = text
 
     def set_text(self, text: str) -> None:
         self.text = text
+
+    def code(self) -> Union[None, dict]:
+        with open(PLAYER_CODE + self.text) as commands:
+            try:
+                t = commands.read().split('\n\n')
+                print(t)
+                return
+            except Exception as e:
+                print(e)
