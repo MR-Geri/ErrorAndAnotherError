@@ -7,7 +7,7 @@ from Code.slider import VerticalSlider, Numbers
 class Scroll:
     def __init__(self, pos: Tuple[int, int], width: int, one_line: int, height: int, color: COLOR,
                  if_button: bool = False, color_disabled: COLOR = (30, 30, 30),
-                 color_active: COLOR = (40, 40, 40), line=None) -> None:
+                 color_active: COLOR = (40, 40, 40), line=None, path=None) -> None:
         self.rect = pg.Rect(*pos, width, height)
         self.surface = pg.Surface((self.rect.width, self.rect.height))
         self.color = color
@@ -17,6 +17,7 @@ class Scroll:
         self.color_disabled = color_disabled
         self.one_line = one_line
         self.line = line
+        self.path = path
         #
         self.buttons = Buttons()
         self.position = Numbers(0, 100, self.one_line // 2)
@@ -38,7 +39,8 @@ class Scroll:
         for text in texts:
             self.buttons.add(ChoiceButton(
                 text=text, pos=pos_text.pos, width=pos_text.width, height=pos_text.height, line=self.line,
-                color_active=self.color_active, color_disabled=self.color_disabled, offset=(self.rect.x, self.rect.y)))
+                path=self.path, color_active=self.color_active, color_disabled=self.color_disabled,
+                offset=(self.rect.x, self.rect.y)))
             pos_text.move(0, is_indent=(False, True))
         self.position.set(0, pos_text.pos[1] - self.rect.height)
 

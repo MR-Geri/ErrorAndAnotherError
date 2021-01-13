@@ -83,7 +83,7 @@ class ButtonTwoStates(Button):
 
 class ChoiceButton:
     def __init__(self, pos: Tuple[int, int], width: int, height: int, color_disabled: COLOR, color_active: COLOR,
-                 text: ALL_TEXT, line: Path, offset: Tuple[int, int] = None) -> None:
+                 text: ALL_TEXT, line: Path, offset: Tuple[int, int] = None, path=None) -> None:
         self.rect = pg.Rect(*pos, width, height)
         self.click = pg.Rect(*pos, width, height)
         if offset:
@@ -94,6 +94,7 @@ class ChoiceButton:
         self.color_active = color_active
         self.color = self.color_disabled
         self.flag_click = False
+        self.path = path
         self.render()
 
     def event(self, event: pg.event.Event, correction: Tuple[int, int] = None) -> None:
@@ -105,7 +106,7 @@ class ChoiceButton:
                 self.color = self.color_active
                 if event.type == pg.MOUSEBUTTONUP and event.button == 1 and self.flag_click:
                     self.flag_click = False
-                    self.line.set_text(self.text.text)
+                    self.line.set_text(self.path.text.text + r'\ '[0] + self.text.text)
                 if event.type == pg.MOUSEBUTTONDOWN and event.button == 1 and not self.flag_click:
                     self.flag_click = True
             else:

@@ -96,7 +96,7 @@ class DialogFile:
     def show(self, line) -> None:
         self.scroll = Scroll(pos=self.interface.pos, width=self.interface.width, one_line=self.interface.height,
                              height=9 * self.interface.height, color=COLOR_BACKGROUND, if_button=True, line=line,
-                             color_disabled=(128, 128, 128), color_active=(138, 138, 138))
+                             color_disabled=(128, 128, 128), color_active=(138, 138, 138), path=self.line_input)
         self.if_active = True
         self.line_input.if_active = True
         self.files = []

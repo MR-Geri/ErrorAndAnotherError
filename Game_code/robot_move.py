@@ -1,2 +1,2 @@
-def move():
-    return 1, 0
+def func():
+    return 3

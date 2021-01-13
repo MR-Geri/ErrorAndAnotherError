@@ -41,7 +41,7 @@ class Processor:
                 entity = self.entities.entities_sector[y][x]
                 type_ = type(entity)
                 if type_ in ROBOTS:
-                    self.moves.append(entity)
+                    self.robots.append(entity)
                 elif type_ in BASES:
                     if entity.generator is not None:
                         entity.generator.update(self.tick_complete)
@@ -49,10 +49,17 @@ class Processor:
             for entity in self.robots:
                 entities = self.get_entities()
                 try:
+                    code = entity.path_user_code.code()
+                    if code:
+                        print(1)
+                        del entity.move
+                        data = __import__('Game_code').robot_move.move
+                        entity.move = data
+                        del data
+                        print(entity.move)
                     who_pos = entity.move_my(board=board, entities=entities)
-                    if
                     if who_pos and board[who_pos[1]][who_pos[0]] not in entity.sell_block:
-                        self.entities.move_my(entity, who_pos)
+                        self.entities.move(entity, who_pos)
                 except Exception as e:
-                    print(e)
+                    print(f'Processor update Exception -> {e}')
             self.sector.render()

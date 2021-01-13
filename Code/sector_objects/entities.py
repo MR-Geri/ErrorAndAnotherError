@@ -31,7 +31,7 @@ class Entities:
 
     def move(self, entity, pos: Tuple[int, int]) -> None:
         x, y = entity.pos
-        if entity.distance_move >= abs(pos[1] - y) and entity.distance_move >= abs(pos[0] - x) and  \
+        if entity.distance_move >= abs(pos[1] - y) and entity.distance_move >= abs(pos[0] - x) and pos != (x, y) and  \
                 self.entities_sector[y][x] is not None and pos[0] < SECTOR_X_NUMBER and pos[1] < SECTOR_Y_NUMBER:
             entity.update_pos(pos)
             self.entities_sector[y][x] = None

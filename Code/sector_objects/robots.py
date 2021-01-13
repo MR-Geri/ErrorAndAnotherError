@@ -13,8 +13,8 @@ class MK0:
         self.dialog_file = dialog_file
         self.board = board
         self.entities = entities
-        # Functions Заменять можно только их!
-        self.move = lambda board, entities: None
+        #
+        self.move = lambda: None
         #
         self.path_user_code = Path('MK0')
         self.name = 'Робот MK0'
@@ -38,7 +38,9 @@ class MK0:
         self.rect = pg.Rect(self.pos[0] * self.size_cell, self.pos[1] * self.size_cell, self.size_cell, self.size_cell)
 
     def move_my(self, board, entities) -> Union[None, Tuple[int, int]]:
-        return self.move(board, entities)
+        pos = self.move()
+        print(f'pos: {pos}')
+        return pos
 
     def info(self) -> None:
         print(self.path_user_code.text)
