@@ -63,7 +63,10 @@ class Sector:
                 self.surface.blit(cell.image, cell.rect)
         self.entities.draw(self.surface)
 
-    def scale(self, size_cell):
+    def robot_move(self, entity, pos: Tuple[int, int]) -> None:
+        pass
+
+    def scale(self, size_cell) -> None:
         self.size_cell = size_cell
         self.size_sector = (self.number_x * size_cell, self.number_y * size_cell)
         self.surface = pg.Surface(self.size_sector)

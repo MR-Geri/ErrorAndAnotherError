@@ -39,8 +39,9 @@ class Entities:
                 self.entities_sector[y][x] = None
             else:
                 self.entities_sector[y][x] = None
-                if self.entities_sector[pos[1]][pos[0]] is not None:
+                if self.entities_sector[pos[1]][pos[0]] is None:
+                    entity.update_pos(pos)
+                    self.entities_sector[pos[1]][pos[0]] = entity
+                    self.sound.add(self.entities_sector[pos[1]][pos[0]].sound_move)
+                else:
                     self.sound.add(self.entities_sector[pos[1]][pos[0]].sound_crash)
-                self.entities_sector[pos[1]][pos[0]] = entity
-                self.sound.add(self.entities_sector[pos[1]][pos[0]].sound_move)
-                entity.update_pos(pos)
