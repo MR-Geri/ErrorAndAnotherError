@@ -54,15 +54,16 @@ class Processor:
                     code = entity.path_user_code.code()
                     if code:
                         module = entity.path_user_code.module()
-                        print(code)
                         if 'move' in code:
-                            print(entity.move)
                             importlib.reload(importlib.import_module(module))
                             entity.move = importlib.import_module(module).move
-                            print(entity.move)
                     who_pos = entity.move_my(board=board, entities=entities)
                     if who_pos and board[who_pos[1]][who_pos[0]] not in entity.sell_block:
                         self.entities.move(entity, who_pos)
+                except FileNotFoundError:
+                    pass
+                except IndexError:
+                    pass
                 except Exception as e:
                     print(f'Processor update Exception -> {e}')
             self.sector.render()

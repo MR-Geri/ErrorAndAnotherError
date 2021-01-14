@@ -1,11 +1,9 @@
+import pygame as pg
 from Code.settings import *
 from Code.dialogs import DialogInfo, DialogFile
 from Code.escape_menu import EscMenu
 from Code.utils import Interface
 from Code.processor import Processor
-
-import pygame as pg
-
 from Code.Graphics.matrix import Matrix
 from Code.sound import Sound
 from Code.сamera import Camera
@@ -329,8 +327,10 @@ class GameWindow(Window):
                         self.sector.entities.entities_sector[y][x].info()
                         if self.sector.entities.entities_sector[y][x].func_file:
                             self.left_panel.button_file.func = self.sector.entities.entities_sector[y][x].func_file
+                    except AttributeError:
+                        pass
                     except Exception as e:
-                        print(f'window -> click Exceptio    n: {e}')
+                        print(f'window -> click Exception: {e}')
                 else:
                     try:
                         self.right_panel.info_update = None

@@ -1,3 +1,4 @@
+import pygame as pg
 from Code.scroll import Scroll
 from Code.settings import *
 from Code.buttons import Button

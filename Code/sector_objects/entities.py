@@ -1,5 +1,5 @@
-from Code.settings import *
-
+import pygame as pg
+from Code.settings import BASES, Tuple, SECTOR_X_NUMBER, SECTOR_Y_NUMBER
 from Code.sound import Sound
 
 
@@ -32,10 +32,15 @@ class Entities:
     def move(self, entity, pos: Tuple[int, int]) -> None:
         x, y = entity.pos
         if entity.distance_move >= abs(pos[1] - y) and entity.distance_move >= abs(pos[0] - x) and pos != (x, y) and  \
-                self.entities_sector[y][x] is not None and pos[0] < SECTOR_X_NUMBER and pos[1] < SECTOR_Y_NUMBER:
-            entity.update_pos(pos)
-            self.entities_sector[y][x] = None
-            if self.entities_sector[pos[1]][pos[0]] is not None:
-                self.sound.add(self.entities_sector[pos[1]][pos[0]].sound_crash)
-            self.entities_sector[pos[1]][pos[0]] = entity
-            self.sound.add(self.entities_sector[pos[1]][pos[0]].sound_move)
+                self.entities_sector[y][x] is not None and 0 <= pos[0] < SECTOR_X_NUMBER and \
+                0 <= pos[1] < SECTOR_Y_NUMBER:
+            if type(self.entities_sector[pos[1]][pos[0]]) in BASES:
+                self.sound.add(self.entities_sector[y][x].sound_crash)
+                self.entities_sector[y][x] = None
+            else:
+                self.entities_sector[y][x] = None
+                if self.entities_sector[pos[1]][pos[0]] is not None:
+                    self.sound.add(self.entities_sector[pos[1]][pos[0]].sound_crash)
+                self.entities_sector[pos[1]][pos[0]] = entity
+                self.sound.add(self.entities_sector[pos[1]][pos[0]].sound_move)
+                entity.update_pos(pos)

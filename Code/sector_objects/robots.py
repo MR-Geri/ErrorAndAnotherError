@@ -1,3 +1,4 @@
+import pygame as pg
 from Code.settings import *
 from Code.sector_objects.entities import Entities
 from Code.utils import Path
@@ -14,7 +15,7 @@ class MK0:
         self.board = board
         self.entities = entities
         #
-        self.move = lambda: None
+        self.move = lambda *args, **kwargs: None
         #
         self.path_user_code = Path('MK0')
         self.name = 'Робот MK0'
@@ -33,14 +34,18 @@ class MK0:
         #
         self.render()
 
+    def get_state(self) -> dict:
+        return {
+            'pos': self.pos, 'x': self.pos[0], 'y': self.pos[1], 'hp': self.hp, 'energy': self.energy,
+            'damage': self.dmg, 'dmg': self.dmg
+        }
+
     def update_pos(self, pos: Tuple[int, int]) -> None:
         self.pos = list(pos)
         self.rect = pg.Rect(self.pos[0] * self.size_cell, self.pos[1] * self.size_cell, self.size_cell, self.size_cell)
 
     def move_my(self, board, entities) -> Union[None, Tuple[int, int]]:
-        pos = self.move()
-        print(f'pos: {pos}')
-        return pos
+        return self.move(self.get_state()['pos'], board, entities)
 
     def info(self) -> None:
         print(self.path_user_code.text)

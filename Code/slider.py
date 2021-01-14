@@ -1,3 +1,4 @@
+import pygame as pg
 from Code.settings import *
 
 

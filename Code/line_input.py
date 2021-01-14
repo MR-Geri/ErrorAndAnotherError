@@ -1,5 +1,4 @@
 import pyperclip
-
 from Code.settings import FPS, COLOR
 
 from typing import Tuple
