@@ -1,3 +1,5 @@
+import importlib
+
 from Code.settings import *
 
 
@@ -51,12 +53,13 @@ class Processor:
                 try:
                     code = entity.path_user_code.code()
                     if code:
-                        print(1)
-                        del entity.move
-                        data = __import__('Game_code').robot_move.move
-                        entity.move = data
-                        del data
-                        print(entity.move)
+                        module = entity.path_user_code.module()
+                        print(code)
+                        if 'move' in code:
+                            print(entity.move)
+                            importlib.reload(importlib.import_module(module))
+                            entity.move = importlib.import_module(module).move
+                            print(entity.move)
                     who_pos = entity.move_my(board=board, entities=entities)
                     if who_pos and board[who_pos[1]][who_pos[0]] not in entity.sell_block:
                         self.entities.move(entity, who_pos)

@@ -44,16 +44,18 @@ class Path:
     def set_text(self, text: str) -> None:
         self.text = text
 
-    def code(self):
+    def module(self) -> Union[str, None]:
+        return self.text.split(r'projectPygame\ '[:-1])[1].split('.py')[0].replace(r'\ '[0], '.')
+
+    def code(self) -> Union[None, list]:
         with open(self.text) as commands:
             try:
                 t = commands.read().split('\n\n')
                 t = {i.split("def ")[1].split("(")[0]: i for i in t}
                 if t != self.last_code:
                     self.last_code = t
-                    print('last: ', self.last_code)
                 else:
                     return None
             except:
                 return None
-        return self.last_code
+        return list(self.last_code.keys())

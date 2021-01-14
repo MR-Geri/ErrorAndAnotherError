@@ -1,4 +1,6 @@
 import time
+from Game_code import robot_move
+import importlib
 
 
 class Test:
@@ -11,21 +13,16 @@ class Test:
 
     def my_func(self):
         p = self.func()
-        print('p=', p)
+        print('p =', p)
 
 
 if __name__ == '__main__':
     test = Test()
-    for i in range(10):
+    for i in range(12):
         print(i)
-        if i == 2 or i == 9:
-            try:
-                data = __import__('robot_move').func
-                test.func = data
-            except Exception as e:
-                print(e)
-        time.sleep(1)
         try:
-            test.my_func()
+            importlib.reload(importlib.import_module('Game_code.robot_move'))
+            print(importlib.import_module('Game_code.robot_move').func())
         except Exception as e:
-            print('e', e)
+            print('Ошибка', e)
+        time.sleep(2)
