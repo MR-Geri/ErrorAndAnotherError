@@ -1,4 +1,3 @@
-import pygame as pg
 from Code.settings import *
 from Code.Map.minimaps import Minimap
 from Code.buttons import Buttons, Button, ButtonTwoStates

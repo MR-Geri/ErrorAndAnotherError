@@ -1,4 +1,3 @@
-import pygame as pg
 from Code.settings import *
 from Code.sector_objects.entities import Entities
 from Code.utils import Path

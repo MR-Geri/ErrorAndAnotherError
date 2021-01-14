@@ -1,4 +1,3 @@
-import pygame as pg
 from Code.settings import *
 from Code.buttons import Button, Buttons
 from Code.utils import Interface

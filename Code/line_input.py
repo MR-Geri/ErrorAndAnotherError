@@ -1,8 +1,5 @@
 import pyperclip
-from Code.settings import FPS, COLOR
-
-from typing import Tuple
-import pygame as pg
+from Code.settings import *
 
 from Code.texts import TextMaxSize
 

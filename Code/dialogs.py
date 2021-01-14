@@ -1,8 +1,7 @@
-import pygame as pg
 from Code.scroll import Scroll
 from Code.settings import *
 from Code.buttons import Button
-from Code.utils import Interface, Path
+from Code.utils import Interface
 from Code.line_input import LineInput
 
 from Code.texts import max_size_list_text

@@ -1,4 +1,3 @@
-import pygame as pg
 from Code.settings import *
 from Code.dialogs import DialogInfo, DialogFile
 from Code.escape_menu import EscMenu

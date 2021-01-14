@@ -4,9 +4,6 @@ from Code.dialogs import DialogInfo
 from Code.info_panel import RightPanel
 from Code.sector_objects.base import Base
 from Code.sector_objects.entities import Entities
-
-import pygame as pg
-
 from Code.Map.biomes import GeneratorBiomes
 from Code.sound import Sound
 
@@ -28,7 +25,7 @@ class Sector:
         # Инициализация
         self.gen_board()
         #
-        self.entities = Entities((self.number_x, self.number_y), sound)
+        self.entities = Entities((self.number_x, self.number_y), sound, bases=BASES)
         #
         self.render()
 

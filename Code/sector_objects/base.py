@@ -3,8 +3,6 @@ from Code.utils import Path
 from Code.dialogs import DialogInfo
 from Code.info_panel import RightPanel
 from Code.sector_objects.generates_electrical import RadioisotopeGenerator
-
-import pygame as pg
 from Code.sector_objects.entities import Entities
 
 
