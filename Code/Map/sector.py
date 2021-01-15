@@ -26,7 +26,7 @@ class Sector:
         # Инициализация
         self.gen_board()
         #
-        self.entities = Entities((self.number_x, self.number_y), sound=sound)
+        self.entities = Entities((self.number_x, self.number_y), sound)
         #
         self.render()
 
@@ -73,7 +73,8 @@ class Sector:
             if type(entities_sector[pos[1]][pos[0]]) in BASES:
                 self.sound.add(entities_sector[y][x].sound_crash)
                 entities_sector[y][x] = None
-            else:
+            elif entity.energy >= self.board[pos[1]][pos[0]].energy_passage:
+                entity.energy -= self.board[pos[1]][pos[0]].energy_passage
                 entities_sector[y][x] = None
                 if entities_sector[pos[1]][pos[0]] is None:
                     entity.update_pos(pos)

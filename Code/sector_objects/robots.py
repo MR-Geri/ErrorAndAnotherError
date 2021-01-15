@@ -18,7 +18,7 @@ class MK0:
         #
         self.path_user_code = Path('MK0')
         self.name = 'Робот MK0'
-        self.energy = 0
+        self.energy = 50
         self.energy_create = 100
         self.dmg = 0
         self.hp = 100
@@ -34,20 +34,23 @@ class MK0:
         self.render()
 
     def get_state(self) -> dict:
-        return {
+        data = {
             'pos': self.pos, 'x': self.pos[0], 'y': self.pos[1], 'hp': self.hp, 'energy': self.energy,
-            'damage': self.dmg, 'dmg': self.dmg
+            'damage': self.dmg, 'dmg': self.dmg, 'sell_block': self.sell_block
         }
+        for k, v in data.items():
+            data[k] = type(v)(v)
+        return data
 
     def update_pos(self, pos: Tuple[int, int]) -> None:
         self.pos = list(pos)
         self.rect = pg.Rect(self.pos[0] * self.size_cell, self.pos[1] * self.size_cell, self.size_cell, self.size_cell)
+        self.info()
 
     def move_my(self, board, entities) -> Union[None, Tuple[int, int]]:
-        return self.move(self.get_state()['pos'], board, entities)
+        return self.move(self.get_state(), board, entities)
 
     def info(self) -> None:
-        print(self.path_user_code.text)
         self.right_panel.info_update = self.info
         energy = f'Энергии > {self.energy}'
         hp = f'Прочности > {self.hp}'
