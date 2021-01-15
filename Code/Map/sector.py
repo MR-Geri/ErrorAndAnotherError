@@ -2,7 +2,7 @@ from Code.settings import *
 
 from Code.dialogs import DialogInfo
 from Code.info_panel import RightPanel
-from Code.sector_objects.base import Base
+from Code.sector_objects.bases import Base
 from Code.sector_objects.entities import Entities
 from Code.Map.biomes import GeneratorBiomes
 from Code.sound import Sound

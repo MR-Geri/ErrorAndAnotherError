@@ -32,7 +32,7 @@ class Processor:
     def get_entities(self) -> list:
         entities = self.entities.entities_sector
         entities = [
-            [entities[y][x].__class__.__name__ if entities[y][x] is not None else None for x in entities[y]]
+            [entities[y][x].get_state() if entities[y][x] is not None else None for x in entities[y]]
             for y in entities
         ]
         return entities
@@ -59,7 +59,7 @@ class Processor:
                         if 'move' in code:
                             importlib.reload(importlib.import_module(module))
                             entity.move = importlib.import_module(module).move
-                    who_pos = entity.move_my(board=board, entities=entities)
+                    who_pos = entity.move_core(board=board, entities=entities)
                     if who_pos and board[who_pos[1]][who_pos[0]]['name'] not in entity.sell_block:
                         self.sector.move(entity, who_pos)
                 except FileNotFoundError:

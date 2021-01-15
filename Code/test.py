@@ -1,5 +1,5 @@
 import time
-from Game_code import robot_move
+from Game_code import robot
 import importlib
 
 

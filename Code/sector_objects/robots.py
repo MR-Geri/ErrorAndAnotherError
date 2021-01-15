@@ -13,12 +13,13 @@ class MK0:
         self.dialog_file = dialog_file
         self.board = board
         self.entities = entities
-        #
+        # Функции пользователя
         self.move = lambda *args, **kwargs: None
         #
         self.path_user_code = Path('MK0')
         self.name = 'Робот MK0'
         self.energy = 50
+        self.energy_max = 150
         self.energy_create = 100
         self.dmg = 0
         self.hp = 100
@@ -35,8 +36,9 @@ class MK0:
 
     def get_state(self) -> dict:
         data = {
-            'pos': self.pos, 'x': self.pos[0], 'y': self.pos[1], 'hp': self.hp, 'energy': self.energy,
-            'damage': self.dmg, 'dmg': self.dmg, 'sell_block': self.sell_block
+            'name': self.__class__.__name__, 'pos': self.pos, 'x': self.pos[0], 'y': self.pos[1], 'hp': self.hp,
+            'energy': self.energy, 'energy_max': self.energy_max, 'damage': self.dmg, 'dmg': self.dmg,
+            'sell_block': self.sell_block, 'distance_move': self.distance_move
         }
         for k, v in data.items():
             data[k] = type(v)(v)
@@ -45,9 +47,10 @@ class MK0:
     def update_pos(self, pos: Tuple[int, int]) -> None:
         self.pos = list(pos)
         self.rect = pg.Rect(self.pos[0] * self.size_cell, self.pos[1] * self.size_cell, self.size_cell, self.size_cell)
-        self.info()
+        if self.right_panel.info_update == self.info:
+            self.info()
 
-    def move_my(self, board, entities) -> Union[None, Tuple[int, int]]:
+    def move_core(self, board, entities) -> Union[None, Tuple[int, int]]:
         return self.move(self.get_state(), board, entities)
 
     def info(self) -> None:
