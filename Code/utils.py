@@ -50,12 +50,13 @@ class Path:
     def code(self) -> Union[None, list]:
         with open(self.text) as commands:
             try:
-                t = commands.read().split('\n\n')
-                t = {i.split("def ")[1].split("(")[0]: i for i in t}
-                if t != self.last_code:
-                    self.last_code = t
+                t = commands.read().split('\n\n\n')
+                data = {i.split("def ")[1].split("(")[0]: i for i in t if 'def' in i}
+                if data != self.last_code:
+                    self.last_code = data
                 else:
                     return None
-            except:
+            except Exception as e:
+                print(e)
                 return None
         return list(self.last_code.keys())

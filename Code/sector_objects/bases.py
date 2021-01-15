@@ -25,6 +25,10 @@ class Base:
         self.energy_max = 1500
         self.hp = 1000
         self.distance_create = 1
+        self.distance_charging = 1
+        self.energy_possibility = ['MK0']
+        #
+        self.sound_charge = PATH_CHARGE + 'MK0.wav'
         # Установленные предметы
         self.generator = RadioisotopeGenerator(self.energy_generation)
         #
@@ -36,7 +40,8 @@ class Base:
     def get_state(self) -> dict:
         data = {
             'pos': self.pos, 'x': self.pos[0], 'y': self.pos[1], 'hp': self.hp, 'energy': self.energy,
-            'energy_max': self.energy_max, 'distance_create': self.distance_create
+            'energy_max': self.energy_max, 'distance_create': self.distance_create,
+            'distance_charging': self.distance_charging, 'energy_possibility': self.energy_possibility
         }
         for k, v in data.items():
             data[k] = type(v)(v)
@@ -66,8 +71,13 @@ class Base:
         self.rect = pg.Rect(self.pos[0] * self.size_cell, self.pos[1] * self.size_cell, self.size_cell, self.size_cell)
         self.render()
 
-    def energy_generation(self, energy: int):
+    def energy_generation(self, energy: int) -> None:
         self.energy += energy if self.energy + energy <= self.energy_max else 0
+        if self.right_panel.info_update == self.info:
+            self.info()
+
+    def energy_return(self, energy: int) -> None:
+        self.energy -= energy
         if self.right_panel.info_update == self.info:
             self.info()
 
@@ -76,21 +86,3 @@ class Base:
 
     def func_file(self) -> None:
         self.dialog_file.show(self.path_user_code)  # Установка файла
-
-    def create_robot(self, robot: ALL_ROBOT) -> None:
-        n_x, k_x = self.pos[0] - self.distance_create, self.pos[0] + self.distance_create + 1
-        n_y, k_y = self.pos[1] - self.distance_create, self.pos[1] + self.distance_create + 1
-        for i_y, y in enumerate(self.board):
-            for i_x, x in enumerate(y):
-                if k_y > i_y >= n_y and k_x > i_x >= n_x and \
-                        type(x) not in SELL_BLOCKED and self.entities.entities_sector[i_y][i_x] is None:
-                    robot_ = robot(pos=(i_x, i_y), size_cell=self.size_cell, dialog_file=self.dialog_file,
-                                   right_panel=self.right_panel, board=self.board, entities=self.entities)
-                    if self.energy >= robot_.energy_create:
-                        self.energy -= robot_.energy_create
-                        self.entities.add(robot_)
-                        # Происходит обновление базы -> обновим панель
-                        if self.right_panel.info_update == self.info:
-                            self.info()
-                    return
-        self.dialog_info.show(['Вокруг базы нет места', 'для нового объекта'])

@@ -46,7 +46,8 @@ class Sector:
         ]
 
     def place_base(self, pos: Tuple[int, int]) -> None:
-        if type(self.board[pos[1]][pos[0]]) not in SELL_BLOCKED and not self.is_base:
+        if type(self.board[pos[1]][pos[0]]) not in SELL_BLOCKED and not self.is_base and \
+               0 <= pos[1] < SECTOR_Y_NUMBER and 0 <= pos[0] < SECTOR_X_NUMBER:
             self.is_base = True
             self.base = Base(pos=pos, size_cell=self.size_cell, board=self.board, entities=self.entities,
                              dialog_info=self.dialog_info, dialog_file=self.dialog_file, right_panel=self.right_panel)
@@ -57,12 +58,31 @@ class Sector:
             else:
                 self.dialog_info.show(['Неподходящая поверхность для базы'])
 
-    def render(self) -> None:
-        self.surface.fill(pg.Color(COLOR_BACKGROUND))
-        for cells in self.board:
-            for cell in cells:
-                self.surface.blit(cell.image, cell.rect)
-        self.entities.draw(self.surface)
+    def energy_transfer(self, energy: int, pos: Tuple[int, int]) -> None:
+        if abs(self.base.pos[0] - pos[0]) <= self.base.distance_charging and \
+                abs(self.base.pos[1] - pos[1]) <= self.base.distance_charging and self.base.energy >= energy and \
+                self.entities.entities_sector[pos[1]][pos[0]] is not None:
+            self.entities.entities_sector[pos[1]][pos[0]].energy_receiving(energy)
+            self.base.energy_return(energy)
+            self.sound.add(self.base.sound_charge)
+
+    def create_robot(self, robot: ALL_ROBOT) -> None:
+        n_x, k_x = self.base.pos[0] - self.base.distance_create, self.base.pos[0] + self.base.distance_create + 1
+        n_y, k_y = self.base.pos[1] - self.base.distance_create, self.base.pos[1] + self.base.distance_create + 1
+        for i_y, y in enumerate(self.board):
+            for i_x, x in enumerate(y):
+                if k_y > i_y >= n_y and k_x > i_x >= n_x and \
+                        type(x) not in SELL_BLOCKED and self.entities.entities_sector[i_y][i_x] is None:
+                    robot_ = robot(pos=(i_x, i_y), size_cell=self.size_cell, dialog_file=self.dialog_file,
+                                   right_panel=self.right_panel)
+                    if self.base.energy >= robot_.energy_create:
+                        self.base.energy -= robot_.energy_create
+                        self.base.entities.add(robot_)
+                        # Происходит обновление базы -> обновим панель
+                        if self.right_panel.info_update == self.base.info:
+                            self.base.info()
+                    return
+        self.dialog_info.show(['Вокруг базы нет места', 'для нового объекта'])
 
     def move(self, entity, pos: Tuple[int, int]) -> None:
         entities_sector = self.entities.entities_sector
@@ -76,12 +96,18 @@ class Sector:
             elif entity.energy >= self.board[pos[1]][pos[0]].energy_passage:
                 entity.energy -= self.board[pos[1]][pos[0]].energy_passage
                 entities_sector[y][x] = None
-                if entities_sector[pos[1]][pos[0]] is None:
-                    entity.update_pos(pos)
-                    entities_sector[pos[1]][pos[0]] = entity
-                    self.sound.add(entities_sector[pos[1]][pos[0]].sound_move)
-                else:
+                if entities_sector[pos[1]][pos[0]] is not None:
                     self.sound.add(entities_sector[pos[1]][pos[0]].sound_crash)
+                entity.pos_update(pos)
+                entities_sector[pos[1]][pos[0]] = entity
+                self.sound.add(entities_sector[pos[1]][pos[0]].sound_move)
+
+    def render(self) -> None:
+        self.surface.fill(pg.Color(COLOR_BACKGROUND))
+        for cells in self.board:
+            for cell in cells:
+                self.surface.blit(cell.image, cell.rect)
+        self.entities.draw(self.surface)
 
     def scale(self, size_cell) -> None:
         self.size_cell = size_cell

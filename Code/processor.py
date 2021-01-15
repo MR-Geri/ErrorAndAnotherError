@@ -39,18 +39,40 @@ class Processor:
 
     def update(self) -> None:
         board = self.get_board()
-        self.robots = []
+        robots = []
         for y in self.entities.entities_sector:
             for x in self.entities.entities_sector[y]:
                 entity = self.entities.entities_sector[y][x]
                 type_ = type(entity)
                 if type_ in ROBOTS:
-                    self.robots.append(entity)
+                    robots.append(entity)
                 elif type_ in BASES:
+                    entities = self.get_entities()
+                    try:
+                        code = entity.path_user_code.code()
+                        if code:
+                            module = entity.path_user_code.module()
+                            if 'energy_transfer' in code:
+                                importlib.reload(importlib.import_module(module))
+                                entity.energy_transfer = importlib.import_module(module).energy_transfer
+                        data = entity.energy_transfer_core(board=board, entities=entities)
+                        if data:
+                            energy, who_pos = data[0], data[1]
+                            if who_pos and \
+                                    self.entities.entities_sector[who_pos[1]][who_pos[0]].__class__.__name__ in \
+                                    entity.energy_possibility:
+                                self.sector.energy_transfer(energy, who_pos)
+                    except FileNotFoundError:
+                        pass
+                    except IndexError:
+                        pass
+                    except Exception as e:
+                        print(f'Processor base Exception -> {e}')
+                    #
                     if entity.generator is not None:
                         entity.generator.update(self.tick_complete)
-        if self.robots:
-            for entity in self.robots:
+        if robots:
+            for entity in robots:
                 entities = self.get_entities()
                 try:
                     code = entity.path_user_code.code()
@@ -67,5 +89,5 @@ class Processor:
                 except IndexError:
                     pass
                 except Exception as e:
-                    print(f'Processor update Exception -> {e}')
+                    print(f'Processor robots Exception -> {e}')
             self.sector.render()

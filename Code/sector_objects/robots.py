@@ -1,18 +1,14 @@
 from Code.settings import *
-from Code.sector_objects.entities import Entities
 from Code.utils import Path
 from Code.info_panel import RightPanel
 
 
 class MK0:
-    def __init__(self, pos: Tuple[int, int], size_cell: int, dialog_file, right_panel: RightPanel, board: list,
-                 entities: Entities) -> None:
+    def __init__(self, pos: Tuple[int, int], size_cell: int, dialog_file, right_panel: RightPanel) -> None:
         self.pos = list(pos)
         self.size_cell = size_cell
         self.right_panel = right_panel
         self.dialog_file = dialog_file
-        self.board = board
-        self.entities = entities
         # Функции пользователя
         self.move = lambda *args, **kwargs: None
         #
@@ -44,9 +40,14 @@ class MK0:
             data[k] = type(v)(v)
         return data
 
-    def update_pos(self, pos: Tuple[int, int]) -> None:
+    def pos_update(self, pos: Tuple[int, int]) -> None:
         self.pos = list(pos)
         self.rect = pg.Rect(self.pos[0] * self.size_cell, self.pos[1] * self.size_cell, self.size_cell, self.size_cell)
+        if self.right_panel.info_update == self.info:
+            self.info()
+
+    def energy_receiving(self, energy: int) -> None:
+        self.energy = min(energy + self.energy, self.energy_max)
         if self.right_panel.info_update == self.info:
             self.info()
 

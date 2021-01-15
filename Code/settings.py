@@ -34,6 +34,7 @@ MENU_BACKGROUND = '../Data/Images/game.jpg'
 
 PATH_CRASHES = '../Data/Sounds/crashes/'
 PATH_MOVES = '../Data/Sounds/moves/'
+PATH_CHARGE = '../Data/Sounds/charge/'
 ALL_BACKGROUND_MUSIC = [[root + i for i in files] for root, _, files in walk('../Data/Sounds/background_music/')][0]
 
 PLAYER_CODE = '../Game_code/'

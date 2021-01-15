@@ -1,3 +1,3 @@
 # D:\PycharmProjects\projectPygame\Game_code
-# sector.place_base(pos=(3, 29))
-base.create_robot(MK0)
+# sector.place_base(pos=(0, 29))
+sector.create_robot(MK0)
