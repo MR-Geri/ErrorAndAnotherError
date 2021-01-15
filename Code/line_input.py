@@ -55,7 +55,8 @@ class LineInput:
                     self.pos_cursor[0] = min(
                         len(c_v), int(self.text.rect.width / self.char), int(self.rect.width / self.char))
                     if int(self.text.rect.width / self.char) - int(self.rect.width / self.char) > 0:
-                        self.pos[0] = self.char * int(self.rect.width / self.char - self.text.rect.width / self.char)
+                        self.pos[0] = self.char * \
+                                      (int(self.rect.width / self.char - self.text.rect.width / self.char) - 1)
             elif event.key == pg.K_BACKSPACE or event.key == pg.K_LEFT:
                 if event.key == pg.K_BACKSPACE:
                     self.text.set_text(text[0][:-1] + text[1])
