@@ -59,7 +59,7 @@ class Processor:
                             entity.move = importlib.import_module(module).move
                     who_pos = entity.move_my(board=board, entities=entities)
                     if who_pos and board[who_pos[1]][who_pos[0]] not in entity.sell_block:
-                        self.entities.move(entity, who_pos)
+                        self.sector.move(entity, who_pos)
                 except FileNotFoundError:
                     pass
                 except IndexError:

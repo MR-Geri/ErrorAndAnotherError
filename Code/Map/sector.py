@@ -17,6 +17,7 @@ class Sector:
         self.surface = pg.Surface(self.size_sector)
         self.board = None
         self.base = None
+        self.sound = sound
         self.dialog_info = dialog_info
         self.dialog_file = dialog_file
         self.right_panel = right_panel
@@ -25,7 +26,7 @@ class Sector:
         # Инициализация
         self.gen_board()
         #
-        self.entities = Entities((self.number_x, self.number_y), sound, bases=BASES)
+        self.entities = Entities((self.number_x, self.number_y), sound=sound)
         #
         self.render()
 
@@ -63,8 +64,23 @@ class Sector:
                 self.surface.blit(cell.image, cell.rect)
         self.entities.draw(self.surface)
 
-    def robot_move(self, entity, pos: Tuple[int, int]) -> None:
-        pass
+    def move(self, entity, pos: Tuple[int, int]) -> None:
+        entities_sector = self.entities.entities_sector
+        x, y = entity.pos
+        if entity.distance_move >= abs(pos[1] - y) and entity.distance_move >= abs(pos[0] - x) and pos != (x, y) and \
+                entities_sector[y][x] is not None and 0 <= pos[0] < SECTOR_X_NUMBER and \
+                0 <= pos[1] < SECTOR_Y_NUMBER:
+            if type(entities_sector[pos[1]][pos[0]]) in BASES:
+                self.sound.add(entities_sector[y][x].sound_crash)
+                entities_sector[y][x] = None
+            else:
+                entities_sector[y][x] = None
+                if entities_sector[pos[1]][pos[0]] is None:
+                    entity.update_pos(pos)
+                    entities_sector[pos[1]][pos[0]] = entity
+                    self.sound.add(entities_sector[pos[1]][pos[0]].sound_move)
+                else:
+                    self.sound.add(entities_sector[pos[1]][pos[0]].sound_crash)
 
     def scale(self, size_cell) -> None:
         self.size_cell = size_cell
