@@ -12,6 +12,7 @@ class LineInput:
         self.pos_cursor = [0, 0]
         #
         self.l_ctrl = False
+        self.l_shift = False
         self.if_active = False
         self.tick = 0
         #
@@ -42,12 +43,20 @@ class LineInput:
             self.l_ctrl = True
         elif event.type == pg.KEYUP and event.key == pg.K_LCTRL:
             self.l_ctrl = False
+        elif event.type == pg.KEYDOWN and event.key == pg.K_LSHIFT:
+            self.l_shift = True
+        elif event.type == pg.KEYUP and event.key == pg.K_LSHIFT:
+            self.l_shift = False
         elif event.type == pg.KEYDOWN and self.if_active:
             cur = int((-self.pos[0] / self.char) + self.pos_cursor[0])
             text = [self.text.text[:cur], self.text.text[cur:]]
             if event.key == pg.K_RETURN:
                 self.if_active = False
                 self.tick = 0
+            elif self.l_shift and (event.key == pg.K_BACKSPACE or event.key == pg.K_DELETE):
+                self.text.set_text('')
+                self.pos[0] = 0
+                self.pos_cursor[0] = 0
             elif self.l_ctrl and event.key == pg.K_v:
                 c_v = str(pyperclip.paste()).replace('\n', ' ')
                 if c_v:
@@ -63,7 +72,7 @@ class LineInput:
                 if self.pos_cursor[0] == 0 and self.pos[0] < 0:
                     self.pos[0] += self.char
                 self.pos_cursor[0] = max(self.pos_cursor[0] - 1, 0)
-            if event.key == pg.K_DELETE:
+            elif event.key == pg.K_DELETE:
                 self.text.set_text(text[0] + text[1][1:])
             elif event.key == pg.K_RIGHT or event.unicode:
                 if event.unicode:

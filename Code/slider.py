@@ -21,13 +21,14 @@ class Numbers:
 
 class Slider:
     def __init__(self, pos: Tuple[int, int], width: int, height: int, color_no_use: COLOR, color_use: COLOR,
-                 color_circle: COLOR, slider, func, offset: Tuple[int, int] = None) -> None:
+                 color_circle: COLOR, slider, func, offset: Tuple[int, int] = None, name: str = None) -> None:
         self.rect = pg.Rect(*pos, width, height)
         self.click = pg.Rect(*pos, width, height)
         if offset:
             self.click.x, self.click.y = self.click.x + offset[0], self.click.y + offset[1]
         self.slider = slider
         self.func = func
+        self.name = name
         self.color_no_use = color_no_use
         self.color_use = color_use
         self.color_circle = color_circle
@@ -55,7 +56,10 @@ class Slider:
                     self.slider.set_value(value)
                     # print(self.slider.value)
                     if self.func:
-                        self.func.update(self.slider.value)
+                        if self.name:
+                            self.func.update(self.slider.value, self.name)
+                        else:
+                            self.func.update(self.slider.value)
                 if event.type == pg.MOUSEBUTTONDOWN and event.button == 1 and not self.flag_click:
                     self.flag_click = True
             else:

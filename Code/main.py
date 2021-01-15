@@ -2,14 +2,19 @@ from Code.settings import *
 from Code.edit_permission import Permission
 
 from Code.slider import Numbers
-from Code.sound import Music
+from Code.sound import Music, Sound
 from Code.window import MenuWindow, SettingsWindow, GameWindow
 
 
 class Controller:
     def __init__(self) -> None:
         self.volume = Numbers(0, 1, 0.01, round(1 / 16, 3))
+        self.volume_sound = {
+            'crashes': Numbers(0, 1, 0.01, round(1 / 16, 3)),
+            'moves': Numbers(0, 1, 0.01, round(1 / 16, 3)),
+            'charge': Numbers(0, 1, 0.01, round(1 / 16, 3))}
         self.music = Music(path=ALL_BACKGROUND_MUSIC, volume=self.volume.value)
+        self.sound = Sound(self.volume_sound)
         self.permission = Permission(active=DISPLAY_SIZE)
         #
         self.menu = MenuWindow(self, DISPLAY_SIZE, MENU_TITLE)

@@ -26,6 +26,7 @@ class Base:
         self.hp = 1000
         self.distance_create = 1
         self.distance_charging = 1
+        self.energy_max_charging = 5
         self.energy_possibility = ['MK0']
         #
         self.sound_charge = PATH_CHARGE + 'MK0.wav'
@@ -41,7 +42,8 @@ class Base:
         data = {
             'pos': self.pos, 'x': self.pos[0], 'y': self.pos[1], 'hp': self.hp, 'energy': self.energy,
             'energy_max': self.energy_max, 'distance_create': self.distance_create,
-            'distance_charging': self.distance_charging, 'energy_possibility': self.energy_possibility
+            'distance_charging': self.distance_charging, 'energy_possibility': self.energy_possibility,
+            'energy_max_charging': self.energy_max_charging
         }
         for k, v in data.items():
             data[k] = type(v)(v)

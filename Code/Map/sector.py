@@ -61,8 +61,9 @@ class Sector:
     def energy_transfer(self, energy: int, pos: Tuple[int, int]) -> None:
         if abs(self.base.pos[0] - pos[0]) <= self.base.distance_charging and \
                 abs(self.base.pos[1] - pos[1]) <= self.base.distance_charging and self.base.energy >= energy and \
-                self.entities.entities_sector[pos[1]][pos[0]] is not None:
-            self.entities.entities_sector[pos[1]][pos[0]].energy_receiving(energy)
+                self.base.energy_max_charging >= energy:
+            if self.entities.entities_sector[pos[1]][pos[0]] is not None:
+                self.entities.entities_sector[pos[1]][pos[0]].energy_receiving(energy)
             self.base.energy_return(energy)
             self.sound.add(self.base.sound_charge)
 

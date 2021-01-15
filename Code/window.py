@@ -9,7 +9,7 @@ from Code.сamera import Camera
 from Code.buttons import Button, Buttons, ButtonTwoStates
 from Code.Map.sector import Sector
 from Code.info_panel import LeftPanel, RightPanel
-from Code.texts import max_size_list_text, TextCenter
+from Code.texts import max_size_list_text, TextCenter, Texts
 from Code.slider import Slider, Sliders
 from Code.sector_objects.robots import MK0
 
@@ -170,13 +170,14 @@ class SettingsWindow(Window):
     def __init__(self, controller: object, size_display: Tuple[int, int], caption: str) -> None:
         super().__init__(controller, size_display, caption)
         self.interface = Interface(
-            pos=(10, 100), max_width=self.win_width - 20, max_height=self.win_height - 200,
-            indent=(0, self.win_height // 100), size=(self.win_width - 20, (self.win_height - 200) // 10))
+            pos=(10, 10), max_width=self.win_width, max_height=self.win_height,
+            indent=(0, self.win_height // 100), size=(self.win_width - 20, (self.win_height - 20) // 13))
+        self.sound = controller.sound
         self.sliders = Sliders()
         self.buttons = Buttons()
-        self.init_sliders()
+        self.texts = Texts()
         self.init_permission()
-        self.interface.move(0)
+        self.init_sliders()
         #
 
     def permission_previous(self) -> None:
@@ -192,6 +193,10 @@ class SettingsWindow(Window):
         self.controller.settings.run('menu')
 
     def init_permission(self) -> None:
+        self.texts.add(TextMaxSizeCenter(
+            text='Разрешение', width=self.interface.width, height=self.interface.height, font_type=PT_MONO,
+            pos=self.interface.pos))
+        self.interface.move(0)
         width10, height = self.interface.width // 10, self.interface.height
         button = Button(
             pos=self.interface.pos, width=width10, height=height, func=self.permission_previous,
@@ -204,6 +209,7 @@ class SettingsWindow(Window):
             f'', width=self.interface.width - 2 * width10, height=self.interface.height,
             pos=self.interface.pos, font_type=PT_MONO
         )
+        self.texts.add(self.text_permission)
         self.interface.move(self.interface.width - 2 * width10, 0, is_indent=(False, False))
         button = Button(
             pos=self.interface.pos, width=width10, height=height, func=self.permission_next,
@@ -211,19 +217,38 @@ class SettingsWindow(Window):
             text=TextMaxSizeCenter(text='>', width=width10, height=height, font_type=PT_MONO)
         )
         self.buttons.add(button)
-        self.interface.move(width10, is_indent=(False, False))
+        self.interface.move(-(self.interface.width - width10), is_indent=(False, True))
 
     def init_sliders(self) -> None:
-        volume_slider = Slider(
+        self.texts.add(TextMaxSizeCenter(
+            text='Громкость музыки', width=self.interface.width, height=self.interface.height, font_type=PT_MONO,
+            pos=self.interface.pos))
+        self.interface.move(0)
+        self.sliders.add(Slider(
             pos=self.interface.pos, width=self.interface.width, height=self.interface.height,
             color_no_use=COLOR_SLIDER_NO_USE,
             color_use=COLOR_SLIDER_USE,
             color_circle=COLOR_SLIDER_CIRCLE,
             slider=self.volume,
             func=self.music
-        )
-        self.sliders.add(volume_slider)
+        ))
         self.interface.move(0)
+        data = ['Громкость звуков разрушения', 'Громкость звуков передвижение', 'Громкость звуков зарядки']
+        for ind, el in enumerate(self.sound.volumes.keys()):
+            self.texts.add(TextMaxSizeCenter(
+                text=data[ind], width=self.interface.width, height=self.interface.height,
+                font_type=PT_MONO, pos=self.interface.pos))
+            self.interface.move(0)
+            self.sliders.add(Slider(
+                pos=self.interface.pos, width=self.interface.width, height=self.interface.height,
+                color_no_use=COLOR_SLIDER_NO_USE,
+                color_use=COLOR_SLIDER_USE,
+                color_circle=COLOR_SLIDER_CIRCLE,
+                slider=self.sound.volumes[el],
+                func=self.sound,
+                name=el
+            ))
+            self.interface.move(0, self.interface.height)
 
     def update(self) -> None:
         pg.display.set_caption(str(self.clock.get_fps()))  # нужно для отладки. FPS в заголовок окна!
@@ -232,8 +257,8 @@ class SettingsWindow(Window):
 
     def draw(self) -> None:
         self.sliders.draw(self.display)
-        self.text_permission.draw(self.display)
         self.buttons.draw(self.display)
+        self.texts.draw(self.display)
 
     def event(self) -> None:
         for en in pg.event.get():
@@ -264,8 +289,8 @@ class GameWindow(Window):
                                       width=self.win_width // 2, height=self.win_height // 3)
         self.dialog_file = DialogFile(pos=(self.win_width // 8, self.win_height // 8),
                                       width=int(self.win_width * (6 / 8)), height=int(self.win_height * (6 / 8)))
+        self.sound = controller.sound
         # sector нужно ЗАГРУЖАТЬ если это НЕ НОВАЯ игра
-        self.sound = Sound()
         self.sector = Sector(
             number_x=SECTOR_X_NUMBER, number_y=SECTOR_Y_NUMBER, size_cell=self.size_cell, sound=self.sound,
             dialog_info=self.dialog_info, dialog_file=self.dialog_file, right_panel=self.right_panel)
