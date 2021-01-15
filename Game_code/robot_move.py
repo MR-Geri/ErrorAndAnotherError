@@ -1,2 +1,3 @@
-def move(pos, board, entities):
-    return pos[0] + 1, pos[1] + 1
+def move(state, board, entities):
+    pos = state['pos']
+    return pos[0] + 1, pos[1]

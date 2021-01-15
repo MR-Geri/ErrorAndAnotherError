@@ -24,7 +24,9 @@ class Processor:
             self.day = not self.day
 
     def get_board(self) -> list:
-        board = [[x.__class__.__name__ for x in y] for y in self.board]
+        board = [[
+            {'name': x.__class__.__name__, 'energy_passage': int(x.energy_passage)}
+            for x in y] for y in self.board]
         return board
 
     def get_entities(self) -> list:
@@ -58,8 +60,8 @@ class Processor:
                             importlib.reload(importlib.import_module(module))
                             entity.move = importlib.import_module(module).move
                     who_pos = entity.move_my(board=board, entities=entities)
-                    if who_pos and board[who_pos[1]][who_pos[0]] not in entity.sell_block:
-                        self.entities.move(entity, who_pos)
+                    if who_pos and board[who_pos[1]][who_pos[0]]['name'] not in entity.sell_block:
+                        self.sector.move(entity, who_pos)
                 except FileNotFoundError:
                     pass
                 except IndexError:
