@@ -11,9 +11,33 @@
     - Если робот (А) _наступает на ячейку_, где находится робот (В), то робот (В) **уничтожается**.
     - Если робот (А) _наступает на ячейку_, где находится база, то робот (А) **уничтожается**.
     - У робота есть permissions
-     в котором указано может ли робот сейчас выполнять то или иное действие, на это состояние могут влиять другие объекты. 
+     в котором указано может ли робот сейчас выполнять то или иное действие.
+     ```
+   class Permissions:
+        def __init__(self) -> None:
+            self.can_move = True
+            self.can_charging = True
+    
+        def set_move(self, flag: bool) -> None:
+            self.can_move = flag
+    
+        def set_charging(self, flag: bool) -> None:
+            self.can_charging = flag
+   ```
+    - На permissions могут влиять другие объекты. 
      например **База** блокирует перемещение для **Робота**:
-     ![alt text](https://github.com/MR-Geri/projectPygame/blob/master/idea/logic_base.png)
+    ```
+    # Логика базы для зарядки робота
+    def energy_transfer(state, board, entities) -> Union[Tuple[int, Tuple[int, int]], None]:
+        robot = entities[28][0]
+        if robot:
+            if robot['energy'] < robot['energy_max']:
+                robot['permissions'].set_move(False)
+                return 5, (0, 28)
+            else:
+                robot['permissions'].set_move(True)
+        return None
+    ```
     - Функиции 
         - Перемещение:
             1. Называется **move**
