@@ -60,3 +60,15 @@ class Path:
                 print(e)
                 return None
         return list(self.last_code.keys())
+
+
+class Permissions:
+    def __init__(self) -> None:
+        self.can_move = True
+        self.can_charging = True
+
+    def set_move(self, flag: bool) -> None:
+        self.can_move = flag
+
+    def set_charging(self, flag: bool) -> None:
+        self.can_charging = flag

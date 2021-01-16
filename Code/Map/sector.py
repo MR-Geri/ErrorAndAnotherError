@@ -21,8 +21,6 @@ class Sector:
         self.dialog_info = dialog_info
         self.dialog_file = dialog_file
         self.right_panel = right_panel
-        # Данные
-        self.is_base: bool = False
         # Инициализация
         self.gen_board()
         #
@@ -46,14 +44,13 @@ class Sector:
         ]
 
     def place_base(self, pos: Tuple[int, int]) -> None:
-        if type(self.board[pos[1]][pos[0]]) not in SELL_BLOCKED and not self.is_base and \
+        if type(self.board[pos[1]][pos[0]]) not in SELL_BLOCKED and not self.base and \
                0 <= pos[1] < SECTOR_Y_NUMBER and 0 <= pos[0] < SECTOR_X_NUMBER:
-            self.is_base = True
             self.base = Base(pos=pos, size_cell=self.size_cell, board=self.board, entities=self.entities,
                              dialog_info=self.dialog_info, dialog_file=self.dialog_file, right_panel=self.right_panel)
             self.entities.add(self.base)
         else:
-            if self.is_base:
+            if self.base:
                 self.dialog_info.show(['База уже существует'])
             else:
                 self.dialog_info.show(['Неподходящая поверхность для базы'])

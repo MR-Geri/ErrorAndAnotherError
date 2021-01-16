@@ -1,5 +1,5 @@
 from Code.settings import *
-from Code.utils import Path
+from Code.utils import Path, Permissions
 from Code.info_panel import RightPanel
 
 
@@ -9,13 +9,16 @@ class MK0:
         self.size_cell = size_cell
         self.right_panel = right_panel
         self.dialog_file = dialog_file
+        self.unique_name = ''
         # Функции пользователя
         self.move = lambda *args, **kwargs: None
+        # Состояния
+        self.permissions = Permissions()
         #
         self.path_user_code = Path('MK0')
         self.name = 'Робот MK0'
         self.energy = 50
-        self.energy_max = 150
+        self.energy_max = 200
         self.energy_create = 100
         self.dmg = 0
         self.hp = 100
@@ -32,12 +35,16 @@ class MK0:
 
     def get_state(self) -> dict:
         data = {
-            'name': self.__class__.__name__, 'pos': self.pos, 'x': self.pos[0], 'y': self.pos[1], 'hp': self.hp,
-            'energy': self.energy, 'energy_max': self.energy_max, 'damage': self.dmg, 'dmg': self.dmg,
+            'name': self.__class__.__name__, 'unique_name': self.unique_name,
+            'pos': self.pos, 'x': self.pos[0], 'y': self.pos[1],
+            'hp': self.hp,
+            'energy': self.energy, 'energy_max': self.energy_max,
+            'damage': self.dmg, 'dmg': self.dmg,
             'sell_block': self.sell_block, 'distance_move': self.distance_move
         }
         for k, v in data.items():
             data[k] = type(v)(v)
+        data['permissions'] = self.permissions
         return data
 
     def pos_update(self, pos: Tuple[int, int]) -> None:
@@ -47,12 +54,15 @@ class MK0:
             self.info()
 
     def energy_receiving(self, energy: int) -> None:
-        self.energy = min(energy + self.energy, self.energy_max)
-        if self.right_panel.info_update == self.info:
-            self.info()
+        if self.state.can_charging:
+            self.energy = min(energy + self.energy, self.energy_max)
+            if self.right_panel.info_update == self.info:
+                self.info()
 
     def move_core(self, board, entities) -> Union[None, Tuple[int, int]]:
-        return self.move(self.get_state(), board, entities)
+        if self.state.can_move:
+            return self.move(self.get_state(), board, entities)
+        return None
 
     def info(self) -> None:
         self.right_panel.info_update = self.info

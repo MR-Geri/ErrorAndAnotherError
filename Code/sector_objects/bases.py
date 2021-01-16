@@ -22,7 +22,7 @@ class Base:
         self.path_user_code = Path('Base')
         self.name = 'База MK0'
         self.energy = 1000
-        self.energy_max = 1500
+        self.energy_max = 4000
         self.hp = 1000
         self.distance_create = 1
         self.distance_charging = 1
