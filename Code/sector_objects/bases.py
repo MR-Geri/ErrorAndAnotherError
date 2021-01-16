@@ -1,5 +1,5 @@
 from Code.settings import *
-from Code.utils import Path
+from Code.utils import Path, PermissionsBase
 from Code.dialogs import DialogInfo
 from Code.info_panel import RightPanel
 from Code.sector_objects.generates_electrical import RadioisotopeGenerator
@@ -18,6 +18,8 @@ class Base:
         self.right_panel = right_panel
         # Функции пользователя
         self.energy_transfer = lambda *args, **kwargs: None
+        # Состояния
+        self.permissions = PermissionsBase()
         #
         self.path_user_code = Path('Base')
         self.name = 'База MK0'
@@ -31,7 +33,7 @@ class Base:
         #
         self.sound_charge = PATH_CHARGE + 'MK0.wav'
         # Установленные предметы
-        self.generator = RadioisotopeGenerator(self.energy_generation)
+        self.generator = RadioisotopeGenerator(self.energy_increase)
         #
         self.rect = pg.Rect(self.pos[0] * self.size_cell, self.pos[1] * self.size_cell, self.size_cell, self.size_cell)
         self.surface = pg.Surface((self.size_cell, self.size_cell), pg.SRCALPHA)
@@ -40,13 +42,14 @@ class Base:
 
     def get_state(self) -> dict:
         data = {
-            'pos': self.pos, 'x': self.pos[0], 'y': self.pos[1], 'hp': self.hp, 'energy': self.energy,
+            'pos': tuple(self.pos), 'x': self.pos[0], 'y': self.pos[1], 'hp': self.hp, 'energy': self.energy,
             'energy_max': self.energy_max, 'distance_create': self.distance_create,
             'distance_charging': self.distance_charging, 'energy_possibility': self.energy_possibility,
             'energy_max_charging': self.energy_max_charging
         }
         for k, v in data.items():
             data[k] = type(v)(v)
+        data['permissions'] = self.permissions
         return data
 
     def render(self) -> None:
@@ -73,17 +76,20 @@ class Base:
         self.rect = pg.Rect(self.pos[0] * self.size_cell, self.pos[1] * self.size_cell, self.size_cell, self.size_cell)
         self.render()
 
-    def energy_generation(self, energy: int) -> None:
+    def energy_increase(self, energy: int) -> None:
+        # НЕ ВЛИЯЕТ пользователь
         self.energy += energy if self.energy + energy <= self.energy_max else 0
         if self.right_panel.info_update == self.info:
             self.info()
 
-    def energy_return(self, energy: int) -> None:
+    def energy_decrease(self, energy: int) -> None:
+        # НЕ ВЛИЯЕТ пользователь
         self.energy -= energy
         if self.right_panel.info_update == self.info:
             self.info()
 
-    def energy_transfer_core(self, board, entities) -> Union[None, Tuple[int, Tuple[int, int]]]:
+    def energy_transfer_core(self, board, entities) -> Union[None, list]:
+        # НЕ ВЛИЯЕТ пользователь
         return self.energy_transfer(self.get_state(), board, entities)
 
     def func_file(self) -> None:

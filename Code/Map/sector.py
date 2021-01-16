@@ -59,10 +59,11 @@ class Sector:
         if abs(self.base.pos[0] - pos[0]) <= self.base.distance_charging and \
                 abs(self.base.pos[1] - pos[1]) <= self.base.distance_charging and self.base.energy >= energy and \
                 self.base.energy_max_charging >= energy:
-            if self.entities.entities_sector[pos[1]][pos[0]] is not None:
-                self.entities.entities_sector[pos[1]][pos[0]].energy_receiving(energy)
-            self.base.energy_return(energy)
-            self.sound.add(self.base.sound_charge)
+            if self.base.permissions.can_charging:
+                if self.entities.entities_sector[pos[1]][pos[0]] is not None:
+                    self.entities.entities_sector[pos[1]][pos[0]].energy_receiving(energy)
+                self.base.energy_decrease(energy)
+                self.sound.add(self.base.sound_charge)
 
     def create_robot(self, robot: ALL_ROBOT) -> None:
         n_x, k_x = self.base.pos[0] - self.base.distance_create, self.base.pos[0] + self.base.distance_create + 1

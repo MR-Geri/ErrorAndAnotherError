@@ -4,8 +4,8 @@ from Code.settings import *
 class RadioisotopeGenerator:
     def __init__(self, generation_energy) -> None:
         self.generation_energy = generation_energy
-        self.energy_generate = 1
-        self.energy_tick = 8
+        self.energy_generate = 5
+        self.energy_tick = 1
         self.resource = 10 ** 6
         #
         self.name = 'Радиоизотопный генератор'

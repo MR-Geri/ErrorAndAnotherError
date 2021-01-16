@@ -62,7 +62,7 @@ class Path:
         return list(self.last_code.keys())
 
 
-class Permissions:
+class PermissionsRobot:
     def __init__(self) -> None:
         self.can_move = True
         self.can_charging = True
@@ -72,3 +72,15 @@ class Permissions:
 
     def set_charging(self, flag: bool) -> None:
         self.can_charging = flag
+
+
+class PermissionsBase:
+    def __init__(self) -> None:
+        self.can_charging = True
+        self.can_generate = True
+
+    def set_charging(self, flag: bool) -> None:
+        self.can_charging = flag
+
+    def set_generate(self, flag: bool) -> None:
+        self.can_generate = flag

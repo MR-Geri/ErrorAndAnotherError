@@ -13,7 +13,7 @@
     - У робота есть permissions
      в котором указано может ли робот сейчас выполнять то или иное действие.
      ```
-   class Permissions:
+   class PermissionsRobot:
         def __init__(self) -> None:
             self.can_move = True
             self.can_charging = True
@@ -33,7 +33,7 @@
         if robot:
             if robot['energy'] < robot['energy_max']:
                 robot['permissions'].set_move(False)
-                return 5, (0, 28)
+                return (5, (0, 28)), (5, (0, 29))
             else:
                 robot['permissions'].set_move(True)
         return None

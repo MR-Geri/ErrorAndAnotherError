@@ -1,5 +1,5 @@
 from Code.settings import *
-from Code.utils import Path, Permissions
+from Code.utils import Path, PermissionsRobot
 from Code.info_panel import RightPanel
 
 
@@ -13,7 +13,7 @@ class MK0:
         # Функции пользователя
         self.move = lambda *args, **kwargs: None
         # Состояния
-        self.permissions = Permissions()
+        self.permissions = PermissionsRobot()
         #
         self.path_user_code = Path('MK0')
         self.name = 'Робот MK0'
@@ -36,7 +36,7 @@ class MK0:
     def get_state(self) -> dict:
         data = {
             'name': self.__class__.__name__, 'unique_name': self.unique_name,
-            'pos': self.pos, 'x': self.pos[0], 'y': self.pos[1],
+            'pos': tuple(self.pos), 'x': self.pos[0], 'y': self.pos[1],
             'hp': self.hp,
             'energy': self.energy, 'energy_max': self.energy_max,
             'damage': self.dmg, 'dmg': self.dmg,
@@ -48,19 +48,22 @@ class MK0:
         return data
 
     def pos_update(self, pos: Tuple[int, int]) -> None:
+        # НЕ ВЛИЯЕТ пользователь
         self.pos = list(pos)
         self.rect = pg.Rect(self.pos[0] * self.size_cell, self.pos[1] * self.size_cell, self.size_cell, self.size_cell)
         if self.right_panel.info_update == self.info:
             self.info()
 
     def energy_receiving(self, energy: int) -> None:
-        if self.state.can_charging:
+        # ВЛИЯЕТ пользователь
+        if self.permissions.can_charging:
             self.energy = min(energy + self.energy, self.energy_max)
             if self.right_panel.info_update == self.info:
                 self.info()
 
     def move_core(self, board, entities) -> Union[None, Tuple[int, int]]:
-        if self.state.can_move:
+        # ВЛИЯЕТ пользователь
+        if self.permissions.can_move:
             return self.move(self.get_state(), board, entities)
         return None
 
