@@ -47,6 +47,20 @@
     - База передаёт энергию лучом
         1. Если на ячейке, куда она передаёт энергию ничего нет, то энергия теряется.
         2. Если энергии у объекта, которому передаётся энергия, максимальное количество, то энергия теряется.
+    - У базы есть permissions в котором указано может ли база сейчас выполнять то или иное действие.
+     ```
+   class PermissionsBase:
+        def __init__(self) -> None:
+            self.can_charging = True
+            self.can_generate = True
+    
+        def set_charging(self, flag: bool) -> None:
+            self.can_charging = flag
+    
+        def set_generate(self, flag: bool) -> None:
+            self.can_generate = flag
+   ```
+    - На permissions могут влиять другие объекты. 
     - Функиции 
         - Передача энергии:
             1. Называется **energy_transfer**
