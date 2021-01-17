@@ -9,7 +9,7 @@ class MK0:
         self.size_cell = size_cell
         self.right_panel = right_panel
         self.dialog_file = dialog_file
-        self.unique_name = ''
+        self.unique_name = str(randint(1000000, 9999999))
         # Функции пользователя
         self.move = lambda *args, **kwargs: None
         # Состояния
@@ -70,9 +70,10 @@ class MK0:
     def info(self) -> None:
         self.right_panel.info_update = self.info
         energy = f'Энергии > {self.energy}'
+        energy_max = f'Макс. Энергии > {self.energy_max}'
         hp = f'Прочности > {self.hp}'
         move = f'Премещение > {self.distance_move}'
-        texts = [self.name, energy, hp, move]
+        texts = [self.name, 'Уникальное имя', self.unique_name, energy, energy_max, hp, move]
         self.right_panel.update_text(texts)
 
     def render(self) -> None:

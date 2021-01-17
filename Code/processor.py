@@ -58,7 +58,7 @@ class Processor:
                         data = entity.energy_transfer_core(board=board, entities=entities)
                         if data:
                             for energy, who_pos in data:
-                                if energy >= 0:
+                                if energy > 0:
                                     ent = self.entities.entities_sector[who_pos[1]][who_pos[0]]
                                     if who_pos and ent.__class__.__name__ in entity.energy_possibility or ent is None:
                                         self.sector.energy_transfer(energy, who_pos)

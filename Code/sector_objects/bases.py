@@ -64,9 +64,13 @@ class Base:
     def info(self) -> None:
         self.right_panel.info_update = self.info
         energy = f'Энергии > {self.energy}'
+        energy_max = f'Макс. Энергии > {self.energy_max}'
+        distance_charging = f'Дист. Зарядки > {self.distance_charging}'
+        energy_max_charging = f'Макс. Передача > {self.energy_max_charging}'
+        distance_create = f'Дист. создания > {self.distance_create}'
         hp = f'Прочность > {self.hp}'
-        distance = f'Дистанция базы > {self.distance_create}'
-        texts = [self.name, energy, hp, distance, 'Установленные модули']
+        texts = [self.name, energy, energy_max, distance_charging, energy_max_charging, distance_create, hp,
+                 'Установленные модули']
         if self.generator:
             texts.append(f'<{self.generator.name}>')
         self.right_panel.update_text(texts)

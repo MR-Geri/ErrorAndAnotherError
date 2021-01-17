@@ -1,6 +1,7 @@
 from typing import Union, Tuple
 from os import walk
 import pygame as pg
+from random import randint
 
 
 # Настройки окна
