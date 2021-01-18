@@ -32,3 +32,9 @@ class Camera:
             self.rect.x += self.move_x
         if -max_height >= -(self.rect.y + self.move_y) >= 0:
             self.rect.y += self.move_y
+
+    def save(self) -> dict:
+        pass
+
+    def load(self):
+        pass

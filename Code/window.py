@@ -317,9 +317,9 @@ class GameWindow(Window):
         # Сохранение поля и ентити
         # self.sector
 
-        # self.camera
-        # self.processor
-        # self.controller
+        camera = self.camera.save()
+        processor = self.processor.save()
+        settings = self.controller.save()
         pass
 
     def scale(self, coeff_scale: float):
