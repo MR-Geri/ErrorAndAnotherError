@@ -4,7 +4,6 @@ from Code.escape_menu import EscMenu
 from Code.utils import Interface
 from Code.processor import Processor
 from Code.Graphics.matrix import Matrix
-from Code.sound import Sound
 from Code.сamera import Camera
 from Code.buttons import Button, Buttons, ButtonTwoStates
 from Code.Map.sector import Sector
@@ -305,12 +304,23 @@ class GameWindow(Window):
             int(self.size_cell / CAMERA_K_SPEED_X),
             int(self.size_cell / CAMERA_K_SPEED_Y)
         )
-        self.esc_menu = EscMenu(pos=(self.win_width // 4, self.win_height // 4), width=self.win_width // 2,
-                                height=self.win_height // 2, controller=self.controller)
+        self.esc_menu = EscMenu(pos=(int(self.win_width * 1/6), int(self.win_height * 1/6)),
+                                width=int(self.win_width * 2/3), height=int(self.win_height * 2/3),
+                                controller=self.controller)
         #
         self.camera_left, self.camera_right, self.camera_up, self.camera_down = False, False, False, False
         self.l_ctrl = False
         self.processor = Processor(sector=self.sector)
+
+    def save(self) -> None:
+        path_dialog = self.dialog_file.line_text.text
+        # Сохранение поля и ентити
+        # self.sector
+
+        # self.camera
+        # self.processor
+        # self.controller
+        pass
 
     def scale(self, coeff_scale: float):
         # Масштабирование sector с ограничениями
@@ -440,10 +450,6 @@ class GameWindow(Window):
             else:
                 self.left_panel.event(en)
                 self.right_panel.event(en)
-                if en.type == pg.MOUSEBUTTONUP and en.button == 1:
-                    self.click(pos=en.pos)
-                if en.type == pg.MOUSEBUTTONUP and en.button == 3:
-                    self.read_file()
                 #
                 if en.type == pg.KEYDOWN and en.key == pg.K_LCTRL:
                     self.l_ctrl = True
@@ -454,6 +460,14 @@ class GameWindow(Window):
                     self.scale(self.coefficient_scale)
                 if self.l_ctrl and en.type == pg.MOUSEBUTTONUP and en.button == 5:
                     self.scale(-self.coefficient_scale)
+                #
+                if en.type == pg.MOUSEBUTTONUP and en.button == 1:
+                    self.click(pos=en.pos)
+                if en.type == pg.MOUSEBUTTONUP and en.button == 3:
+                    self.read_file()
+                #
+                if en.type == pg.KEYUP and en.key == pg.K_BACKQUOTE:
+                    self.esc_menu.changes_active()
                 #
                 if en.type == pg.KEYDOWN and en.key == pg.K_w:
                     self.camera_up = True

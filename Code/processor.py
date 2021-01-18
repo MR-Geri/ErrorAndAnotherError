@@ -12,8 +12,6 @@ class Processor:
         self.sector = sector
         self.entities = sector.entities
         self.board = sector.board
-        #
-        self.robots = []
 
     def ticked(self) -> None:
         self.tick = (self.tick + 1) % (self.tick_update + 1)

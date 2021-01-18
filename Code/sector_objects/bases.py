@@ -67,7 +67,7 @@ class Base:
         energy_max = f'Макс. Энергии > {self.energy_max}'
         distance_charging = f'Дист. Зарядки > {self.distance_charging}'
         energy_max_charging = f'Макс. Передача > {self.energy_max_charging}'
-        distance_create = f'Дист. создания > {self.distance_create}'
+        distance_create = f'Дист. Создания > {self.distance_create}'
         hp = f'Прочность > {self.hp}'
         texts = [self.name, energy, energy_max, distance_charging, energy_max_charging, distance_create, hp,
                  'Установленные модули']
