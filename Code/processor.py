@@ -4,9 +4,9 @@ from Code.settings import *
 
 
 class Processor:
-    def __init__(self, sector) -> None:
-        self.tick_complete = 0
-        self.tick = 0
+    def __init__(self, sector, tick_complete=0, tick=0) -> None:
+        self.tick_complete = tick_complete
+        self.tick = tick
         self.tick_update = int(round(FPS / CHANGE_TICK, 0))  # 2 раза за секунду
         self.day = True
         self.sector = sector

@@ -34,7 +34,7 @@ class Camera:
             self.rect.y += self.move_y
 
     def save(self) -> dict:
-        pass
+        return {'rect': (self.rect.x, self.rect.y, self.rect.width, self.rect.height)}
 
-    def load(self):
-        pass
+    def load(self, data: dict) -> None:
+        self.rect = pg.Rect(data['rect'])

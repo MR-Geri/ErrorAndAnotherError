@@ -43,6 +43,14 @@ class Sector:
             for y in range(self.number_y)
         ]
 
+    def save(self) -> tuple:
+        board = [
+            [x.__class__.__name__ for x in y]
+            for y in self.board
+        ]
+        entities = []
+        return board, entities
+
     def place_base(self, pos: Tuple[int, int]) -> None:
         if type(self.board[pos[1]][pos[0]]) not in SELL_BLOCKED and not self.base and \
                0 <= pos[1] < SECTOR_Y_NUMBER and 0 <= pos[0] < SECTOR_X_NUMBER:
