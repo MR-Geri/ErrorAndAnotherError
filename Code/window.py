@@ -318,26 +318,29 @@ class GameWindow(Window):
     def save(self) -> None:
         board, entities = self.sector.save()
         save = {
-            'camera': self.camera.save(),
+            'camera': self.camera.save(self.coefficient_scale),
             'processor': (self.processor.tick, self.processor.tick_complete),
             'board': board,
-            'entities': entities
+            'entities': entities,
+            'degree_scale': (self.size_cell - self.size_cell_min) / self.coefficient_scale
         }
-        print(save)
         with open(SAVE + '/save.json', 'w') as file:
             json.dump(save, file)
 
     def load(self) -> None:
         with open(SAVE + '/save.json') as file:
             data = json.load(file)
-            self.camera.load(data['camera'])
+            self.size_cell = self.size_cell_min + data['degree_scale'] * self.coefficient_scale
+            self.sector.load(data['board'], data['entities'], self.size_cell)
+            self.scale(0)
+            self.camera.load(data['camera'], self.coefficient_scale)
             processor = data['processor']
             self.processor = Processor(sector=self.sector, tick=processor[0], tick_complete=processor[1])
 
     def scale(self, coeff_scale: float):
         # Масштабирование sector с ограничениями
-        if (coeff_scale > 0 and self.size_cell < self.size_cell_max) or \
-                (coeff_scale < 0 and self.size_cell > self.size_cell_min):
+        if (coeff_scale >= 0 and self.size_cell < self.size_cell_max) or \
+                (coeff_scale <= 0 and self.size_cell > self.size_cell_min):
             self.size_cell += coeff_scale
             self.sector.scale(self.size_cell)
             # Ограничение перемещения камеры|СОЗДАЁМ ЗАНОВО

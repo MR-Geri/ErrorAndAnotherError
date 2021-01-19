@@ -51,6 +51,13 @@ class Sector:
         entities = []
         return board, entities
 
+    def load(self, board, entities, size_cell) -> None:
+        self.board = [
+            [CELLS[board[y][x]](x, y, size_cell, self.right_panel) for x in range(self.number_x)]
+            for y in range(self.number_y)
+        ]
+        self.render()
+
     def place_base(self, pos: Tuple[int, int]) -> None:
         if type(self.board[pos[1]][pos[0]]) not in SELL_BLOCKED and not self.base and \
                0 <= pos[1] < SECTOR_Y_NUMBER and 0 <= pos[0] < SECTOR_X_NUMBER:

@@ -33,8 +33,8 @@ class Camera:
         if -max_height >= -(self.rect.y + self.move_y) >= 0:
             self.rect.y += self.move_y
 
-    def save(self) -> dict:
-        return {'rect': (self.rect.x, self.rect.y, self.rect.width, self.rect.height)}
+    def save(self, k: Union[int, float]) -> Tuple[float, float, float, float]:
+        return self.rect.x / k, self.rect.y / k, self.rect.width / k, self.rect.height / k
 
-    def load(self, data: dict) -> None:
-        self.rect = pg.Rect(data['rect'])
+    def load(self, data: Tuple[float, float, float, float], k: Union[int, float]) -> None:
+        self.rect = pg.Rect(int(data[0] * k), int(data[1] * k), int(data[2] * k), int(data[3] * k))

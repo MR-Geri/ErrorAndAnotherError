@@ -54,6 +54,7 @@ ALL_ROBOT = Union[MK0]
 from Code.buttons import Button, ButtonTwoStates, ChoiceButton
 BUTTONS = [Button, ButtonTwoStates, ChoiceButton]
 # Биомы
+CELLS = {'Plain': Plain, 'Swamp': Swamp, 'Mountain': Mountain}
 MAX_SIZE_MOUNTAIN = (10, 10)
 MAX_QUANTITY_MOUNTAIN = 3
 MIN_QUANTITY_MOUNTAIN_CELL = 4
