@@ -17,9 +17,9 @@ class Controller:
         self.sound = Sound(self.volume_sound)
         self.permission = Permission(active=DISPLAY_SIZE)
         #
+        self.game = GameWindow(self, DISPLAY_SIZE, MENU_TITLE)
         self.menu = MenuWindow(self, DISPLAY_SIZE, MENU_TITLE)
         self.settings = SettingsWindow(self, DISPLAY_SIZE, MENU_TITLE)
-        self.game = GameWindow(self, DISPLAY_SIZE, MENU_TITLE)
         #
         self.windows = {'menu': self.menu, 'settings': self.settings, 'game': self.game}
 

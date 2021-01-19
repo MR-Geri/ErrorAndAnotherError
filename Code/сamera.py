@@ -32,3 +32,9 @@ class Camera:
             self.rect.x += self.move_x
         if -max_height >= -(self.rect.y + self.move_y) >= 0:
             self.rect.y += self.move_y
+
+    def save(self) -> dict:
+        return {'rect': (self.rect.x, self.rect.y, self.rect.width, self.rect.height)}
+
+    def load(self, data: dict) -> None:
+        self.rect = pg.Rect(data['rect'])

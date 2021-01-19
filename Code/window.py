@@ -1,3 +1,5 @@
+import json
+
 from Code.settings import *
 from Code.dialogs import DialogInfo, DialogFile
 from Code.escape_menu import EscMenu
@@ -136,6 +138,7 @@ class MenuWindow(Window):
 
     def load_game(self) -> None:
         print('Загрузка игры')
+        self.controller.game.load()
         self.controller.action_window('game')
 
     def settings(self) -> None:
@@ -306,21 +309,30 @@ class GameWindow(Window):
         )
         self.esc_menu = EscMenu(pos=(int(self.win_width * 1/6), int(self.win_height * 1/6)),
                                 width=int(self.win_width * 2/3), height=int(self.win_height * 2/3),
-                                controller=self.controller)
+                                controller=self.controller, save=self.save)
         #
         self.camera_left, self.camera_right, self.camera_up, self.camera_down = False, False, False, False
         self.l_ctrl = False
         self.processor = Processor(sector=self.sector)
 
     def save(self) -> None:
-        path_dialog = self.dialog_file.line_text.text
-        # Сохранение поля и ентити
-        # self.sector
+        board, entities = self.sector.save()
+        save = {
+            'camera': self.camera.save(),
+            'processor': (self.processor.tick, self.processor.tick_complete),
+            'board': board,
+            'entities': entities
+        }
+        print(save)
+        with open(SAVE + '/save.json', 'w') as file:
+            json.dump(save, file)
 
-        # self.camera
-        # self.processor
-        # self.controller
-        pass
+    def load(self) -> None:
+        with open(SAVE + '/save.json') as file:
+            data = json.load(file)
+            self.camera.load(data['camera'])
+            processor = data['processor']
+            self.processor = Processor(sector=self.sector, tick=processor[0], tick_complete=processor[1])
 
     def scale(self, coeff_scale: float):
         # Масштабирование sector с ограничениями

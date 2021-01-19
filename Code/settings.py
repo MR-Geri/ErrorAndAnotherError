@@ -39,6 +39,7 @@ PATH_CHARGE = '../Data/Sounds/charge/'
 ALL_BACKGROUND_MUSIC = [[root + i for i in files] for root, _, files in walk('../Data/Sounds/background_music/')][0]
 
 PLAYER_CODE = '../Game_code/'
+SAVE = '../Data/Save/'
 # Типизация
 COLOR = Union[Tuple[int, int, int], str]
 from Code.texts import Text, TextMaxSize, TextMaxSizeCenter, TextCenter

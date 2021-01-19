@@ -6,12 +6,13 @@ from Code.texts import max_size_list_text, TextCenter
 
 
 class EscMenu:
-    def __init__(self, pos: Tuple[int, int], width: int, height: int, controller) -> None:
+    def __init__(self, pos: Tuple[int, int], width: int, height: int, controller, save) -> None:
         self.rect = pg.Rect(*pos, width, height)
         self.surface = pg.Surface((self.rect.width, self.rect.height), pg.SRCALPHA)
         self.surface.fill(COLOR_BACKGROUND)
         self.if_active: bool = False
         self.text = None
+        self.save = save
         self.controller = controller
         self.interface = Interface(
             pos=(self.rect.x, self.rect.y), max_width=self.rect.width, max_height=self.rect.height,
@@ -31,13 +32,10 @@ class EscMenu:
     def resume(self) -> None:
         self.if_active = False
 
-    def save(self) -> None:
-        pass
-
     def init(self) -> None:
         width, height = self.interface.width, self.interface.height
-        data = [('Вернуться', self.resume), ('Настройки', self.act_settings), ('Сохранить игру', self.save),
-                ('Главное меню', self.act_menu)]
+        data = [('Вернуться', self.resume), ('Настройки', self.act_settings),
+                ('Сохранить игру', self.save), ('Главное меню', self.act_menu)]
         ind = len(data) * self.interface.height + len(data) * self.interface.indent[1]
         height_text = self.interface.max_height - ind
         self.text = TextMaxSizeCenter(text=f'Пауза', width=width, height=height_text, pos=self.interface.pos)
