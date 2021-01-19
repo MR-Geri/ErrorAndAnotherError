@@ -27,3 +27,15 @@ class Entities:
                 entity = self.entities_sector[y][x]
                 if entity is not None:
                     entity.scale(size_cell)
+
+    def save(self) -> list:
+        save = []
+        for y in self.entities_sector:
+            for x in self.entities_sector[y]:
+                entity = self.entities_sector[y][x]
+                if entity is not None:
+                    save.append(entity.save())
+        return save
+
+    def load(self, entities: list) -> None:
+        pass

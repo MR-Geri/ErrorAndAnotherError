@@ -20,20 +20,20 @@ class Base:
         self.energy_transfer = lambda *args, **kwargs: None
         # Состояния
         self.permissions = PermissionsBase()
-        #
-        self.path_user_code = Path('Base')
-        self.name = 'База MK0'
-        self.energy = 1000
-        self.energy_max = 4000
-        self.hp = 1000
-        self.distance_create = 1
-        self.distance_charging = 1
-        self.energy_max_charging = 5
-        self.energy_possibility = ['MK0']
+        # Характеристики
+        self.path_user_code = Path('Base')  # Надо сохранять
+        self.name = 'База MK0'  # Надо сохранять
+        self.energy = 1000  # Надо сохранять
+        self.energy_max = 4000  # Надо сохранять
+        self.hp = 1000  # Надо сохранять
+        self.distance_create = 1  # Надо сохранять
+        self.distance_charging = 1  # Надо сохранять
+        self.energy_max_charging = 5  # Надо сохранять
+        self.energy_possibility = ['MK0']  # Надо сохранять
         #
         self.sound_charge = PATH_CHARGE + 'MK0.wav'
         # Установленные предметы
-        self.generator = RadioisotopeGenerator(self.energy_increase)
+        self.generator = RadioisotopeGenerator(self.energy_increase)  # Надо сохранять
         #
         self.rect = pg.Rect(self.pos[0] * self.size_cell, self.pos[1] * self.size_cell, self.size_cell, self.size_cell)
         self.surface = pg.Surface((self.size_cell, self.size_cell), pg.SRCALPHA)
@@ -98,3 +98,10 @@ class Base:
 
     def func_file(self) -> None:
         self.dialog_file.show(self.path_user_code)  # Установка файла
+
+    def save(self):
+        pass
+
+    def load(self) -> None:
+        # Нужно передать size_cell
+        pass

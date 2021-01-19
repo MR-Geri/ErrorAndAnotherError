@@ -91,3 +91,9 @@ class MK0:
         self.size_cell = size_cell
         self.rect = pg.Rect(self.pos[0] * self.size_cell, self.pos[1] * self.size_cell, self.size_cell, self.size_cell)
         self.render()
+
+    def save(self):
+        pass
+
+    def load(self) -> None:
+        pass

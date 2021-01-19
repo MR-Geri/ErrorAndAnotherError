@@ -48,7 +48,7 @@ class Sector:
             [x.__class__.__name__ for x in y]
             for y in self.board
         ]
-        entities = []
+        entities = self.entities.save()
         return board, entities
 
     def load(self, board, entities, size_cell) -> None:
@@ -56,6 +56,7 @@ class Sector:
             [CELLS[board[y][x]](x, y, size_cell, self.right_panel) for x in range(self.number_x)]
             for y in range(self.number_y)
         ]
+        self.entities.load(entities)
         self.render()
 
     def place_base(self, pos: Tuple[int, int]) -> None:
