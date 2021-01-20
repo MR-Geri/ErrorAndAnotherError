@@ -284,14 +284,14 @@ class SettingsWindow(Window):
                 pg.quit()
                 quit()
             if en.type == pg.KEYUP and en.key == pg.K_ESCAPE:
-                with open(SAVE + 'settings.json', 'w') as file:
-                    json.dump(
-                        {
-                            'volume_music': self.controller.volume.value,
-                            'crashes': self.controller.volume_sound['crashes'].value,
-                            'moves': self.controller.volume_sound['moves'].value,
-                            'charge': self.controller.volume_sound['charge'].value
-                        }, file)
+                with open(SAVE + 'settings.json', 'r') as read:
+                    data = json.load(read)
+                    with open(SAVE + 'settings.json', 'w') as file:
+                        data['volume_music'] = self.controller.volume.value
+                        data['crashes'] = self.controller.volume_sound['crashes'].value
+                        data['moves'] = self.controller.volume_sound['moves'].value
+                        data['charge'] = self.controller.volume_sound['charge'].value
+                        json.dump(data, file)
                 self.controller.action_window(self.last_window)
 
 

@@ -1,13 +1,16 @@
 from Code.settings import *
 from Code.edit_permission import Permission
-
 from Code.slider import Numbers
 from Code.sound import Music, Sound
 from Code.window import MenuWindow, SettingsWindow, GameWindow
+import json
 
 
 class Controller:
     def __init__(self) -> None:
+        with open(SAVE + 'settings.json', 'r') as file:
+            data = json.load(file)
+            display_size = tuple(data['display_size'])
         self.volume = Numbers(0, 1, 0.01, round(1 / 16, 3))
         self.volume_sound = {
             'crashes': Numbers(0, 1, 0.01, round(1 / 16, 3)),
@@ -15,15 +18,20 @@ class Controller:
             'charge': Numbers(0, 1, 0.01, round(1 / 16, 3))}
         self.music = Music(path=ALL_BACKGROUND_MUSIC, volume=self.volume.value)
         self.sound = Sound(self.volume_sound)
-        self.permission = Permission(active=DISPLAY_SIZE)
+        self.permission = Permission(active=display_size)
         #
-        self.game = GameWindow(self, DISPLAY_SIZE, MENU_TITLE)
-        self.menu = MenuWindow(self, DISPLAY_SIZE, MENU_TITLE)
-        self.settings = SettingsWindow(self, DISPLAY_SIZE, MENU_TITLE)
+        self.game = GameWindow(self, display_size, MENU_TITLE)
+        self.menu = MenuWindow(self, display_size, MENU_TITLE)
+        self.settings = SettingsWindow(self, display_size, MENU_TITLE)
         #
         self.windows = {'menu': self.menu, 'settings': self.settings, 'game': self.game}
 
     def init(self) -> None:
+        with open(SAVE + 'settings.json', 'r') as read:
+            data = json.load(read)
+            data['display_size'] = list(self.permission.active)
+            with open(SAVE + 'settings.json', 'w') as file:
+                json.dump(data, file)
         del self.menu
         del self.settings
         del self.game
