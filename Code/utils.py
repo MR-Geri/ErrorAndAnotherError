@@ -63,9 +63,11 @@ class Path:
 
 
 class PermissionsRobot:
-    def __init__(self) -> None:
-        self.can_move = True
-        self.can_charging = True
+    def __init__(self, states: dict = None) -> None:
+        if states is None:
+            states = {'can_move': True, 'can_charging': True}
+        self.can_move = states['can_move']
+        self.can_charging = states['can_charging']
 
     def set_move(self, flag: bool) -> None:
         self.can_move = flag
@@ -73,14 +75,22 @@ class PermissionsRobot:
     def set_charging(self, flag: bool) -> None:
         self.can_charging = flag
 
+    def get_state(self) -> dict:
+        return {'can_move': self.can_move, 'can_charging': self.can_charging}
+
 
 class PermissionsBase:
-    def __init__(self) -> None:
-        self.can_charging = True
-        self.can_generate = True
+    def __init__(self, states: dict = None) -> None:
+        if states is None:
+            states = {'can_charging': True, 'can_generate': True}
+        self.can_charging = states['can_charging']
+        self.can_generate = states['can_generate']
 
     def set_charging(self, flag: bool) -> None:
         self.can_charging = flag
 
     def set_generate(self, flag: bool) -> None:
         self.can_generate = flag
+
+    def get_state(self) -> dict:
+        return {'can_charging': self.can_charging, 'can_generate': self.can_generate}

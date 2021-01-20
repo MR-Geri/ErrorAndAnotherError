@@ -53,10 +53,20 @@ class Sector:
 
     def load(self, board, entities, size_cell) -> None:
         self.board = [
-            [CELLS[board[y][x]](x, y, size_cell, self.right_panel) for x in range(self.number_x)]
+            [STR_TO_OBJECT[board[y][x]](x, y, size_cell, self.right_panel) for x in range(self.number_x)]
             for y in range(self.number_y)
         ]
-        self.entities.load(entities)
+        for data in entities:
+            entity = STR_TO_OBJECT[data['name']]
+            if entity in BASES:
+                entity = entity(pos=data['pos'], size_cell=size_cell, board=board, entities=self.entities,
+                                dialog_info=self.dialog_info, dialog_file=self.dialog_file,
+                                right_panel=self.right_panel)
+            elif entity in ROBOTS:
+                entity = entity(pos=data['pos'], size_cell=size_cell, dialog_info=self.dialog_info,
+                                dialog_file=self.dialog_file, right_panel=self.right_panel)
+            entity.load(data)
+            self.entities.add(entity)
         self.render()
 
     def place_base(self, pos: Tuple[int, int]) -> None:
@@ -89,7 +99,7 @@ class Sector:
                 if k_y > i_y >= n_y and k_x > i_x >= n_x and \
                         type(x) not in SELL_BLOCKED and self.entities.entities_sector[i_y][i_x] is None:
                     robot_ = robot(pos=(i_x, i_y), size_cell=self.size_cell, dialog_file=self.dialog_file,
-                                   right_panel=self.right_panel)
+                                   dialog_info=self.dialog_info, right_panel=self.right_panel)
                     if self.base.energy >= robot_.energy_create:
                         self.base.energy -= robot_.energy_create
                         self.base.entities.add(robot_)

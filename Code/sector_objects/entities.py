@@ -36,6 +36,3 @@ class Entities:
                 if entity is not None:
                     save.append(entity.save())
         return save
-
-    def load(self, entities: list) -> None:
-        pass

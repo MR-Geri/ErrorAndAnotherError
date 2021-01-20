@@ -1,15 +1,14 @@
 from Code.settings import *
 from Code.utils import Path, PermissionsBase
-from Code.dialogs import DialogInfo
+from Code.dialogs import DialogInfo, DialogFile
 from Code.info_panel import RightPanel
-from Code.sector_objects.generates_electrical import RadioisotopeGenerator
 from Code.sector_objects.entities import Entities
 
 
 class Base:
     def __init__(self, pos: Tuple[int, int], size_cell: int, board: list, entities: Entities,
-                 dialog_info: DialogInfo, dialog_file, right_panel: RightPanel) -> None:
-        self.pos = list(pos)
+                 dialog_info: DialogInfo, dialog_file: DialogFile, right_panel: RightPanel) -> None:
+        self.pos = list(pos)  # Надо сохранять
         self.size_cell = size_cell
         self.board = board
         self.entities = entities
@@ -19,17 +18,17 @@ class Base:
         # Функции пользователя
         self.energy_transfer = lambda *args, **kwargs: None
         # Состояния
-        self.permissions = PermissionsBase()
+        self.permissions = PermissionsBase()  # Надо сохранять
         # Характеристики
         self.path_user_code = Path('Base')  # Надо сохранять
-        self.name = 'База MK0'  # Надо сохранять
+        self.name = 'База MK0'
         self.energy = 1000  # Надо сохранять
         self.energy_max = 4000  # Надо сохранять
         self.hp = 1000  # Надо сохранять
         self.distance_create = 1  # Надо сохранять
         self.distance_charging = 1  # Надо сохранять
         self.energy_max_charging = 5  # Надо сохранять
-        self.energy_possibility = ['MK0']  # Надо сохранять
+        self.energy_possibility = ['MK0']
         #
         self.sound_charge = PATH_CHARGE + 'MK0.wav'
         # Установленные предметы
@@ -99,9 +98,25 @@ class Base:
     def func_file(self) -> None:
         self.dialog_file.show(self.path_user_code)  # Установка файла
 
-    def save(self):
-        pass
+    def save(self) -> dict:  # Как мы будем "сохранять" класс
+        state = {
+            'pos': self.pos,
+            'path_user_code': self.path_user_code.text, 'name': self.__class__.__name__, 'energy': self.energy,
+            'energy_max': self.energy_max, 'hp': self.hp, 'distance_create': self.distance_create,
+            'distance_charging': self.distance_charging, 'energy_max_charging': self.energy_max_charging,
+            'generator': self.generator.__class__.__name__, 'permissions': self.permissions.get_state()}
+        # 'energy_transfer': self.energy_transfer
+        return state
 
-    def load(self) -> None:
-        # Нужно передать size_cell
-        pass
+    def load(self, state: dict):  # Как мы будем восстанавливать класс из байтов
+        self.pos = state['pos']
+        self.path_user_code = Path(state['path_user_code'])
+        self.energy = state['energy']
+        self.energy_max = state['energy_max']
+        self.hp = state['hp']
+        self.distance_create = state['distance_create']
+        self.distance_charging = state['distance_charging']
+        self.energy_max_charging = state['energy_max_charging']
+        #
+        self.generator = STR_TO_OBJECT[state['generator']](self.energy_increase)
+        self.permissions = PermissionsBase(state['permissions'])

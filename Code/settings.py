@@ -43,18 +43,26 @@ SAVE = '../Data/Save/'
 # Типизация
 COLOR = Union[Tuple[int, int, int], str]
 from Code.texts import Text, TextMaxSize, TextMaxSizeCenter, TextCenter
+from Code.sector_objects.generates_electrical import RadioisotopeGenerator
+STR_TO_OBJECT = {'RadioisotopeGenerator': RadioisotopeGenerator}
 ALL_TEXT = Union[Text, TextMaxSize, TextMaxSizeCenter, TextCenter]
 from Code.running_line import RunningLineMaxSizeCenter
 ALL_RUNNING_LINE = Union[RunningLineMaxSizeCenter]
 from Code.Map.cell import Plain, Swamp, Mountain
+STR_TO_OBJECT['Plain'] = Plain
+STR_TO_OBJECT['Swamp'] = Swamp
+STR_TO_OBJECT['Mountain'] = Mountain
 ALL_CELL = Union[Plain, Swamp, Mountain]
 from Code.sector_objects.robots import MK0
+STR_TO_OBJECT['MK0'] = MK0
 ALL_ROBOT = Union[MK0]
+from Code.sector_objects.bases import Base
+STR_TO_OBJECT['Base'] = Base
 #
 from Code.buttons import Button, ButtonTwoStates, ChoiceButton
 BUTTONS = [Button, ButtonTwoStates, ChoiceButton]
+
 # Биомы
-CELLS = {'Plain': Plain, 'Swamp': Swamp, 'Mountain': Mountain}
 MAX_SIZE_MOUNTAIN = (10, 10)
 MAX_QUANTITY_MOUNTAIN = 3
 MIN_QUANTITY_MOUNTAIN_CELL = 4
@@ -63,7 +71,6 @@ MAX_QUANTITY_SWAMP = 5
 MIN_QUANTITY_SWAMP_CELL = 8
 SELL_BLOCKED = [Mountain]
 #
-from Code.sector_objects.bases import Base
 ROBOTS = [MK0]
 BASES = [Base]
 #
