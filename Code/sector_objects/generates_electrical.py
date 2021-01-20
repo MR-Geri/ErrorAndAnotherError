@@ -2,11 +2,11 @@ from Code.settings import *
 
 
 class RadioisotopeGenerator:
-    def __init__(self, generation_energy) -> None:
+    def __init__(self, generation_energy, resource: int = 10 ** 6) -> None:
         self.generation_energy = generation_energy
         self.energy_generate = 5
         self.energy_tick = 1
-        self.resource = 10 ** 6
+        self.resource = resource
         #
         self.name = 'Радиоизотопный генератор'
 

@@ -104,7 +104,8 @@ class Base:
             'path_user_code': self.path_user_code.text, 'name': self.__class__.__name__, 'energy': self.energy,
             'energy_max': self.energy_max, 'hp': self.hp, 'distance_create': self.distance_create,
             'distance_charging': self.distance_charging, 'energy_max_charging': self.energy_max_charging,
-            'generator': self.generator.__class__.__name__, 'permissions': self.permissions.get_state()}
+            'generator': self.generator.__class__.__name__, 'generator_resource': self.generator.resource,
+            'permissions': self.permissions.get_state()}
         # 'energy_transfer': self.energy_transfer
         return state
 
@@ -118,5 +119,5 @@ class Base:
         self.distance_charging = state['distance_charging']
         self.energy_max_charging = state['energy_max_charging']
         #
-        self.generator = STR_TO_OBJECT[state['generator']](self.energy_increase)
+        self.generator = STR_TO_OBJECT[state['generator']](self.energy_increase, state['generator_resource'])
         self.permissions = PermissionsBase(state['permissions'])

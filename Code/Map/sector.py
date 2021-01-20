@@ -62,6 +62,7 @@ class Sector:
                 entity = entity(pos=data['pos'], size_cell=size_cell, board=board, entities=self.entities,
                                 dialog_info=self.dialog_info, dialog_file=self.dialog_file,
                                 right_panel=self.right_panel)
+                self.base = entity
             elif entity in ROBOTS:
                 entity = entity(pos=data['pos'], size_cell=size_cell, dialog_info=self.dialog_info,
                                 dialog_file=self.dialog_file, right_panel=self.right_panel)
