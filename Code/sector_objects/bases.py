@@ -118,6 +118,5 @@ class Base:
         self.distance_create = state['distance_create']
         self.distance_charging = state['distance_charging']
         self.energy_max_charging = state['energy_max_charging']
-        #
         self.generator = STR_TO_OBJECT[state['generator']](self.energy_increase, state['generator_resource'])
         self.permissions = PermissionsBase(state['permissions'])

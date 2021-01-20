@@ -178,9 +178,23 @@ class SettingsWindow(Window):
         self.sliders = Sliders()
         self.buttons = Buttons()
         self.texts = Texts()
+        # Загрузка настроек
+        self.load_settings()
         self.init_permission()
         self.init_sliders()
         #
+
+    def load_settings(self) -> None:
+        try:
+            with open(SAVE + 'settings.json', 'r') as file:
+                data = json.load(file)
+                self.controller.volume.set_value(data['volume_music'])
+                self.controller.music.update(data['volume_music'])
+                self.controller.volume_sound['crashes'].set_value(data['crashes'])
+                self.controller.volume_sound['moves'].set_value(data['moves'])
+                self.controller.volume_sound['charge'].set_value(data['charge'])
+        except:
+            pass
 
     def permission_previous(self) -> None:
         self.controller.all_off()
@@ -270,6 +284,14 @@ class SettingsWindow(Window):
                 pg.quit()
                 quit()
             if en.type == pg.KEYUP and en.key == pg.K_ESCAPE:
+                with open(SAVE + 'settings.json', 'w') as file:
+                    json.dump(
+                        {
+                            'volume_music': self.controller.volume.value,
+                            'crashes': self.controller.volume_sound['crashes'].value,
+                            'moves': self.controller.volume_sound['moves'].value,
+                            'charge': self.controller.volume_sound['charge'].value
+                        }, file)
                 self.controller.action_window(self.last_window)
 
 
