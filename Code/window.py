@@ -133,16 +133,15 @@ class MenuWindow(Window):
         self.interface.move(- width + width3, 0, is_indent=(False, False))
 
     def new_game(self) -> None:
-        print('Новая игра')
+        self.controller.new_game()
         self.controller.action_window('game')
 
     def load_game(self) -> None:
-        print('Загрузка игры')
+        self.controller.new_game()
         self.controller.game.load()
         self.controller.action_window('game')
 
     def settings(self) -> None:
-        print('Настройки')
         self.controller.action_window('settings')
 
     @staticmethod

@@ -26,6 +26,11 @@ class Controller:
         #
         self.windows = {'menu': self.menu, 'settings': self.settings, 'game': self.game}
 
+    def new_game(self) -> None:
+        del self.game
+        self.game = GameWindow(self, self.permission.active, MENU_TITLE)
+        self.windows['game'] = self.game
+
     def init(self) -> None:
         with open(SAVE + 'settings.json', 'r') as read:
             data = json.load(read)
