@@ -6,7 +6,6 @@ from random import randint
 
 # Настройки окна
 WIN_WIDTH, WIN_HEIGHT = 1280, 720
-DISPLAY_SIZE = (WIN_WIDTH, WIN_HEIGHT)
 FULL_SCREEN = False
 MENU_TITLE = 'Название игры'
 FPS = 60
