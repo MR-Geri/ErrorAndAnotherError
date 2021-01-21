@@ -3,7 +3,6 @@ from Code.settings import *
 from Code.buttons import Button
 from Code.utils import Interface
 from Code.line_input import LineInput
-
 from Code.texts import max_size_list_text
 
 
@@ -137,7 +136,7 @@ class DialogCodeUse:
                                       height=self.interface.height)
         self.interface.move(0)
         self.line_input = LineInput(pos=self.interface.pos, width=self.interface.width, height=self.interface.height,
-                                    font_type=PT_MONO, offset=pos)
+                                    font_type=PT_MONO, offset=pos, background_color=(40, 40, 40))
         self.interface.move(0)
         self.button = Button(pos=self.interface.pos, width=self.interface.width,
                              height=self.interface.height, func=self.processing_read, offset=pos,
@@ -148,16 +147,16 @@ class DialogCodeUse:
 
     @staticmethod
     def read(line_input, dialog_info, place_base, create_robot):
+        from Code.sector_objects.robots import MK0
         t = line_input.text.text
         try:
             eval(str(t))
         except SyntaxError:
             exec(str(t))
         except NameError as e:
-            print(e)
             dialog_info.show([f'Не существует такого объекта'])
-        except Exception as e:
-            print(e)
+        except:
+            dialog_info.show([f'Нет такой команды'])
 
     def processing_read(self) -> None:
         self.read(self.line_input, self.dialog_info, self.sector.place_base, self.sector.create_robot)
@@ -165,7 +164,7 @@ class DialogCodeUse:
         self.if_active = False
 
     def render(self) -> None:
-        self.surface.fill(pg.Color(COLOR_BACKGROUND))
+        self.surface.fill(pg.Color((30, 30, 30)))
         self.text.draw(self.surface)
 
     def draw(self, surface: pg.surface.Surface) -> None:
@@ -175,6 +174,8 @@ class DialogCodeUse:
             surface.blit(self.surface, self.rect)
 
     def changes_active(self) -> None:
+        self.line_input.clear()
+        self.line_input.if_active = True
         self.if_active = not self.if_active
 
     def event(self, event: pg.event.Event) -> None:

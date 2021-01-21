@@ -12,7 +12,6 @@ from Code.Map.sector import Sector
 from Code.info_panel import LeftPanel, RightPanel
 from Code.texts import max_size_list_text, TextCenter, Texts
 from Code.slider import Slider, Sliders
-from Code.sector_objects.robots import MK0
 
 
 class Window:
@@ -450,26 +449,6 @@ class GameWindow(Window):
             self.right_panel.update()
             self.left_panel.update()
 
-    def read_file(self) -> None:
-        sector = self.sector
-        base = self.sector.base
-        with open(PLAYER_CODE + 'main.py') as commands:
-            try:
-                r = commands.read().split('\n')
-                for t in r:
-                    try:
-                        eval(str(t))
-                    except SyntaxError:
-                        exec(str(t))
-                    except NameError as e:
-                        print(e)
-                        self.dialog_info.show([f'Не существует такого объекта'])
-                    except Exception as e:
-                        print(e)
-                self.sector.render()
-            except Exception as e:
-                print(e)
-
     def event(self) -> None:
         for en in pg.event.get():
             if en.type == pg.QUIT:
@@ -508,8 +487,6 @@ class GameWindow(Window):
                 #
                 if en.type == pg.MOUSEBUTTONUP and en.button == 1:
                     self.click(pos=en.pos)
-                if en.type == pg.MOUSEBUTTONUP and en.button == 3:
-                    self.read_file()
                 #
                 if en.type == pg.KEYUP and en.key == pg.K_BACKQUOTE:
                     self.dialog_code_use.changes_active()

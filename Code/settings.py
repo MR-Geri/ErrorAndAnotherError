@@ -10,7 +10,6 @@ FULL_SCREEN = False
 MENU_TITLE = 'Название игры'
 FPS = 60
 UPDATE_CHANGE_TIME = 1440
-CHANGE_TICK = 2
 CLOCK = pg.time.Clock()
 # Цвета
 COLOR_BACKGROUND = '#313335'
@@ -19,7 +18,7 @@ COLOR_SLIDER_USE = '#25B2B9'
 COLOR_SLIDER_NO_USE = '#D5F0F8'
 COLOR_SLIDER_CIRCLE = 'white'
 # Камера
-MAX_SCALE = 5
+MAX_SCALE = 3
 CAMERA_K_SPEED_X, CAMERA_K_SPEED_Y = 5, 5
 # Ячейки
 SECTOR_Y_NUMBER = 50  # Размер сектора

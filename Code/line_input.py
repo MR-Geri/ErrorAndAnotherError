@@ -14,8 +14,8 @@ class LineInput:
         self.pos = [0, 0]
         self.pos_cursor = [0, 0]
         #
-        self.l_ctrl = False
-        self.l_shift = False
+        self.ctrl = False
+        self.shift = False
         self.if_active = False
         self.tick = 0
         #
@@ -42,25 +42,25 @@ class LineInput:
         Если эта дичь не работает. ГОСПАДЕ перепиши сам по братски.
         СЯБ!
         """
-        if event.type == pg.KEYDOWN and event.key == pg.K_LCTRL:
-            self.l_ctrl = True
-        elif event.type == pg.KEYUP and event.key == pg.K_LCTRL:
-            self.l_ctrl = False
-        elif event.type == pg.KEYDOWN and event.key == pg.K_LSHIFT:
-            self.l_shift = True
-        elif event.type == pg.KEYUP and event.key == pg.K_LSHIFT:
-            self.l_shift = False
+        if event.type == pg.KEYDOWN and (event.key == pg.K_LCTRL or event.key == pg.K_RCTRL):
+            self.ctrl = True
+        elif event.type == pg.KEYUP and (event.key == pg.K_LCTRL or event.key == pg.K_RCTRL):
+            self.ctrl = False
+        elif event.type == pg.KEYDOWN and (event.key == pg.K_LSHIFT or event.key == pg.K_RSHIFT):
+            self.shift = True
+        elif event.type == pg.KEYUP and (event.key == pg.K_LSHIFT or event.key == pg.K_RSHIFT):
+            self.shift = False
         elif event.type == pg.KEYDOWN and self.if_active:
             cur = int((-self.pos[0] / self.char) + self.pos_cursor[0])
             text = [self.text.text[:cur], self.text.text[cur:]]
             if event.key == pg.K_RETURN:
                 self.if_active = False
                 self.tick = 0
-            elif self.l_shift and (event.key == pg.K_BACKSPACE or event.key == pg.K_DELETE):
+            elif self.shift and (event.key == pg.K_BACKSPACE or event.key == pg.K_DELETE):
                 self.text.set_text('')
                 self.pos[0] = 0
                 self.pos_cursor[0] = 0
-            elif self.l_ctrl and event.key == pg.K_v:
+            elif self.ctrl and event.key == pg.K_v:
                 c_v = str(pyperclip.paste()).replace('\n', ' ')
                 if c_v:
                     self.text.set_text(text[0] + c_v + text[1])
@@ -110,7 +110,7 @@ class LineInput:
             pg.draw.rect(
                 display, pg.Color(self.font_color),
                 (
-                    self.rect.x + self.pos_cursor[0] * self.char + int(round(self.text.rect.height / 10, 0)),
+                    self.rect.x + self.pos_cursor[0] * self.char,  # + int(round(self.text.rect.height / 10, 0))
                     self.rect.y + self.text.rect.y,
                     int(round(self.text.rect.height / 10, 0)), self.rect.height
                 )

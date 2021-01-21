@@ -70,10 +70,10 @@ class Sector:
             self.entities.add(entity)
         self.render()
 
-    def place_base(self, pos: Tuple[int, int]) -> None:
-        if type(self.board[pos[1]][pos[0]]) not in SELL_BLOCKED and not self.base and \
-               0 <= pos[1] < SECTOR_Y_NUMBER and 0 <= pos[0] < SECTOR_X_NUMBER:
-            self.base = Base(pos=pos, size_cell=self.size_cell, board=self.board, entities=self.entities,
+    def place_base(self, x: int, y: int) -> None:  # pos: Tuple[int, int]
+        if type(self.board[y][x]) not in SELL_BLOCKED and not self.base and \
+               0 <= y < SECTOR_Y_NUMBER and 0 <= x < SECTOR_X_NUMBER:
+            self.base = Base(pos=(x, y), size_cell=self.size_cell, board=self.board, entities=self.entities,
                              dialog_info=self.dialog_info, dialog_file=self.dialog_file, right_panel=self.right_panel)
             self.entities.add(self.base)
         else:

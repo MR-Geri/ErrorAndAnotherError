@@ -1,5 +1,5 @@
 import importlib
-
+import time
 from Code.settings import *
 
 
@@ -7,15 +7,16 @@ class Processor:
     def __init__(self, sector, tick_complete=0, tick=0) -> None:
         self.tick_complete = tick_complete
         self.tick = tick
-        self.tick_update = int(round(FPS / CHANGE_TICK, 0))  # 2 раза за секунду
+        self.time_update = 0.5  # 2 раза за секунду
         self.day = True
         self.sector = sector
         self.entities = sector.entities
         self.board = sector.board
 
     def ticked(self) -> None:
-        self.tick = (self.tick + 1) % (self.tick_update + 1)
-        if self.tick == self.tick_update:
+        t = time.time()
+        if t - self.tick >= self.time_update:
+            self.tick = t
             self.tick_complete += 1
             self.update()
         if self.tick_complete % UPDATE_CHANGE_TIME:
