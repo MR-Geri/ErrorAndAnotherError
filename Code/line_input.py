@@ -6,8 +6,11 @@ from Code.texts import TextMaxSize
 
 class LineInput:
     def __init__(self, width: int, height: int, pos: Tuple[int, int], background_color: COLOR = '#808080',
-                 font_color: COLOR = (255, 255, 255), font_type: str = None) -> None:
+                 font_color: COLOR = (255, 255, 255), font_type: str = None, offset: Tuple[int, int] = None) -> None:
         self.rect = pg.Rect(*pos, width, height)
+        self.click = pg.Rect(*pos, width, height)
+        if offset:
+            self.click.x, self.click.y = self.click.x + offset[0], self.click.y + offset[1]
         self.pos = [0, 0]
         self.pos_cursor = [0, 0]
         #
@@ -86,7 +89,7 @@ class LineInput:
                     self.pos[0] -= self.char
             self.render()
         try:
-            if self.rect.collidepoint(*event.pos) and event.type == pg.MOUSEBUTTONUP and event.button == 1:
+            if self.click.collidepoint(*event.pos) and event.type == pg.MOUSEBUTTONUP and event.button == 1:
                 self.if_active = True
                 self.tick = 0
             elif event.type == pg.MOUSEBUTTONUP and event.button == 1:

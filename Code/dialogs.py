@@ -122,3 +122,62 @@ class DialogFile:
                         self.files = list(files)
                 except Exception as e:
                     print(f'Load files users -> Exception: {e}')
+
+
+class DialogCodeUse:
+    def __init__(self, pos: Tuple[int, int], width: int, height: int, dialog_info: DialogInfo, sector) -> None:
+        self.sector = sector
+        self.dialog_info = dialog_info
+        self.rect = pg.Rect(*pos, width, height)
+        self.surface = pg.surface.Surface((width, height))
+        self.if_active: bool = False
+        self.interface = Interface(pos=(0, 0), max_width=width, max_height=height, indent=(0, height // 10),
+                                   size=(width, int(height * (4/5) / 3)))
+        self.text = TextMaxSizeCenter('Разовый код', pos=self.interface.pos, width=self.interface.width,
+                                      height=self.interface.height)
+        self.interface.move(0)
+        self.line_input = LineInput(pos=self.interface.pos, width=self.interface.width, height=self.interface.height,
+                                    font_type=PT_MONO, offset=pos)
+        self.interface.move(0)
+        self.button = Button(pos=self.interface.pos, width=self.interface.width,
+                             height=self.interface.height, func=self.processing_read, offset=pos,
+                             text=TextMaxSizeCenter('Применить', width=self.interface.width,
+                                                    height=self.interface.height),
+                             color_disabled=(30, 30, 30), color_active=(40, 40, 40))
+        self.render()
+
+    @staticmethod
+    def read(line_input, dialog_info, place_base, create_robot):
+        t = line_input.text.text
+        try:
+            eval(str(t))
+        except SyntaxError:
+            exec(str(t))
+        except NameError as e:
+            print(e)
+            dialog_info.show([f'Не существует такого объекта'])
+        except Exception as e:
+            print(e)
+
+    def processing_read(self) -> None:
+        self.read(self.line_input, self.dialog_info, self.sector.place_base, self.sector.create_robot)
+        self.sector.render()
+        self.if_active = False
+
+    def render(self) -> None:
+        self.surface.fill(pg.Color(COLOR_BACKGROUND))
+        self.text.draw(self.surface)
+
+    def draw(self, surface: pg.surface.Surface) -> None:
+        if self.if_active:
+            self.button.draw(self.surface)
+            self.line_input.draw(self.surface)
+            surface.blit(self.surface, self.rect)
+
+    def changes_active(self) -> None:
+        self.if_active = not self.if_active
+
+    def event(self, event: pg.event.Event) -> None:
+        if self.if_active:
+            self.line_input.event(event)
+            self.button.event(event)

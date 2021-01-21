@@ -1,7 +1,7 @@
 import json
 
 from Code.settings import *
-from Code.dialogs import DialogInfo, DialogFile
+from Code.dialogs import DialogInfo, DialogFile, DialogCodeUse
 from Code.escape_menu import EscMenu
 from Code.utils import Interface
 from Code.processor import Processor
@@ -335,6 +335,9 @@ class GameWindow(Window):
         self.camera_left, self.camera_right, self.camera_up, self.camera_down = False, False, False, False
         self.l_ctrl = False
         self.processor = Processor(sector=self.sector)
+        self.dialog_code_use = DialogCodeUse(pos=(self.win_width // 8, int(self.win_height * 1/3)),
+                                             width=int(self.win_width * (6 / 8)), height=int(self.win_height * 1/3),
+                                             dialog_info=self.dialog_info, sector=self.sector)
 
     def save(self) -> None:
         board, entities = self.sector.save()
@@ -377,7 +380,8 @@ class GameWindow(Window):
             )
 
     def get_action_window(self) -> bool:
-        return self.esc_menu.if_active or self.dialog_info.if_active or self.dialog_file.if_active
+        return self.esc_menu.if_active or self.dialog_info.if_active or self.dialog_file.if_active or \
+               self.dialog_code_use.if_active
 
     def get_number_cell(self, mouse_pos: Tuple[int, int]) -> Tuple[int, int]:
         try:
@@ -423,6 +427,7 @@ class GameWindow(Window):
         self.esc_menu.draw(self.display)
         self.dialog_info.draw(self.display)
         self.dialog_file.draw(self.display)
+        self.dialog_code_use.draw(self.display)
 
     def update(self) -> None:
         pg.display.set_caption(str(self.clock.get_fps()))  # нужно для отладки. FPS в заголовок окна!
@@ -475,6 +480,8 @@ class GameWindow(Window):
                     self.dialog_info.hide()
                 elif self.dialog_file.if_active:
                     self.dialog_file.hide()
+                elif self.dialog_code_use.if_active:
+                    self.dialog_code_use.changes_active()
                 else:
                     self.esc_menu.changes_active()
             if self.esc_menu.if_active:
@@ -483,6 +490,8 @@ class GameWindow(Window):
                 self.dialog_info.event(en)
             elif self.dialog_file.if_active:
                 self.dialog_file.event(en)
+            elif self.dialog_code_use.if_active:
+                self.dialog_code_use.event(en)
             else:
                 self.left_panel.event(en)
                 self.right_panel.event(en)
@@ -503,7 +512,7 @@ class GameWindow(Window):
                     self.read_file()
                 #
                 if en.type == pg.KEYUP and en.key == pg.K_BACKQUOTE:
-                    self.esc_menu.changes_active()
+                    self.dialog_code_use.changes_active()
                 #
                 if en.type == pg.KEYDOWN and en.key == pg.K_w:
                     self.camera_up = True
