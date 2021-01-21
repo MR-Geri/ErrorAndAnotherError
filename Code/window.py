@@ -1,5 +1,5 @@
 import json
-
+from cryptography.fernet import Fernet
 from Code.settings import *
 from Code.dialogs import DialogInfo, DialogFile, DialogCodeUse
 from Code.escape_menu import EscMenu
