@@ -1,6 +1,6 @@
 from Code.settings import *
 
-from Code.dialogs import DialogInfo
+from Code.dialogs import DialogInfo, DialogFile, DialogState
 from Code.info_panel import RightPanel, LeftPanel
 from Code.sector_objects.bases import Base
 from Code.sector_objects.entities import Entities
@@ -10,7 +10,8 @@ from Code.sound import Sound
 
 class Sector:
     def __init__(self, number_x: int, number_y: int, size_cell: int, sound: Sound, dialog_info: DialogInfo,
-                 dialog_file, right_panel: RightPanel, left_panel: LeftPanel) -> None:
+                 dialog_file: DialogFile, dialog_state: DialogState,
+                 right_panel: RightPanel, left_panel: LeftPanel) -> None:
         self.number_x, self.number_y = number_x, number_y  # Длина и высота сектора в единицах
         self.size_cell = size_cell
         self.size_sector = (number_x * size_cell, number_y * size_cell)
@@ -20,6 +21,7 @@ class Sector:
         self.sound = sound
         self.dialog_info = dialog_info
         self.dialog_file = dialog_file
+        self.dialog_state = dialog_state
         self.right_panel = right_panel
         self.left_panel = left_panel
         # Инициализация
@@ -60,13 +62,15 @@ class Sector:
         for data in entities:
             entity = STR_TO_OBJECT[data['name']]
             if entity in BASES:
-                entity = entity(pos=data['pos'], size_cell=size_cell, board=board, entities=self.entities,
-                                dialog_info=self.dialog_info, dialog_file=self.dialog_file,
-                                right_panel=self.right_panel, left_panel=self.left_panel)
+                entity = entity(
+                    pos=data['pos'], size_cell=size_cell, board=board, entities=self.entities,
+                    dialog_info=self.dialog_info, dialog_file=self.dialog_file, dialog_state=self.dialog_state,
+                    right_panel=self.right_panel, left_panel=self.left_panel)
                 self.base = entity
             elif entity in ROBOTS:
-                entity = entity(pos=data['pos'], size_cell=size_cell, dialog_info=self.dialog_info,
-                                dialog_file=self.dialog_file, right_panel=self.right_panel, left_panel=self.left_panel)
+                entity = entity(
+                    pos=data['pos'], size_cell=size_cell, dialog_info=self.dialog_info, dialog_file=self.dialog_file,
+                    dialog_state=self.dialog_state, right_panel=self.right_panel, left_panel=self.left_panel)
             entity.load(data)
             self.entities.add(entity)
         self.render()

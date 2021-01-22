@@ -182,3 +182,40 @@ class DialogCodeUse:
         if self.if_active:
             self.line_input.event(event)
             self.button.event(event)
+
+
+class DialogState:
+    def __init__(self, pos: Tuple[int, int], width: int, height: int) -> None:
+        self.rect = pg.Rect(*pos, width, height)
+        self.surface = pg.Surface((self.rect.width, self.rect.height), pg.SRCALPHA)
+        self.surface.fill(COLOR_BACKGROUND)
+        x = width // 100
+        self.scroll = Scroll(pos=(pos[0] + x, pos[1]), width=width - x,
+                             height=int(self.rect.height * 4/5), one_line=self.rect.height // 5,
+                             color=COLOR_BACKGROUND, color_disabled=(128, 128, 128), color_active=(138, 138, 138))
+        self.button = Button(
+            pos=(pos[0], pos[1] + int(self.rect.height * 4/5) + 1), width=width, height=self.rect.height // 5,
+            color_disabled=(30, 30, 30), color_active=(40, 40, 40), func=self.hide,
+            text=TextMaxSizeCenter(text='Понятно', width=width, height=self.rect.height // 5, font_type=PT_MONO)
+        )
+        self.if_active: bool = False
+
+    def hide(self) -> None:
+        self.if_active = False
+        self.surface = pg.Surface((self.rect.width, self.rect.height), pg.SRCALPHA)
+        self.surface.fill(COLOR_BACKGROUND)
+        self.scroll.clear()
+
+    def event(self, event: pg.event.Event) -> None:
+        self.button.event(event)
+        self.scroll.event(event)
+
+    def show(self, texts: list) -> None:
+        self.if_active = True
+        self.scroll.update(texts)
+
+    def draw(self, surface: pg.Surface) -> None:
+        if self.if_active:
+            surface.blit(self.surface, self.rect)
+            self.button.draw(surface)
+            self.scroll.draw(surface)

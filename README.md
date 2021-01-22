@@ -1,5 +1,6 @@
 # Крутое название
 ---
+D:\PycharmProjects\projectPygame\Game_code
 1. Логика мира:
     - Сектор выглядит так:  
         ![alt text](https://github.com/MR-Geri/projectPygame/blob/master/idea/sector.png)
@@ -14,15 +15,20 @@
      в котором указано может ли робот сейчас выполнять то или иное действие.
      ```
    class PermissionsRobot:
-        def __init__(self) -> None:
-            self.can_move = True
-            self.can_charging = True
+        def __init__(self, states: dict = None) -> None:
+            if states is None:
+                states = {'can_move': True, 'can_charging': True}
+            self.can_move = states['can_move']
+            self.can_charging = states['can_charging']
     
         def set_move(self, flag: bool) -> None:
             self.can_move = flag
     
         def set_charging(self, flag: bool) -> None:
             self.can_charging = flag
+    
+        def get_state(self) -> dict:
+            return {'can_move': self.can_move, 'can_charging': self.can_charging}
    ```
     - На permissions могут влиять другие объекты. 
      например **База** блокирует перемещение для **Робота**:
@@ -51,15 +57,20 @@
     - У базы есть permissions в котором указано может ли база сейчас выполнять то или иное действие.
      ```
    class PermissionsBase:
-        def __init__(self) -> None:
-            self.can_charging = True
-            self.can_generate = True
+        def __init__(self, states: dict = None) -> None:
+            if states is None:
+                states = {'can_charging': True, 'can_generate': True}
+            self.can_charging = states['can_charging']
+            self.can_generate = states['can_generate']
     
         def set_charging(self, flag: bool) -> None:
             self.can_charging = flag
     
         def set_generate(self, flag: bool) -> None:
             self.can_generate = flag
+    
+        def get_state(self) -> dict:
+            return {'can_charging': self.can_charging, 'can_generate': self.can_generate}
    ```
     - На permissions могут влиять другие объекты. 
     - Функиции 

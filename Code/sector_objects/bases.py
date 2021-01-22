@@ -1,40 +1,42 @@
 from Code.settings import *
 from Code.utils import Path, PermissionsBase
-from Code.dialogs import DialogInfo, DialogFile
+from Code.dialogs import DialogInfo, DialogFile, DialogState
 from Code.info_panel import RightPanel, LeftPanel
 from Code.sector_objects.entities import Entities
 
 
 class Base:
     def __init__(self, pos: Tuple[int, int], size_cell: int, board: list, entities: Entities,
-                 dialog_info: DialogInfo, dialog_file: DialogFile, right_panel: RightPanel,
-                 left_panel: LeftPanel) -> None:
-        self.pos = list(pos)  # Надо сохранять
+                 dialog_info: DialogInfo, dialog_file: DialogFile, dialog_state: DialogState,
+                 right_panel: RightPanel, left_panel: LeftPanel) -> None:
+        self.pos = list(pos)
         self.size_cell = size_cell
         self.board = board
         self.entities = entities
         self.dialog_info = dialog_info
         self.dialog_file = dialog_file
+        self.dialog_state = dialog_state
         self.right_panel = right_panel
         self.left_panel = left_panel
         # Функции пользователя
         self.energy_transfer = lambda *args, **kwargs: None
         # Состояния
-        self.permissions = PermissionsBase()  # Надо сохранять
+        self.permissions = PermissionsBase()
         # Характеристики
-        self.path_user_code = Path('')  # Надо сохранять
+        self.path_user_code = Path('')
         self.name = 'База MK0'
-        self.energy = 1000  # Надо сохранять
-        self.energy_max = 4000  # Надо сохранять
-        self.hp = 1000  # Надо сохранять
-        self.distance_create = 1  # Надо сохранять
-        self.distance_charging = 1  # Надо сохранять
-        self.energy_max_charging = 5  # Надо сохранять
+        self.energy = 1000
+        self.energy_max = 4000
+        self.hp = 1000
+        self.hp_max = 1000
+        self.distance_create = 1
+        self.distance_charging = 1
+        self.energy_max_charging = 5
         self.energy_possibility = ['MK0']
         #
         self.sound_charge = PATH_CHARGE + 'MK0.wav'
         # Установленные предметы
-        self.generator = RadioisotopeGenerator(self.energy_increase)  # Надо сохранять
+        self.generator = RadioisotopeGenerator(self.energy_increase)
         #
         self.rect = pg.Rect(self.pos[0] * self.size_cell, self.pos[1] * self.size_cell, self.size_cell, self.size_cell)
         self.surface = pg.Surface((self.size_cell, self.size_cell), pg.SRCALPHA)
@@ -43,8 +45,8 @@ class Base:
 
     def get_state(self) -> dict:
         data = {
-            'pos': tuple(self.pos), 'x': self.pos[0], 'y': self.pos[1], 'hp': self.hp, 'energy': self.energy,
-            'energy_max': self.energy_max, 'distance_create': self.distance_create,
+            'pos': tuple(self.pos), 'x': self.pos[0], 'y': self.pos[1], 'hp': self.hp, 'hp_max': self.hp_max,
+            'energy': self.energy, 'energy_max': self.energy_max, 'distance_create': self.distance_create,
             'distance_charging': self.distance_charging, 'energy_possibility': self.energy_possibility,
             'energy_max_charging': self.energy_max_charging
         }
@@ -65,16 +67,35 @@ class Base:
     def info(self) -> None:
         self.right_panel.info_update = self.info
         energy = f'Энергии > {self.energy}'
-        energy_max = f'Макс. Энергии > {self.energy_max}'
-        distance_charging = f'Дист. Зарядки > {self.distance_charging}'
-        energy_max_charging = f'Макс. Передача > {self.energy_max_charging}'
-        distance_create = f'Дист. Создания > {self.distance_create}'
         hp = f'Прочность > {self.hp}'
-        texts = [self.name, energy, energy_max, distance_charging, energy_max_charging, distance_create, hp,
-                 'Установленные модули']
+        texts = [self.name, energy, hp, 'Установленные модули']
         if self.generator:
             texts.append(f'<{self.generator.name}>')
         self.right_panel.update_text(texts)
+
+    def save(self) -> dict:
+        state = {
+            'pos': self.pos,
+            'path_user_code': self.path_user_code.text, 'name': self.__class__.__name__,
+            'energy': self.energy, 'energy_max': self.energy_max, 'energy_max_charging': self.energy_max_charging,
+            'hp': self.hp, 'hp_max': self.hp_max,
+            'distance_create': self.distance_create, 'distance_charging': self.distance_charging,
+            'generator': self.generator.__class__.__name__, 'generator_resource': self.generator.resource,
+            'permissions': self.permissions.get_state()}
+        return state
+
+    def load(self, state: dict):
+        self.pos = state['pos']
+        self.path_user_code = Path(state['path_user_code'])
+        self.energy = state['energy']
+        self.energy_max = state['energy_max']
+        self.hp = state['hp']
+        self.hp_max = state['hp_max']
+        self.distance_create = state['distance_create']
+        self.distance_charging = state['distance_charging']
+        self.energy_max_charging = state['energy_max_charging']
+        self.generator = STR_TO_OBJECT[state['generator']](self.energy_increase, state['generator_resource'])
+        self.permissions = PermissionsBase(state['permissions'])
 
     def scale(self, size_cell: int) -> None:
         self.size_cell = size_cell
@@ -104,25 +125,9 @@ class Base:
         self.path_user_code.set_text('')
         self.left_panel.button_del_file.func = None
 
-    def save(self) -> dict:  # Как мы будем "сохранять" класс
-        state = {
-            'pos': self.pos,
-            'path_user_code': self.path_user_code.text, 'name': self.__class__.__name__, 'energy': self.energy,
-            'energy_max': self.energy_max, 'hp': self.hp, 'distance_create': self.distance_create,
-            'distance_charging': self.distance_charging, 'energy_max_charging': self.energy_max_charging,
-            'generator': self.generator.__class__.__name__, 'generator_resource': self.generator.resource,
-            'permissions': self.permissions.get_state()}
-        # 'energy_transfer': self.energy_transfer
-        return state
-
-    def load(self, state: dict):  # Как мы будем восстанавливать класс из байтов
-        self.pos = state['pos']
-        self.path_user_code = Path(state['path_user_code'])
-        self.energy = state['energy']
-        self.energy_max = state['energy_max']
-        self.hp = state['hp']
-        self.distance_create = state['distance_create']
-        self.distance_charging = state['distance_charging']
-        self.energy_max_charging = state['energy_max_charging']
-        self.generator = STR_TO_OBJECT[state['generator']](self.energy_increase, state['generator_resource'])
-        self.permissions = PermissionsBase(state['permissions'])
+    def func_info(self) -> None:
+        self.dialog_state.show([
+            f'Максимально энергии > {self.energy_max}', f'Дальность зарядки > {self.distance_charging}',
+            f'Максимальная передача > {self.energy_max_charging}', f'Дальность создания > {self.distance_create}',
+            f'Максимальная прочность > {self.hp_max}'
+        ])

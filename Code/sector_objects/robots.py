@@ -1,12 +1,12 @@
 from Code.settings import *
 from Code.utils import Path, PermissionsRobot
-from Code.dialogs import DialogInfo, DialogFile
+from Code.dialogs import DialogInfo, DialogFile, DialogState
 from Code.info_panel import RightPanel, LeftPanel
 
 
 class Robot:
     def __init__(self, pos: Tuple[int, int], size_cell: int,
-                 dialog_info: DialogInfo, dialog_file: DialogFile, right_panel: RightPanel,
+                 dialog_info: DialogInfo, dialog_file: DialogFile, dialog_state: DialogState, right_panel: RightPanel,
                  left_panel: LeftPanel) -> None:
         self.pos = list(pos)
         self.size_cell = size_cell
@@ -14,6 +14,7 @@ class Robot:
         self.left_panel = left_panel
         self.dialog_info = dialog_info
         self.dialog_file = dialog_file
+        self.dialog_state = dialog_state
         self.unique_name = str(randint(1000000, 9999999))
         # Функции пользователя
         self.move = lambda *args, **kwargs: None
@@ -62,38 +63,16 @@ class Robot:
     def info(self) -> None:
         self.right_panel.info_update = self.info
         energy = f'Энергии > {self.energy}'
-        energy_max = f'Макс. Энергии > {self.energy_max}'
         hp = f'Прочности > {self.hp}'
-        move = f'Премещение > {self.distance_move}'
-        texts = [self.name, 'Уникальное имя', self.unique_name, energy, energy_max, hp, move]
+        texts = [self.name, 'Уникальное имя', self.unique_name, energy, hp]
         self.right_panel.update_text(texts)
-
-    def render(self) -> None:
-        self.surface = pg.Surface((self.size_cell, self.size_cell), pg.SRCALPHA)
-        radius = int(self.size_cell / 2)
-        pg.draw.circle(self.surface, pg.Color(255, 255, 255), (radius, radius), radius)
-
-    def func_file(self) -> None:
-        self.dialog_file.show(self.path_user_code)
-
-    def func_del_file(self) -> None:
-        self.path_user_code.set_text('')
-        self.left_panel.button_del_file.func = None
-
-    def draw(self, surface: pg.Surface) -> None:
-        surface.blit(self.surface, self.rect)
-
-    def scale(self, size_cell: int) -> None:
-        self.size_cell = size_cell
-        self.rect = pg.Rect(self.pos[0] * self.size_cell, self.pos[1] * self.size_cell, self.size_cell, self.size_cell)
-        self.render()
 
     def save(self) -> dict:
         state = {
             'pos': self.pos, 'unique_name': self.unique_name,
             'path_user_code': self.path_user_code.text, 'name': self.__class__.__name__, 'energy': self.energy,
-            'energy_max': self.energy_max, 'dmg': self.dmg, 'hp': self.hp, 'distance_move': self.distance_move,
-            'permissions': self.permissions.get_state()}
+            'energy_max': self.energy_max, 'dmg': self.dmg, 'hp': self.hp, 'hp_max': self.hp_max,
+            'distance_move': self.distance_move, 'permissions': self.permissions.get_state()}
         return state
 
     def load(self, state: dict):
@@ -103,16 +82,43 @@ class Robot:
         self.energy = state['energy']
         self.energy_max = state['energy_max']
         self.hp = state['hp']
+        self.hp_max = state['hp_max']
         self.dmg = state['dmg']
         self.distance_move = state['distance_move']
         #
         self.permissions = PermissionsRobot(state['permissions'])
 
+    def render(self) -> None:
+        self.surface = pg.Surface((self.size_cell, self.size_cell), pg.SRCALPHA)
+        radius = int(self.size_cell / 2)
+        pg.draw.circle(self.surface, pg.Color(255, 255, 255), (radius, radius), radius)
+
+    def draw(self, surface: pg.Surface) -> None:
+        surface.blit(self.surface, self.rect)
+
+    def scale(self, size_cell: int) -> None:
+        self.size_cell = size_cell
+        self.rect = pg.Rect(self.pos[0] * self.size_cell, self.pos[1] * self.size_cell, self.size_cell, self.size_cell)
+        self.render()
+
+    def func_file(self) -> None:
+        self.dialog_file.show(self.path_user_code)
+
+    def func_del_file(self) -> None:
+        self.path_user_code.set_text('')
+        self.left_panel.button_del_file.func = None
+
+    def func_info(self) -> None:
+        self.dialog_state.show([
+            f'Максмально энергии > {self.energy_max}', f'Дистанция перемещения > {self.distance_move}',
+            f'Максимально прочности > {self.hp_max}', f'Наносимый урон > {self.dmg}'
+        ])
+
 
 class MK0(Robot):
     def __init__(self, pos: Tuple[int, int], size_cell: int,
-                 dialog_info: DialogInfo, dialog_file: DialogFile, right_panel: RightPanel,
-                 left_panel: LeftPanel) -> None:
+                 dialog_info: DialogInfo, dialog_file: DialogFile, dialog_state: DialogState,
+                 right_panel: RightPanel, left_panel: LeftPanel) -> None:
         self.path_user_code = Path('')
         self.name = 'Робот MK0'
         self.energy = 50
@@ -120,12 +126,13 @@ class MK0(Robot):
         self.energy_create = 100
         self.dmg = 0
         self.hp = 100
+        self.hp_max = 100
         self.distance_move = 1
         self.sell_block = ['Mountain']
         #
         self.sound_crash = PATH_CRASHES + 'MK0.wav'
         self.sound_move = PATH_MOVES + 'MK0.wav'
-        super().__init__(pos, size_cell, dialog_info, dialog_file, right_panel, left_panel)
+        super().__init__(pos, size_cell, dialog_info, dialog_file, dialog_state, right_panel, left_panel)
 
     def render(self) -> None:
         self.surface = pg.Surface((self.size_cell, self.size_cell), pg.SRCALPHA)
@@ -135,8 +142,8 @@ class MK0(Robot):
 
 class MK1(Robot):
     def __init__(self, pos: Tuple[int, int], size_cell: int,
-                 dialog_info: DialogInfo, dialog_file: DialogFile, right_panel: RightPanel,
-                 left_panel: LeftPanel) -> None:
+                 dialog_info: DialogInfo, dialog_file: DialogFile, dialog_state: DialogState,
+                 right_panel: RightPanel, left_panel: LeftPanel) -> None:
         self.path_user_code = Path('')
         self.name = 'Робот MK1'
         self.energy = 100
@@ -149,7 +156,7 @@ class MK1(Robot):
         #
         self.sound_crash = PATH_CRASHES + 'MK0.wav'
         self.sound_move = PATH_MOVES + 'MK0.wav'
-        super().__init__(pos, size_cell, dialog_info, dialog_file, right_panel, left_panel)
+        super().__init__(pos, size_cell, dialog_info, dialog_file, dialog_state, right_panel, left_panel)
 
     def render(self) -> None:
         self.surface = pg.Surface((self.size_cell, self.size_cell), pg.SRCALPHA)

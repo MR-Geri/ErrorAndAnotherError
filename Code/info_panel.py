@@ -55,31 +55,15 @@ class LeftPanel(Panel):
         )
         self.interface.move(0)
         self.buttons = Buttons()
-        self.init_button()
-        self.interface.move(0)
-        self.pos_cursor = TextMaxSizeCenter(
-            text='', width=self.interface.width, height=self.interface.height, pos=self.interface.pos, font_type=PT_MONO
-        )
-        self.interface.move(0)
-        height2 = 2 * self.interface.height + self.interface.indent[1]
-        self.button_file = Button(
-            pos=self.interface.pos, width=self.interface.width, height=height2,
-            func=None, color_disabled=(30, 30, 30), color_active=(40, 40, 40),
-            text=TextMaxSizeCenter(text='Выбрать файл', width=self.interface.width,
-                                   height=height2, font_type=PT_MONO)
-        )
-        self.interface.move(0, height2)
-        self.button_del_file = Button(
-            pos=self.interface.pos, width=self.interface.width, height=height2,
-            func=None, color_disabled=(30, 30, 30), color_active=(40, 40, 40),
-            text=TextMaxSizeCenter(text='Удалить файл', width=self.interface.width,
-                                   height=height2, font_type=PT_MONO)
-        )
-        self.interface.move(0, height2)
+        self.pos_cursor = None
+        self.button_file = None
+        self.button_del_file = None
+        self.button_info = None
+        self.init_interface()
         self.update()
         self.render()
 
-    def init_button(self) -> None:
+    def init_interface(self) -> None:
         size = max_size_list_text(
             ['<', '>', '||', '►'], self.interface.width, self.interface.height, PT_MONO
         )
@@ -113,6 +97,33 @@ class LeftPanel(Panel):
         )
         self.buttons.add(button)
         self.interface.move(- self.interface.width + width3, is_indent=(False, False))
+        self.interface.move(0)
+        self.pos_cursor = TextMaxSizeCenter(
+            text='', width=self.interface.width, height=self.interface.height, pos=self.interface.pos, font_type=PT_MONO
+        )
+        self.interface.move(0)
+        height2 = 2 * self.interface.height + self.interface.indent[1]
+        self.button_info = Button(
+            pos=self.interface.pos, width=self.interface.width, height=height2,
+            func=None, color_disabled=(30, 30, 30), color_active=(40, 40, 40),
+            text=TextMaxSizeCenter(text='Информация', width=self.interface.width,
+                                   height=height2, font_type=PT_MONO)
+        )
+        self.interface.move(0, height2)
+        self.button_file = Button(
+            pos=self.interface.pos, width=self.interface.width, height=height2,
+            func=None, color_disabled=(30, 30, 30), color_active=(40, 40, 40),
+            text=TextMaxSizeCenter(text='Выбрать файл', width=self.interface.width,
+                                   height=height2, font_type=PT_MONO)
+        )
+        self.interface.move(0, height2)
+        self.button_del_file = Button(
+            pos=self.interface.pos, width=self.interface.width, height=height2,
+            func=None, color_disabled=(30, 30, 30), color_active=(40, 40, 40),
+            text=TextMaxSizeCenter(text='Удалить файл', width=self.interface.width,
+                                   height=height2, font_type=PT_MONO)
+        )
+        self.interface.move(0, height2)
 
     def update(self) -> None:
         self.running_line.update(self.music.get_text())
@@ -139,6 +150,8 @@ class LeftPanel(Panel):
             self.button_file.draw(self.surface)
         if self.button_del_file.func:
             self.button_del_file.draw(self.surface)
+        if self.button_info.func:
+            self.button_info.draw(self.surface)
         self.minimap.draw(self.surface)
         self.pos_cursor.draw(self.surface)
 
@@ -148,6 +161,8 @@ class LeftPanel(Panel):
             self.button_file.event(event)
         if self.button_del_file.func:
             self.button_del_file.event(event)
+        if self.button_info.func:
+            self.button_info.event(event)
 
 
 class RightPanel(Panel):

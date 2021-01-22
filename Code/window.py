@@ -1,7 +1,7 @@
 import json
 
 from Code.settings import *
-from Code.dialogs import DialogInfo, DialogFile, DialogCodeUse
+from Code.dialogs import DialogInfo, DialogFile, DialogCodeUse, DialogState
 from Code.escape_menu import EscMenu
 from Code.utils import Interface
 from Code.processor import Processor
@@ -309,14 +309,16 @@ class GameWindow(Window):
         self.size_cell = int(self.size_cell_min)
         self.dialog_info = DialogInfo(pos=(self.win_width // 4, self.win_height // 3),
                                       width=self.win_width // 2, height=self.win_height // 3)
+        self.dialog_state = DialogState(pos=(self.win_width // 4, self.win_height // 3),
+                                        width=self.win_width // 2, height=self.win_height // 3)
         self.dialog_file = DialogFile(pos=(self.win_width // 8, self.win_height // 8),
                                       width=int(self.win_width * (6 / 8)), height=int(self.win_height * (6 / 8)))
         self.sound = controller.sound
         # sector нужно ЗАГРУЖАТЬ если это НЕ НОВАЯ игра
         self.sector = Sector(
             number_x=SECTOR_X_NUMBER, number_y=SECTOR_Y_NUMBER, size_cell=self.size_cell, sound=self.sound,
-            dialog_info=self.dialog_info, dialog_file=self.dialog_file, right_panel=self.right_panel,
-            left_panel=self.left_panel)
+            dialog_info=self.dialog_info, dialog_file=self.dialog_file, dialog_state=self.dialog_state,
+            right_panel=self.right_panel, left_panel=self.left_panel)
         #
         self.camera = Camera(
             SECTOR_X_NUMBER * self.size_cell,
@@ -381,7 +383,7 @@ class GameWindow(Window):
 
     def get_action_window(self) -> bool:
         return self.esc_menu.if_active or self.dialog_info.if_active or self.dialog_file.if_active or \
-               self.dialog_code_use.if_active
+               self.dialog_code_use.if_active or self.dialog_state.if_active
 
     def get_number_cell(self, mouse_pos: Tuple[int, int]) -> Tuple[int, int]:
         try:
@@ -404,6 +406,7 @@ class GameWindow(Window):
                         entity.info()
                         if entity.func_file:
                             self.left_panel.button_file.func = entity.func_file
+                            self.left_panel.button_info.func = entity.func_info
                         if entity.path_user_code.text:
                             self.left_panel.button_del_file.func = entity.func_del_file
                     except AttributeError:
@@ -413,15 +416,12 @@ class GameWindow(Window):
                 else:
                     try:
                         self.left_panel.button_file.func = None
+                        self.left_panel.button_info.func = None
                         self.left_panel.button_del_file.func = None
                         self.right_panel.info_update = None
                         self.sector.board[y][x].info()
                     except Exception as e:
                         print(f'window -> click Exception: {e}')
-        if pos[0] < self.left_panel.rect.width:
-            print('Клик по левой панели информации.')
-        if pos[0] > self.right_panel.rect.x:
-            print('Клик по правой панели информации')
 
     def draw(self) -> None:
         self.left_panel.render()
@@ -434,6 +434,7 @@ class GameWindow(Window):
         self.dialog_info.draw(self.display)
         self.dialog_file.draw(self.display)
         self.dialog_code_use.draw(self.display)
+        self.dialog_state.draw(self.display)
 
     def update(self) -> None:
         pg.display.set_caption(str(self.clock.get_fps()))  # нужно для отладки. FPS в заголовок окна!
@@ -452,7 +453,6 @@ class GameWindow(Window):
                 self.left_panel.render_minimap(self.sector.surface)
             #
             self.sound.play()
-            # Обновление панели каждую секунду
             self.right_panel.update()
             self.left_panel.update()
 
@@ -466,6 +466,8 @@ class GameWindow(Window):
                     self.dialog_info.hide()
                 elif self.dialog_file.if_active:
                     self.dialog_file.hide()
+                elif self.dialog_state.if_active:
+                    self.dialog_state.hide()
                 elif self.dialog_code_use.if_active:
                     self.dialog_code_use.changes_active()
                 else:
@@ -478,6 +480,8 @@ class GameWindow(Window):
                 self.dialog_file.event(en)
             elif self.dialog_code_use.if_active:
                 self.dialog_code_use.event(en)
+            elif self.dialog_state.if_active:
+                self.dialog_state.event(en)
             else:
                 self.left_panel.event(en)
                 self.right_panel.event(en)
