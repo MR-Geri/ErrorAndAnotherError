@@ -4,34 +4,21 @@ from Code.dialogs import DialogInfo, DialogFile
 from Code.info_panel import RightPanel, LeftPanel
 
 
-class MK0:
+class Robot:
     def __init__(self, pos: Tuple[int, int], size_cell: int,
                  dialog_info: DialogInfo, dialog_file: DialogFile, right_panel: RightPanel,
                  left_panel: LeftPanel) -> None:
-        self.pos = list(pos)  # Надо сохранять
+        self.pos = list(pos)
         self.size_cell = size_cell
         self.right_panel = right_panel
         self.left_panel = left_panel
         self.dialog_info = dialog_info
         self.dialog_file = dialog_file
-        self.unique_name = str(randint(1000000, 9999999))  # Надо сохранять
+        self.unique_name = str(randint(1000000, 9999999))
         # Функции пользователя
         self.move = lambda *args, **kwargs: None
         # Состояния
-        self.permissions = PermissionsRobot()  # Надо сохранять
-        #
-        self.path_user_code = Path('')  # Надо сохранять
-        self.name = 'Робот MK0'
-        self.energy = 50  # Надо сохранять
-        self.energy_max = 200  # Надо сохранять
-        self.energy_create = 100
-        self.dmg = 0  # Надо сохранять
-        self.hp = 100  # Надо сохранять
-        self.distance_move = 1  # Надо сохранять
-        self.sell_block = ['Mountain']
-        #
-        self.sound_crash = PATH_CRASHES + 'MK0.wav'
-        self.sound_move = PATH_MOVES + 'MK0.wav'
+        self.permissions = PermissionsRobot()
         #
         self.rect = pg.Rect(self.pos[0] * self.size_cell, self.pos[1] * self.size_cell, self.size_cell, self.size_cell)
         self.surface = pg.Surface((self.size_cell, self.size_cell), pg.SRCALPHA)
@@ -84,7 +71,7 @@ class MK0:
     def render(self) -> None:
         self.surface = pg.Surface((self.size_cell, self.size_cell), pg.SRCALPHA)
         radius = int(self.size_cell / 2)
-        pg.draw.circle(self.surface, pg.Color(0, 0, 0), (radius, radius), radius)
+        pg.draw.circle(self.surface, pg.Color(255, 255, 255), (radius, radius), radius)
 
     def func_file(self) -> None:
         self.dialog_file.show(self.path_user_code)
@@ -101,15 +88,15 @@ class MK0:
         self.rect = pg.Rect(self.pos[0] * self.size_cell, self.pos[1] * self.size_cell, self.size_cell, self.size_cell)
         self.render()
 
-    def save(self) -> dict:  # Как мы будем "сохранять" класс
+    def save(self) -> dict:
         state = {
             'pos': self.pos, 'unique_name': self.unique_name,
             'path_user_code': self.path_user_code.text, 'name': self.__class__.__name__, 'energy': self.energy,
             'energy_max': self.energy_max, 'dmg': self.dmg, 'hp': self.hp, 'distance_move': self.distance_move,
-            'permissions': self.permissions.get_state()}  # 'energy_transfer': self.energy_transfer
+            'permissions': self.permissions.get_state()}
         return state
 
-    def load(self, state: dict):  # Как мы будем восстанавливать класс из байтов
+    def load(self, state: dict):
         self.pos = state['pos']
         self.unique_name = state['unique_name']
         self.path_user_code = Path(state['path_user_code'])
@@ -120,3 +107,51 @@ class MK0:
         self.distance_move = state['distance_move']
         #
         self.permissions = PermissionsRobot(state['permissions'])
+
+
+class MK0(Robot):
+    def __init__(self, pos: Tuple[int, int], size_cell: int,
+                 dialog_info: DialogInfo, dialog_file: DialogFile, right_panel: RightPanel,
+                 left_panel: LeftPanel) -> None:
+        self.path_user_code = Path('')
+        self.name = 'Робот MK0'
+        self.energy = 50
+        self.energy_max = 200
+        self.energy_create = 100
+        self.dmg = 0
+        self.hp = 100
+        self.distance_move = 1
+        self.sell_block = ['Mountain']
+        #
+        self.sound_crash = PATH_CRASHES + 'MK0.wav'
+        self.sound_move = PATH_MOVES + 'MK0.wav'
+        super().__init__(pos, size_cell, dialog_info, dialog_file, right_panel, left_panel)
+
+    def render(self) -> None:
+        self.surface = pg.Surface((self.size_cell, self.size_cell), pg.SRCALPHA)
+        radius = int(self.size_cell / 2)
+        pg.draw.circle(self.surface, pg.Color(0, 0, 0), (radius, radius), radius)
+
+
+class MK1(Robot):
+    def __init__(self, pos: Tuple[int, int], size_cell: int,
+                 dialog_info: DialogInfo, dialog_file: DialogFile, right_panel: RightPanel,
+                 left_panel: LeftPanel) -> None:
+        self.path_user_code = Path('')
+        self.name = 'Робот MK1'
+        self.energy = 100
+        self.energy_max = 400
+        self.energy_create = 150
+        self.dmg = 0
+        self.hp = 130
+        self.distance_move = 1
+        self.sell_block = ['Mountain']
+        #
+        self.sound_crash = PATH_CRASHES + 'MK0.wav'
+        self.sound_move = PATH_MOVES + 'MK0.wav'
+        super().__init__(pos, size_cell, dialog_info, dialog_file, right_panel, left_panel)
+
+    def render(self) -> None:
+        self.surface = pg.Surface((self.size_cell, self.size_cell), pg.SRCALPHA)
+        radius = int(self.size_cell / 2)
+        pg.draw.circle(self.surface, pg.Color(255, 0, 0), (radius, radius), radius)

@@ -17,12 +17,6 @@ class Cell:
     def render(self) -> None:
         self.image = pg.Surface((self.size_cell, self.size_cell))
         self.image.fill(self.color)
-        #
-        # pg.draw.rect(
-        #     self.image,
-        #     pg.Color((255, 255, 255)),
-        #     (0.25 * self.size_cell, 0.25 * self.size_cell, 0.5 * self.size_cell, 0.5 * self.size_cell)
-        # )
 
     def info(self) -> None:
         self.panel.info_update = self.info
