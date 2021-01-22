@@ -69,6 +69,13 @@ class LeftPanel(Panel):
                                    height=height2, font_type=PT_MONO)
         )
         self.interface.move(0, height2)
+        self.button_del_file = Button(
+            pos=self.interface.pos, width=self.interface.width, height=height2,
+            func=None, color_disabled=(30, 30, 30), color_active=(40, 40, 40),
+            text=TextMaxSizeCenter(text='Удалить файл', width=self.interface.width,
+                                   height=height2, font_type=PT_MONO)
+        )
+        self.interface.move(0, height2)
         self.update()
         self.render()
 
@@ -130,6 +137,8 @@ class LeftPanel(Panel):
         self.buttons.draw(self.surface)
         if self.button_file.func:
             self.button_file.draw(self.surface)
+        if self.button_del_file.func:
+            self.button_del_file.draw(self.surface)
         self.minimap.draw(self.surface)
         self.pos_cursor.draw(self.surface)
 
@@ -137,6 +146,8 @@ class LeftPanel(Panel):
         self.buttons.event(event)
         if self.button_file.func:
             self.button_file.event(event)
+        if self.button_del_file.func:
+            self.button_del_file.event(event)
 
 
 class RightPanel(Panel):

@@ -1,15 +1,17 @@
 from Code.settings import *
 from Code.utils import Path, PermissionsRobot
 from Code.dialogs import DialogInfo, DialogFile
-from Code.info_panel import RightPanel
+from Code.info_panel import RightPanel, LeftPanel
 
 
 class MK0:
     def __init__(self, pos: Tuple[int, int], size_cell: int,
-                 dialog_info: DialogInfo, dialog_file: DialogFile, right_panel: RightPanel) -> None:
+                 dialog_info: DialogInfo, dialog_file: DialogFile, right_panel: RightPanel,
+                 left_panel: LeftPanel) -> None:
         self.pos = list(pos)  # Надо сохранять
         self.size_cell = size_cell
         self.right_panel = right_panel
+        self.left_panel = left_panel
         self.dialog_info = dialog_info
         self.dialog_file = dialog_file
         self.unique_name = str(randint(1000000, 9999999))  # Надо сохранять
@@ -18,7 +20,7 @@ class MK0:
         # Состояния
         self.permissions = PermissionsRobot()  # Надо сохранять
         #
-        self.path_user_code = Path('MK0')  # Надо сохранять
+        self.path_user_code = Path('')  # Надо сохранять
         self.name = 'Робот MK0'
         self.energy = 50  # Надо сохранять
         self.energy_max = 200  # Надо сохранять
@@ -86,6 +88,10 @@ class MK0:
 
     def func_file(self) -> None:
         self.dialog_file.show(self.path_user_code)
+
+    def func_del_file(self) -> None:
+        self.path_user_code.set_text('')
+        self.left_panel.button_del_file.func = None
 
     def draw(self, surface: pg.Surface) -> None:
         surface.blit(self.surface, self.rect)

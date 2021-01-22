@@ -1,7 +1,7 @@
 from Code.settings import *
 
 from Code.dialogs import DialogInfo
-from Code.info_panel import RightPanel
+from Code.info_panel import RightPanel, LeftPanel
 from Code.sector_objects.bases import Base
 from Code.sector_objects.entities import Entities
 from Code.Map.biomes import GeneratorBiomes
@@ -10,7 +10,7 @@ from Code.sound import Sound
 
 class Sector:
     def __init__(self, number_x: int, number_y: int, size_cell: int, sound: Sound, dialog_info: DialogInfo,
-                 dialog_file, right_panel: RightPanel) -> None:
+                 dialog_file, right_panel: RightPanel, left_panel: LeftPanel) -> None:
         self.number_x, self.number_y = number_x, number_y  # Длина и высота сектора в единицах
         self.size_cell = size_cell
         self.size_sector = (number_x * size_cell, number_y * size_cell)
@@ -21,6 +21,7 @@ class Sector:
         self.dialog_info = dialog_info
         self.dialog_file = dialog_file
         self.right_panel = right_panel
+        self.left_panel = left_panel
         # Инициализация
         self.gen_board()
         #
@@ -61,11 +62,11 @@ class Sector:
             if entity in BASES:
                 entity = entity(pos=data['pos'], size_cell=size_cell, board=board, entities=self.entities,
                                 dialog_info=self.dialog_info, dialog_file=self.dialog_file,
-                                right_panel=self.right_panel)
+                                right_panel=self.right_panel, left_panel=self.left_panel)
                 self.base = entity
             elif entity in ROBOTS:
                 entity = entity(pos=data['pos'], size_cell=size_cell, dialog_info=self.dialog_info,
-                                dialog_file=self.dialog_file, right_panel=self.right_panel)
+                                dialog_file=self.dialog_file, right_panel=self.right_panel, left_panel=self.left_panel)
             entity.load(data)
             self.entities.add(entity)
         self.render()
@@ -74,7 +75,8 @@ class Sector:
         if type(self.board[y][x]) not in SELL_BLOCKED and not self.base and \
                0 <= y < SECTOR_Y_NUMBER and 0 <= x < SECTOR_X_NUMBER:
             self.base = Base(pos=(x, y), size_cell=self.size_cell, board=self.board, entities=self.entities,
-                             dialog_info=self.dialog_info, dialog_file=self.dialog_file, right_panel=self.right_panel)
+                             dialog_info=self.dialog_info, dialog_file=self.dialog_file, right_panel=self.right_panel,
+                             left_panel=self.left_panel)
             self.entities.add(self.base)
         else:
             if self.base:
@@ -100,7 +102,8 @@ class Sector:
                 if k_y > i_y >= n_y and k_x > i_x >= n_x and \
                         type(x) not in SELL_BLOCKED and self.entities.entities_sector[i_y][i_x] is None:
                     robot_ = robot(pos=(i_x, i_y), size_cell=self.size_cell, dialog_file=self.dialog_file,
-                                   dialog_info=self.dialog_info, right_panel=self.right_panel)
+                                   dialog_info=self.dialog_info, right_panel=self.right_panel,
+                                   left_panel=self.left_panel)
                     if self.base.energy >= robot_.energy_create:
                         self.base.energy -= robot_.energy_create
                         self.base.entities.add(robot_)

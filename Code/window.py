@@ -1,5 +1,5 @@
 import json
-from cryptography.fernet import Fernet
+
 from Code.settings import *
 from Code.dialogs import DialogInfo, DialogFile, DialogCodeUse
 from Code.escape_menu import EscMenu
@@ -315,7 +315,8 @@ class GameWindow(Window):
         # sector нужно ЗАГРУЖАТЬ если это НЕ НОВАЯ игра
         self.sector = Sector(
             number_x=SECTOR_X_NUMBER, number_y=SECTOR_Y_NUMBER, size_cell=self.size_cell, sound=self.sound,
-            dialog_info=self.dialog_info, dialog_file=self.dialog_file, right_panel=self.right_panel)
+            dialog_info=self.dialog_info, dialog_file=self.dialog_file, right_panel=self.right_panel,
+            left_panel=self.left_panel)
         #
         self.camera = Camera(
             SECTOR_X_NUMBER * self.size_cell,
@@ -395,19 +396,25 @@ class GameWindow(Window):
             x, y = self.get_number_cell(pos)
             if SECTOR_X_NUMBER > x >= 0 and SECTOR_Y_NUMBER > y >= 0:
                 self.left_panel.update_cursor((x, y))
-                if self.sector.entities.entities_sector[y][x] is not None:
+                entity = self.sector.entities.entities_sector[y][x]
+                if entity is not None:
+                    self.left_panel.button_file.func = None
+                    self.left_panel.button_del_file.func = None
                     try:
-                        self.sector.entities.entities_sector[y][x].info()
-                        if self.sector.entities.entities_sector[y][x].func_file:
-                            self.left_panel.button_file.func = self.sector.entities.entities_sector[y][x].func_file
+                        entity.info()
+                        if entity.func_file:
+                            self.left_panel.button_file.func = entity.func_file
+                        if entity.path_user_code.text:
+                            self.left_panel.button_del_file.func = entity.func_del_file
                     except AttributeError:
                         pass
                     except Exception as e:
                         print(f'window -> click Exception: {e}')
                 else:
                     try:
-                        self.right_panel.info_update = None
                         self.left_panel.button_file.func = None
+                        self.left_panel.button_del_file.func = None
+                        self.right_panel.info_update = None
                         self.sector.board[y][x].info()
                     except Exception as e:
                         print(f'window -> click Exception: {e}')

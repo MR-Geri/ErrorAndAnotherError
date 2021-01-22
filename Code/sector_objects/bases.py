@@ -1,13 +1,14 @@
 from Code.settings import *
 from Code.utils import Path, PermissionsBase
 from Code.dialogs import DialogInfo, DialogFile
-from Code.info_panel import RightPanel
+from Code.info_panel import RightPanel, LeftPanel
 from Code.sector_objects.entities import Entities
 
 
 class Base:
     def __init__(self, pos: Tuple[int, int], size_cell: int, board: list, entities: Entities,
-                 dialog_info: DialogInfo, dialog_file: DialogFile, right_panel: RightPanel) -> None:
+                 dialog_info: DialogInfo, dialog_file: DialogFile, right_panel: RightPanel,
+                 left_panel: LeftPanel) -> None:
         self.pos = list(pos)  # Надо сохранять
         self.size_cell = size_cell
         self.board = board
@@ -15,12 +16,13 @@ class Base:
         self.dialog_info = dialog_info
         self.dialog_file = dialog_file
         self.right_panel = right_panel
+        self.left_panel = left_panel
         # Функции пользователя
         self.energy_transfer = lambda *args, **kwargs: None
         # Состояния
         self.permissions = PermissionsBase()  # Надо сохранять
         # Характеристики
-        self.path_user_code = Path('Base')  # Надо сохранять
+        self.path_user_code = Path('')  # Надо сохранять
         self.name = 'База MK0'
         self.energy = 1000  # Надо сохранять
         self.energy_max = 4000  # Надо сохранять
@@ -97,6 +99,10 @@ class Base:
 
     def func_file(self) -> None:
         self.dialog_file.show(self.path_user_code)  # Установка файла
+
+    def func_del_file(self) -> None:
+        self.path_user_code.set_text('')
+        self.left_panel.button_del_file.func = None
 
     def save(self) -> dict:  # Как мы будем "сохранять" класс
         state = {
