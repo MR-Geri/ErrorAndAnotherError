@@ -62,8 +62,8 @@ class Robot:
 
     def info(self) -> None:
         self.right_panel.info_update = self.info
-        energy = f'Энергии > {self.energy}'
-        hp = f'Прочности > {self.hp}'
+        energy = f'Энергия > {self.energy}'
+        hp = f'Прочность > {self.hp}'
         texts = [self.name, 'Уникальное имя', self.unique_name, energy, hp]
         self.right_panel.update_text(texts)
 

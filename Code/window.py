@@ -1,5 +1,6 @@
 import json
 
+from Code.inventory import Inventory
 from Code.settings import *
 from Code.dialogs import DialogInfo, DialogFile, DialogCodeUse, DialogState
 from Code.escape_menu import EscMenu
@@ -298,8 +299,10 @@ class GameWindow(Window):
         super().__init__(controller, size_display, caption)
         # Панели
         panel_width = self.win_width // INFO_PANEL_K
+        self.inventory = Inventory()
         self.left_panel = LeftPanel(panel_width, self.win_height, pos=(0, 0), music=self.music)
-        self.right_panel = RightPanel(panel_width, self.win_height, pos=(self.win_width - panel_width, 0))
+        self.right_panel = RightPanel(panel_width, self.win_height, pos=(self.win_width - panel_width, 0),
+                                      inventory=self.inventory)
         # Масштабирование
         self.size_cell_min = int(
             min(self.win_width - 2 * panel_width, self.win_height) / max(SECTOR_X_NUMBER, SECTOR_Y_NUMBER))
@@ -358,8 +361,8 @@ class GameWindow(Window):
             data = json.load(file)
             self.size_cell = self.size_cell_min + data['degree_scale'] * self.coefficient_scale
             self.sector.load(data['board'], data['entities'], self.size_cell)
-            self.scale(0)
             self.camera.load(data['camera'], self.coefficient_scale)
+            self.scale(0)
             processor = data['processor']
             self.processor = Processor(sector=self.sector, tick=processor[0], tick_complete=processor[1])
 

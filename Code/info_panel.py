@@ -14,9 +14,11 @@ class Panel:
         self.rect = pg.Rect(*pos, width, height)
         self.surface = pg.Surface((self.rect.width, self.rect.height))
         self.color_background = pg.Color((128, 128, 128))
+        self.pad = int(self.rect.width * 0.02)
+        self.size = int(self.rect.width * 0.96)
         self.interface = Interface(
             pos=(0, self.rect.height // 50), max_width=width, max_height=height,
-            indent=(0, self.rect.height // 100), size=(self.rect.width, self.rect.height // 20)
+            indent=(0, self.rect.height // 100), size=(self.rect.width, (height - width) // 13)
         )
 
     def get_absolute_pos(self, x: int, y: int) -> Tuple[int, int]:
@@ -41,8 +43,7 @@ class LeftPanel(Panel):
         self.music = music
         # Миникарта
         self.minimap = Minimap(
-            (10, self.rect.height - self.rect.width + 10), self.rect.width - 20, self.rect.width - 20)
-        self.interface.max_height -= self.rect.width
+            (self.pad, self.rect.height - self.pad - self.size), self.size, self.size)
         # Интерфейс
         self.system_time = TextMaxSizeCenter(
             text=f"{datetime.datetime.now().strftime('%d/%m/%y %H:%M:%S')}", width=self.interface.width,
@@ -166,10 +167,13 @@ class LeftPanel(Panel):
 
 
 class RightPanel(Panel):
-    def __init__(self, width: int, height: int, pos: Tuple[int, int]) -> None:
+    def __init__(self, width: int, height: int, pos: Tuple[int, int], inventory) -> None:
         super().__init__(width, height, pos)
         # Интерфейс
         self.info_update = None
+        # Инвентарь
+        self.inventory = inventory
+        self.inventory.init((self.pad, self.rect.height - self.pad - self.size), self.size, self.size)
         #
         self.counter_line = 10
         self.lines = []
@@ -203,3 +207,4 @@ class RightPanel(Panel):
         #
         for line in self.lines:
             line.draw(self.surface)
+        self.inventory.draw(self.surface)

@@ -66,7 +66,7 @@ class Base:
 
     def info(self) -> None:
         self.right_panel.info_update = self.info
-        energy = f'Энергии > {self.energy}'
+        energy = f'Энергия > {self.energy}'
         hp = f'Прочность > {self.hp}'
         texts = [self.name, energy, hp, 'Установленные модули']
         if self.generator:

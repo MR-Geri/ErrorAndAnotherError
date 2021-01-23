@@ -56,7 +56,7 @@ class Swamp(Cell):
 class Mountain(Cell):
     def __init__(self, number_x: int, number_y: int, size_cell: int, panel: RightPanel) -> None:
         self.color = pg.Color('#818394')
-        self.name = 'Горы'
+        self.name = ' Горы '
         self.energy_passage = 20
         self.texts = [self.name, f'Для перемещения', f'энергии > {self.energy_passage}', 'Можно разместить',
                       '<Шахта>']
@@ -66,7 +66,7 @@ class Mountain(Cell):
 class IronOre(Cell):
     def __init__(self, number_x: int, number_y: int, size_cell: int, panel: RightPanel) -> None:
         self.color = pg.Color('#A46B4C')
-        self.name = 'Железная руда'
+        self.name = ' Железная руда '
         self.energy_passage = 20
         self.texts = [self.name, f'Для перемещения', f'энергии > {self.energy_passage}', 'Можно разместить',
                       '<Шахта>']
