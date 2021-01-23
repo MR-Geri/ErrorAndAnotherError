@@ -154,8 +154,10 @@ class DialogCodeUse:
         except SyntaxError:
             exec(str(t))
         except NameError as e:
+            print(e)
             dialog_info.show([f'Не существует такого объекта'])
-        except:
+        except Exception as e:
+            print(e)
             dialog_info.show([f'Нет такой команды'])
 
     def processing_read(self) -> None:

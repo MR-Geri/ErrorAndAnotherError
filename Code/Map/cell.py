@@ -38,7 +38,8 @@ class Plain(Cell):
         self.color = pg.Color('#194D0F')
         self.name = ' Равнина '
         self.energy_passage = 10
-        self.texts = [self.name, f'Для перемещения', f'энергии > {self.energy_passage}', 'Можно разместить', '<База>']
+        self.texts = [self.name, f'Для перемещения', f'энергии > {self.energy_passage}', 'Можно разместить',
+                      '<База>']
         super().__init__(number_x, number_y, size_cell, panel)
 
 
@@ -47,7 +48,8 @@ class Swamp(Cell):
         self.color = pg.Color('#32160D')
         self.name = ' Болото '
         self.energy_passage = 19
-        self.texts = [self.name, f'Для перемещения', f'энергии > {self.energy_passage}', 'Можно разместить', '<База>']
+        self.texts = [self.name, f'Для перемещения', f'энергии > {self.energy_passage}', 'Можно разместить',
+                      '<База>']
         super().__init__(number_x, number_y, size_cell, panel)
 
 
@@ -56,5 +58,16 @@ class Mountain(Cell):
         self.color = pg.Color('#818394')
         self.name = 'Горы'
         self.energy_passage = 20
-        self.texts = [self.name, f'Для перемещения', f'энергии > {self.energy_passage}', 'Можно разместить', '<Шахта>']
+        self.texts = [self.name, f'Для перемещения', f'энергии > {self.energy_passage}', 'Можно разместить',
+                      '<Шахта>']
+        super().__init__(number_x, number_y, size_cell, panel)
+
+
+class IronOre(Cell):
+    def __init__(self, number_x: int, number_y: int, size_cell: int, panel: RightPanel) -> None:
+        self.color = pg.Color('#A46B4C')
+        self.name = 'Железная руда'
+        self.energy_passage = 20
+        self.texts = [self.name, f'Для перемещения', f'энергии > {self.energy_passage}', 'Можно разместить',
+                      '<Шахта>']
         super().__init__(number_x, number_y, size_cell, panel)

@@ -79,8 +79,8 @@ class Sector:
         if type(self.board[y][x]) not in SELL_BLOCKED and not self.base and \
                0 <= y < SECTOR_Y_NUMBER and 0 <= x < SECTOR_X_NUMBER:
             self.base = Base(pos=(x, y), size_cell=self.size_cell, board=self.board, entities=self.entities,
-                             dialog_info=self.dialog_info, dialog_file=self.dialog_file, right_panel=self.right_panel,
-                             left_panel=self.left_panel)
+                             dialog_info=self.dialog_info, dialog_file=self.dialog_file, dialog_state=self.dialog_state,
+                             right_panel=self.right_panel, left_panel=self.left_panel)
             self.entities.add(self.base)
         else:
             if self.base:
@@ -106,8 +106,8 @@ class Sector:
                 if k_y > i_y >= n_y and k_x > i_x >= n_x and \
                         type(x) not in SELL_BLOCKED and self.entities.entities_sector[i_y][i_x] is None:
                     robot_ = robot(pos=(i_x, i_y), size_cell=self.size_cell, dialog_file=self.dialog_file,
-                                   dialog_info=self.dialog_info, right_panel=self.right_panel,
-                                   left_panel=self.left_panel)
+                                   dialog_info=self.dialog_info, dialog_state=self.dialog_state,
+                                   right_panel=self.right_panel, left_panel=self.left_panel)
                     if self.base.energy >= robot_.energy_create:
                         self.base.energy -= robot_.energy_create
                         self.base.entities.add(robot_)

@@ -151,6 +151,7 @@ class MK1(Robot):
         self.energy_create = 150
         self.dmg = 0
         self.hp = 130
+        self.hp_max = 130
         self.distance_move = 1
         self.sell_block = ['Mountain']
         #

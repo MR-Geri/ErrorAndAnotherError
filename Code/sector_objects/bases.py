@@ -32,7 +32,7 @@ class Base:
         self.distance_create = 1
         self.distance_charging = 1
         self.energy_max_charging = 5
-        self.energy_possibility = ['MK0']
+        self.energy_possibility = ['MK0', 'MK1']
         #
         self.sound_charge = PATH_CHARGE + 'MK0.wav'
         # Установленные предметы

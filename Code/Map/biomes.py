@@ -58,6 +58,13 @@ class BiomeSwamp(Biome):
                          min_quantity=min_quantity, size_cell=size_cell, cell=Swamp, right_panel=right_panel)
 
 
+class BiomeIron(Biome):
+    def __init__(self, number_x: int, number_y: int, max_size_biome: Tuple[int, int],
+                 min_quantity: int, size_cell: int, right_panel: RightPanel) -> None:
+        super().__init__(number_x=number_x, number_y=number_y, max_size_biome=max_size_biome,
+                         min_quantity=min_quantity, size_cell=size_cell, cell=IronOre, right_panel=right_panel)
+
+
 class GeneratorBiomes:
     def __init__(self, number_x: int, number_y: int, size_cell: int, right_panel: RightPanel):
         self.number_x = number_x
@@ -67,9 +74,11 @@ class GeneratorBiomes:
         #
         self.mountain = []
         self.swamp = []
+        self.iron_ore = []
         self.for_biomes = [
             (BiomeMountain, MAX_QUANTITY_MOUNTAIN, MIN_QUANTITY_MOUNTAIN_CELL, MAX_SIZE_MOUNTAIN, self.mountain),
-            (BiomeSwamp, MAX_QUANTITY_SWAMP, MIN_QUANTITY_SWAMP_CELL, MAX_SIZE_SWAMP, self.swamp)
+            (BiomeSwamp, MAX_QUANTITY_SWAMP, MIN_QUANTITY_SWAMP_CELL, MAX_SIZE_SWAMP, self.swamp),
+            (BiomeIron, MAX_QUANTITY_IRON, MIN_QUANTITY_IRON_CELL, MAX_SIZE_IRON, self.iron_ore)
         ]
         #
         self.biomes = []

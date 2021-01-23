@@ -1,7 +1,7 @@
 from typing import Union, Tuple
 from os import walk
 import pygame as pg
-from random import randint
+from random import randint, sample
 
 
 # Настройки окна
@@ -46,11 +46,12 @@ STR_TO_OBJECT = {'RadioisotopeGenerator': RadioisotopeGenerator}
 ALL_TEXT = Union[Text, TextMaxSize, TextMaxSizeCenter, TextCenter]
 from Code.running_line import RunningLineMaxSizeCenter
 ALL_RUNNING_LINE = Union[RunningLineMaxSizeCenter]
-from Code.Map.cell import Plain, Swamp, Mountain
+from Code.Map.cell import Plain, Swamp, Mountain, IronOre
 STR_TO_OBJECT['Plain'] = Plain
 STR_TO_OBJECT['Swamp'] = Swamp
 STR_TO_OBJECT['Mountain'] = Mountain
-ALL_CELL = Union[Plain, Swamp, Mountain]
+STR_TO_OBJECT['IronOre'] = IronOre
+ALL_CELL = Union[Plain, Swamp, Mountain, IronOre]
 from Code.sector_objects.robots import MK0, MK1
 STR_TO_OBJECT['MK0'] = MK0
 STR_TO_OBJECT['MK1'] = MK1
@@ -65,9 +66,15 @@ BUTTONS = [Button, ButtonTwoStates, ChoiceButton]
 MAX_SIZE_MOUNTAIN = (10, 10)
 MAX_QUANTITY_MOUNTAIN = 3
 MIN_QUANTITY_MOUNTAIN_CELL = 4
+#
+MAX_SIZE_IRON = (3, 3)
+MAX_QUANTITY_IRON = 1
+MIN_QUANTITY_IRON_CELL = 3
+#
 MAX_SIZE_SWAMP = (20, 20)
 MAX_QUANTITY_SWAMP = 5
 MIN_QUANTITY_SWAMP_CELL = 8
+
 SELL_BLOCKED = [Mountain]
 #
 ROBOTS = [MK0, MK1]
