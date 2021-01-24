@@ -12,6 +12,13 @@ class Processor:
         self.sector = sector
         self.entities = sector.entities
         self.board = sector.board
+        self.state = True
+
+    def get_state(self) -> int:
+        return 1 if self.state else 0
+
+    def change(self) -> None:
+        self.state = not self.state
 
     def ticked(self) -> None:
         t = time.time()

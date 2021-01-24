@@ -1,4 +1,5 @@
 from Code.settings import *
+import math
 
 
 class InterfaceError(Exception):
@@ -94,3 +95,32 @@ class PermissionsBase:
 
     def get_state(self) -> dict:
         return {'can_charging': self.can_charging, 'can_generate': self.can_generate}
+
+
+class Dial:
+    def __init__(self, pos: Tuple[int, int], side: int, max_value: int, circle_color: COLOR, line_color: COLOR) -> None:
+        self.rect = pg.Rect(*pos, side, side)
+        self.surface = pg.Surface((side, side), pg.SRCALPHA)
+        self.max_value = max_value
+        self.value = 0
+        self.circle_color = circle_color
+        self.line_color = line_color
+
+    @staticmethod
+    def get_pos(angle: int, radius: int) -> Tuple[int, int]:
+        x = int(radius + radius * math.cos(math.radians(angle) - math.pi / 2))
+        y = int(radius + radius * math.sin(math.radians(angle) - math.pi / 2))
+        return x, y
+
+    def render(self, value: int) -> None:
+        self.surface = pg.Surface((self.rect.width, self.rect.height), pg.SRCALPHA)
+        radius = self.rect.height // 2
+        pg.draw.circle(self.surface, pg.Color(self.circle_color), (radius, radius), radius, max(1, int(radius / 7)))
+        pos = self.get_pos(int(value / self.max_value * 360), radius)
+        pg.draw.line(self.surface, pg.Color(self.line_color), (radius, radius), pos, max(1, int(radius / 7)))
+
+    def draw(self, surface: pg.Surface, value: int) -> None:
+        if value != self.value:
+            self.render(value)
+            self.value = value
+        surface.blit(self.surface, self.rect)

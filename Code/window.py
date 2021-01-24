@@ -343,6 +343,7 @@ class GameWindow(Window):
         self.dialog_code_use = DialogCodeUse(pos=(self.win_width // 8, int(self.win_height * 1/3)),
                                              width=int(self.win_width * (6 / 8)), height=int(self.win_height * 1/3),
                                              dialog_info=self.dialog_info, sector=self.sector)
+        self.left_panel.init(self.processor)
 
     def save(self) -> None:
         board, entities = self.sector.save()
@@ -365,6 +366,7 @@ class GameWindow(Window):
             self.scale(0)
             processor = data['processor']
             self.processor = Processor(sector=self.sector, tick=processor[0], tick_complete=processor[1])
+            self.left_panel.init(self.processor)
 
     def scale(self, coeff_scale: float):
         # Масштабирование sector с ограничениями
@@ -386,7 +388,7 @@ class GameWindow(Window):
 
     def get_action_window(self) -> bool:
         return self.esc_menu.if_active or self.dialog_info.if_active or self.dialog_file.if_active or \
-               self.dialog_code_use.if_active or self.dialog_state.if_active
+                self.dialog_code_use.if_active or self.dialog_state.if_active
 
     def get_number_cell(self, mouse_pos: Tuple[int, int]) -> Tuple[int, int]:
         try:
@@ -441,7 +443,7 @@ class GameWindow(Window):
 
     def update(self) -> None:
         pg.display.set_caption(str(self.clock.get_fps()))  # нужно для отладки. FPS в заголовок окна!
-        if not self.get_action_window():
+        if not self.get_action_window() and self.processor.state:
             self.processor.ticked()
             self.camera.move(self.camera_left, self.camera_right, self.camera_up, self.camera_down)
             if self.size_cell > self.size_cell_min:
@@ -457,7 +459,7 @@ class GameWindow(Window):
             #
             self.sound.play()
             self.right_panel.update()
-            self.left_panel.update()
+        self.left_panel.update()
 
     def event(self) -> None:
         for en in pg.event.get():
@@ -504,6 +506,8 @@ class GameWindow(Window):
                 #
                 if en.type == pg.KEYUP and en.key == pg.K_BACKQUOTE:
                     self.dialog_code_use.changes_active()
+                if en.type == pg.KEYUP and en.key == pg.K_SPACE:
+                    self.processor.change()
                 #
                 if en.type == pg.KEYDOWN and en.key == pg.K_w:
                     self.camera_up = True

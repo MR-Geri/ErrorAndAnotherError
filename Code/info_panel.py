@@ -1,10 +1,7 @@
 from Code.settings import *
 from Code.Map.minimaps import Minimap
 from Code.buttons import Buttons, Button, ButtonTwoStates
-from Code.utils import Interface
-
-import datetime
-
+from Code.utils import Interface, Dial
 from Code.sound import Music
 from Code.texts import TextMaxSizeCenter, max_size_list_text
 
@@ -17,7 +14,7 @@ class Panel:
         self.pad = int(self.rect.width * 0.02)
         self.size = int(self.rect.width * 0.96)
         self.interface = Interface(
-            pos=(0, self.rect.height // 50), max_width=width, max_height=height,
+            pos=(0, self.rect.height // 70), max_width=width, max_height=height,
             indent=(0, self.rect.height // 100), size=(self.rect.width, (height - width) // 13)
         )
 
@@ -45,21 +42,24 @@ class LeftPanel(Panel):
         self.minimap = Minimap(
             (self.pad, self.rect.height - self.pad - self.size), self.size, self.size)
         # Интерфейс
-        self.system_time = TextMaxSizeCenter(
-            text=f"{datetime.datetime.now().strftime('%d/%m/%y %H:%M:%S')}", width=self.interface.width,
-            height=self.interface.height, pos=self.interface.pos, font_type=PT_MONO
-        )
-        self.interface.move(0)
-        self.running_line = RunningLineMaxSizeCenter(
-            text='пример текста', width=self.interface.width, height=self.interface.height,
-            pos=self.interface.pos, speed=30, font_type=PT_MONO
-        )
-        self.interface.move(0)
-        self.buttons = Buttons()
+        self.buttons = None
+        self.time = None
+        self.running_line = None
         self.pos_cursor = None
         self.button_file = None
         self.button_del_file = None
         self.button_info = None
+        self.processor = None
+        self.dial = None
+        #
+
+    def init(self, processor) -> None:
+        self.interface = Interface(
+            pos=(0, self.rect.height // 70), max_width=self.rect.width, max_height=self.rect.height,
+            indent=(0, self.rect.height // 100), size=(self.rect.width, (self.rect.height - self.rect.width) // 13)
+        )
+        self.buttons = Buttons()
+        self.processor = processor
         self.init_interface()
         self.update()
         self.render()
@@ -69,6 +69,27 @@ class LeftPanel(Panel):
             ['<', '>', '||', '►'], self.interface.width, self.interface.height, PT_MONO
         )
         width3, height = int(round(self.interface.width / 3, 0)), 2 * self.interface.height + self.interface.indent[1]
+        self.dial = Dial(self.interface.pos, self.interface.height, UPDATE_CHANGE_TIME,
+                         (255, 255, 255), (255, 255, 255))
+        self.time = TextMaxSizeCenter(
+            text=f"", width=self.interface.width - 2 * self.interface.height, height=self.interface.height,
+            pos=(self.interface.pos[0] + self.interface.height, self.interface.pos[1]), font_type=PT_MONO
+        )
+        self.buttons.add(ButtonTwoStates(
+            pos=(self.interface.width - self.interface.height, self.interface.pos[1]), width=self.interface.height,
+            height=self.interface.height,
+            func=self.processor.change, color_disabled=(30, 30, 30), color_active=(40, 40, 40),
+            text=TextMaxSizeCenter(text='||', width=self.interface.height, height=self.interface.height,
+                                   font_type=PT_MONO),
+            texts=('►', '||'), get_state=self.processor.get_state
+        ))
+        self.interface.move(0)
+        #
+        self.running_line = RunningLineMaxSizeCenter(
+            text='пример текста', width=self.interface.width, height=self.interface.height,
+            pos=self.interface.pos, speed=30, font_type=PT_MONO
+        )
+        self.interface.move(0)
         button = Button(
             pos=self.interface.pos, width=width3, height=height,
             func=self.music.previous, color_disabled=(30, 30, 30), color_active=(40, 40, 40),
@@ -128,7 +149,8 @@ class LeftPanel(Panel):
 
     def update(self) -> None:
         self.running_line.update(self.music.get_text())
-        self.system_time.set_text(f"{datetime.datetime.now().strftime('%d/%m/%y %H:%M:%S')}")
+        if self.processor:
+            self.time.set_text(f"{self.processor.tick_complete}")
         self.buttons.update_text()
 
     def update_cursor(self, pos_cursor: Tuple[int, int]) -> None:
@@ -145,7 +167,7 @@ class LeftPanel(Panel):
         self.surface.fill(self.color_background)
         #
         self.running_line.draw(self.surface)
-        self.system_time.draw(self.surface)
+        self.time.draw(self.surface)
         self.buttons.draw(self.surface)
         if self.button_file.func:
             self.button_file.draw(self.surface)
@@ -153,6 +175,8 @@ class LeftPanel(Panel):
             self.button_del_file.draw(self.surface)
         if self.button_info.func:
             self.button_info.draw(self.surface)
+        if self.processor:
+            self.dial.draw(self.surface, self.processor.tick_complete)
         self.minimap.draw(self.surface)
         self.pos_cursor.draw(self.surface)
 

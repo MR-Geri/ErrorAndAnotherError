@@ -33,9 +33,10 @@ class Text:
         self.rect.x, self.rect.y = self.pos
 
     def set_text(self, text: str) -> None:
-        self.text = text
-        self.__init__(text=text, pos=self.pos, font_color=self.font_color, font_type=self.font_type,
-                      font_size=self.font_size)
+        if text != self.text:
+            self.text = text
+            self.__init__(text=text, pos=self.pos, font_color=self.font_color, font_type=self.font_type,
+                          font_size=self.font_size)
 
     def draw(self, surface: pg.Surface) -> None:
         surface.blit(self.surface, self.rect)
@@ -63,8 +64,9 @@ class TextMaxSize:
             self.font_size += 1
 
     def set_text(self, text: str) -> None:
-        self.text = text
-        self.__init__(text, self.width, self.height, self.pos, self.font_color, self.font_type)
+        if text != self.text:
+            self.text = text
+            self.__init__(text, self.width, self.height, self.pos, self.font_color, self.font_type)
 
     def draw(self, surface: pg.Surface) -> None:
         surface.blit(self.surface, self.rect)
@@ -93,8 +95,10 @@ class TextCenter(Text):
             self.rect.y += (height - self.rect.height) // 2
 
     def set_text(self, text: str, font_size: int = None) -> None:
-        self.__init__(text=text, width=self.width, height=self.height, pos=self.pos, font_color=self.font_color,
-                      font_type=self.font_type, font_size=font_size if font_size else self.font_size)
+        if text != self.text:
+            self.text = text
+            self.__init__(text=text, width=self.width, height=self.height, pos=self.pos, font_color=self.font_color,
+                          font_type=self.font_type, font_size=font_size if font_size else self.font_size)
 
 
 class Texts:
