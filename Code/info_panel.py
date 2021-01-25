@@ -7,12 +7,12 @@ from Code.texts import TextMaxSizeCenter, max_size_list_text
 
 
 class Panel:
-    def __init__(self, width: int, height: int, pos: Tuple[int, int]) -> None:
+    def __init__(self, width: int, height: int, pos: Tuple[int, int], pad: int, size: int) -> None:
         self.rect = pg.Rect(*pos, width, height)
         self.surface = pg.Surface((self.rect.width, self.rect.height))
         self.color_background = pg.Color((128, 128, 128))
-        self.pad = int(self.rect.width * 0.02)
-        self.size = int(self.rect.width * 0.96)
+        self.pad = pad
+        self.size = size
         self.interface = Interface(
             pos=(0, self.rect.height // 70), max_width=width, max_height=height,
             indent=(0, self.rect.height // 100), size=(self.rect.width, (height - width) // 13)
@@ -35,8 +35,8 @@ class Panel:
 
 
 class LeftPanel(Panel):
-    def __init__(self, width: int, height: int, pos: Tuple[int, int], music: Music = None) -> None:
-        super().__init__(width, height, pos)
+    def __init__(self, width: int, height: int, pos: Tuple[int, int], pad: int, size: int, music: Music = None) -> None:
+        super().__init__(width, height, pos, pad, size)
         self.music = music
         # Миникарта
         self.minimap = Minimap(
@@ -191,13 +191,11 @@ class LeftPanel(Panel):
 
 
 class RightPanel(Panel):
-    def __init__(self, width: int, height: int, pos: Tuple[int, int], inventory) -> None:
-        super().__init__(width, height, pos)
+    def __init__(self, width: int, height: int, pos: Tuple[int, int], pad: int, size: int) -> None:
+        super().__init__(width, height, pos, pad, size)
         # Интерфейс
         self.info_update = None
-        # Инвентарь
-        self.inventory = inventory
-        self.inventory.init((self.pad, self.rect.height - self.pad - self.size), self.size, self.size)
+        self.inventory_settings = (pos[0] + pad, self.rect.height - pad - size), size, size
         #
         self.counter_line = 10
         self.lines = []
@@ -231,4 +229,3 @@ class RightPanel(Panel):
         #
         for line in self.lines:
             line.draw(self.surface)
-        self.inventory.draw(self.surface)

@@ -299,10 +299,12 @@ class GameWindow(Window):
         super().__init__(controller, size_display, caption)
         # Панели
         panel_width = self.win_width // INFO_PANEL_K
-        self.inventory = Inventory()
-        self.left_panel = LeftPanel(panel_width, self.win_height, pos=(0, 0), music=self.music)
-        self.right_panel = RightPanel(panel_width, self.win_height, pos=(self.win_width - panel_width, 0),
-                                      inventory=self.inventory)
+        pad, size = panel_width * 0.02, panel_width * 0.96
+        self.left_panel = LeftPanel(panel_width, self.win_height, pos=(0, 0), music=self.music, pad=pad, size=size)
+        self.right_panel = RightPanel(panel_width, self.win_height, pos=(self.win_width - panel_width, 0), pad=pad,
+                                      size=size)
+        self.inventory = Inventory(*self.right_panel.inventory_settings)
+        self.inventory_active = self.inventory
         # Масштабирование
         self.size_cell_min = int(
             min(self.win_width - 2 * panel_width, self.win_height) / max(SECTOR_X_NUMBER, SECTOR_Y_NUMBER))
@@ -414,11 +416,17 @@ class GameWindow(Window):
                             self.left_panel.button_info.func = entity.func_info
                         if entity.path_user_code.text:
                             self.left_panel.button_del_file.func = entity.func_del_file
+                        if entity.inventory and self.inventory_active != entity.inventory:
+                            self.inventory_active = entity.inventory
+                        elif not entity.inventory and self.inventory_active != self.inventory:
+                            self.inventory_active = self.inventory
                     except AttributeError:
                         pass
                     except Exception as e:
                         print(f'window -> click Exception: {e}')
                 else:
+                    if self.inventory_active != self.inventory:
+                        self.inventory_active = self.inventory
                     try:
                         self.left_panel.button_file.func = None
                         self.left_panel.button_info.func = None
@@ -440,6 +448,7 @@ class GameWindow(Window):
         self.dialog_file.draw(self.display)
         self.dialog_code_use.draw(self.display)
         self.dialog_state.draw(self.display)
+        self.inventory_active.draw(self.display)
 
     def update(self) -> None:
         pg.display.set_caption(str(self.clock.get_fps()))  # нужно для отладки. FPS в заголовок окна!
@@ -458,7 +467,7 @@ class GameWindow(Window):
                 self.left_panel.render_minimap(self.sector.surface)
             #
             self.sound.play()
-            self.right_panel.update()
+        self.right_panel.update()
         self.left_panel.update()
 
     def event(self) -> None:

@@ -117,8 +117,6 @@ class Sector:
                         pass
                     except IndexError:
                         pass
-                    except Exception as e:
-                        print(f'Processor base Exception -> {e}')
                     #
                     if entity.generator is not None and entity.permissions.can_generate:
                         entity.generator.update(tick_complete)
@@ -143,8 +141,6 @@ class Sector:
                     pass
                 except IndexError:
                     pass
-                except Exception as e:
-                    print(f'Processor robots Exception -> {e}')
         self.render()
 
     def place_base(self, x: int, y: int) -> None:  # pos: Tuple[int, int]

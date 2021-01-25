@@ -33,7 +33,8 @@ class Robot:
         self.hp_max = 0
         self.distance_move = 0
         self.sell_block = ['Mountain'] + STR_ORES
-        self.inventory = InventoryRobot(0)
+        self.max_inventory = 0
+        self.inventory = InventoryRobot(*self.right_panel.inventory_settings, max_items=self.max_inventory)
         # Заменяются версией робота
         self.sound_crash = PATH_CRASHES + 'MK0.wav'
         self.sound_move = PATH_MOVES + 'MK0.wav'
@@ -51,7 +52,7 @@ class Robot:
             'hp': self.hp,
             'energy': self.energy, 'energy_max': self.energy_max,
             'damage': self.dmg, 'dmg': self.dmg,
-            'sell_block': self.sell_block, 'distance_move': self.distance_move
+            'sell_block': self.sell_block, 'distance_move': self.distance_move, 'max_inventory': self.max_inventory,
         }
         for k, v in data.items():
             data[k] = type(v)(v)
@@ -88,8 +89,6 @@ class Robot:
         energy = f'Энергия > {self.energy}'
         hp = f'Прочность > {self.hp}'
         texts = [self.name, 'Уникальное имя', self.unique_name, energy, hp]
-        if not self.inventory.empty():
-            texts.extend([])
         self.right_panel.update_text(texts)
 
     def save(self) -> dict:
@@ -137,6 +136,7 @@ class Robot:
         self.dialog_state.show([
             f'Максмально энергии > {self.energy_max}', f'Дистанция перемещения > {self.distance_move}',
             f'Максимально прочности > {self.hp_max}', f'Наносимый урон > {self.dmg}',
+            f'Размер инвентаря > {self.max_inventory}',
         ])
 
 
@@ -154,7 +154,9 @@ class MK0(Robot):
         self.hp_max = 100
         self.distance_move = 1
         self.sell_block = ['Mountain'] + STR_ORES
-        self.inventory = InventoryRobot(50)
+        #
+        self.max_inventory = 50
+        self.inventory = InventoryRobot(*self.right_panel.inventory_settings, max_items=self.max_inventory)
 
     def render(self) -> None:
         self.surface = pg.Surface((self.size_cell, self.size_cell), pg.SRCALPHA)
@@ -176,7 +178,9 @@ class MK1(Robot):
         self.hp_max = 130
         self.distance_move = 1
         self.sell_block = ['Mountain'] + STR_ORES
-        self.inventory = InventoryRobot(100)
+        #
+        self.max_inventory = 150
+        self.inventory = InventoryRobot(*self.right_panel.inventory_settings, max_items=self.max_inventory)
 
     def render(self) -> None:
         self.surface = pg.Surface((self.size_cell, self.size_cell), pg.SRCALPHA)

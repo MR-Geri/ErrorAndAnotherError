@@ -18,6 +18,7 @@ class Base:
         self.dialog_state = dialog_state
         self.right_panel = right_panel
         self.left_panel = left_panel
+        self.inventory = None  # Не менять!
         # Функции пользователя
         self.energy_transfer = lambda *args, **kwargs: None
         # Состояния
