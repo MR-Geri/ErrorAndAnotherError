@@ -1,3 +1,5 @@
+import importlib
+
 from Code.settings import *
 
 from Code.dialogs import DialogInfo, DialogFile, DialogState
@@ -75,6 +77,76 @@ class Sector:
             self.entities.add(entity)
         self.render()
 
+    def get_board(self) -> list:
+        board = [[
+            {'name': x.__class__.__name__, 'energy_passage': int(x.energy_passage)}
+            for x in y] for y in self.board]
+        return board
+
+    def get_entities(self) -> list:
+        entities = self.entities.entities_sector
+        entities = [
+            [entities[y][x].get_state() if entities[y][x] is not None else None for x in entities[y]]
+            for y in entities
+        ]
+        return entities
+
+    def update(self, tick_complete) -> None:
+        board = self.get_board()
+        robots = []
+        for y in self.entities.entities_sector:
+            for x in self.entities.entities_sector[y]:
+                entity = self.entities.entities_sector[y][x]
+                type_ = type(entity)
+                if type_ in ROBOTS:
+                    robots.append(entity)
+                elif type_ in BASES:
+                    entities = self.get_entities()
+                    try:
+                        code = entity.path_user_code.code()
+                        if code:
+                            module = entity.path_user_code.module()
+                            if 'energy_transfer' in code:
+                                importlib.reload(importlib.import_module(module))
+                                entity.energy_transfer = importlib.import_module(module).energy_transfer
+                        data = entity.energy_transfer_core(board=board, entities=entities)
+                        if data:
+                            for energy, who_pos in data:
+                                self.energy_transfer(entity, energy, who_pos)
+                    except FileNotFoundError:
+                        pass
+                    except IndexError:
+                        pass
+                    except Exception as e:
+                        print(f'Processor base Exception -> {e}')
+                    #
+                    if entity.generator is not None and entity.permissions.can_generate:
+                        entity.generator.update(tick_complete)
+        if robots:
+            for entity in robots:
+                entities = self.get_entities()
+                try:
+                    code = entity.path_user_code.code()
+                    if code:
+                        module = entity.path_user_code.module()
+                        if 'move' in code:
+                            importlib.reload(importlib.import_module(module))
+                            entity.move = importlib.import_module(module).move
+                        if 'mine' in code:
+                            importlib.reload(importlib.import_module(module))
+                            entity.mine = importlib.import_module(module).mine
+                    #
+                    self.move(entity, entity.move_core(board=board, entities=entities))
+                    self.mine(entity, entity.mine_core(board=board, entities=entities))
+                    #
+                except FileNotFoundError:
+                    pass
+                except IndexError:
+                    pass
+                except Exception as e:
+                    print(f'Processor robots Exception -> {e}')
+        self.render()
+
     def place_base(self, x: int, y: int) -> None:  # pos: Tuple[int, int]
         if type(self.board[y][x]) not in SELL_BLOCKED and not self.base and \
                0 <= y < SECTOR_Y_NUMBER and 0 <= x < SECTOR_X_NUMBER:
@@ -88,15 +160,18 @@ class Sector:
             else:
                 self.dialog_info.show(['Неподходящая поверхность для базы'])
 
-    def energy_transfer(self, energy: int, pos: Tuple[int, int]) -> None:
-        if abs(self.base.pos[0] - pos[0]) <= self.base.distance_charging and \
-                abs(self.base.pos[1] - pos[1]) <= self.base.distance_charging and self.base.energy >= energy and \
-                self.base.energy_max_charging >= energy:
-            if self.base.permissions.can_charging:
-                if self.entities.entities_sector[pos[1]][pos[0]] is not None:
-                    self.entities.entities_sector[pos[1]][pos[0]].energy_receiving(energy)
-                self.base.energy_decrease(energy)
-                self.sound.add(self.base.sound_charge)
+    def energy_transfer(self, entity, energy: int, pos: Tuple[int, int]) -> None:
+        if energy > 0 and pos:
+            ent = self.entities.entities_sector[pos[1]][pos[0]]
+            if ent.__class__.__name__ in entity.energy_possibility or ent is None:
+                if abs(self.base.pos[0] - pos[0]) <= self.base.distance_charging and \
+                        abs(self.base.pos[1] - pos[1]) <= self.base.distance_charging and self.base.energy >= energy \
+                        and self.base.energy_max_charging >= energy:
+                    if self.base.permissions.can_charging:
+                        if self.entities.entities_sector[pos[1]][pos[0]] is not None:
+                            self.entities.entities_sector[pos[1]][pos[0]].energy_receiving(energy)
+                        self.base.energy_decrease(energy)
+                        self.sound.add(self.base.sound_charge)
 
     def create_robot(self, robot: ALL_ROBOT) -> None:
         n_x, k_x = self.base.pos[0] - self.base.distance_create, self.base.pos[0] + self.base.distance_create + 1
@@ -118,22 +193,32 @@ class Sector:
         self.dialog_info.show(['Вокруг базы нет места', 'для нового объекта'])
 
     def move(self, entity, pos: Tuple[int, int]) -> None:
-        entities_sector = self.entities.entities_sector
-        x, y = entity.pos
-        if entity.distance_move >= abs(pos[1] - y) and entity.distance_move >= abs(pos[0] - x) and pos != (x, y) and \
-                entities_sector[y][x] is not None and 0 <= pos[0] < SECTOR_X_NUMBER and \
-                0 <= pos[1] < SECTOR_Y_NUMBER:
-            if type(entities_sector[pos[1]][pos[0]]) in BASES:
-                self.sound.add(entities_sector[y][x].sound_crash)
-                entities_sector[y][x] = None
-            elif entity.energy >= self.board[pos[1]][pos[0]].energy_passage:
-                entity.energy -= self.board[pos[1]][pos[0]].energy_passage
-                entities_sector[y][x] = None
-                if entities_sector[pos[1]][pos[0]] is not None:
-                    self.sound.add(entities_sector[pos[1]][pos[0]].sound_crash)
-                entity.pos_update(pos)
-                entities_sector[pos[1]][pos[0]] = entity
-                self.sound.add(entities_sector[pos[1]][pos[0]].sound_move)
+        if pos and self.board[pos[1]][pos[0]].__class__.__name__ not in entity.sell_block:
+            entities_sector = self.entities.entities_sector
+            x, y = entity.pos
+            if entity.distance_move >= abs(pos[1] - y) and entity.distance_move >= abs(pos[0] - x) \
+                    and pos != (x, y) and entities_sector[y][x] is not None and 0 <= pos[0] < SECTOR_X_NUMBER and \
+                    0 <= pos[1] < SECTOR_Y_NUMBER:
+                if type(entities_sector[pos[1]][pos[0]]) in BASES:
+                    self.sound.add(entities_sector[y][x].sound_crash)
+                    entities_sector[y][x] = None
+                elif entity.energy >= self.board[pos[1]][pos[0]].energy_passage:
+                    entity.energy -= self.board[pos[1]][pos[0]].energy_passage
+                    entities_sector[y][x] = None
+                    if entities_sector[pos[1]][pos[0]] is not None:
+                        self.sound.add(entities_sector[pos[1]][pos[0]].sound_crash)
+                    entity.pos_update(pos)
+                    entities_sector[pos[1]][pos[0]] = entity
+                    self.sound.add(entities_sector[pos[1]][pos[0]].sound_move)
+
+    def mine(self, entity, pos: Tuple[int, int]) -> None:
+        if pos and self.board[pos[1]][pos[0]].__class__.__name__ in STR_ORES:
+            x, y = entity.pos
+            if abs(pos[1] - y) <= 1 and abs(pos[0] - x) <= 1 and \
+                    0 <= pos[0] < SECTOR_X_NUMBER and 0 <= pos[1] < SECTOR_Y_NUMBER:
+                cell = self.board[pos[1]][pos[0]]
+                entity.inventory.update(resource=cell.ore, quantity=cell.ore_quantity)
+                self.sound.add(entity.sound_mine)
 
     def render(self) -> None:
         self.surface.fill(pg.Color(COLOR_BACKGROUND))

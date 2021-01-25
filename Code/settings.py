@@ -34,6 +34,7 @@ MENU_BACKGROUND = '../Data/Images/game.jpg'
 PATH_CRASHES = '../Data/Sounds/crashes/'
 PATH_MOVES = '../Data/Sounds/moves/'
 PATH_CHARGE = '../Data/Sounds/charge/'
+PATH_MINES = '../Data/Sounds/mines/'
 ALL_BACKGROUND_MUSIC = [[root + i for i in files] for root, _, files in walk('../Data/Sounds/background_music/')][0]
 
 PLAYER_CODE = '../Game_code/'
@@ -52,6 +53,7 @@ STR_TO_OBJECT['Swamp'] = Swamp
 STR_TO_OBJECT['Mountain'] = Mountain
 STR_TO_OBJECT['IronOre'] = IronOre
 ALL_CELL = Union[Plain, Swamp, Mountain, IronOre]
+STR_ORES = ['IronOre']
 from Code.sector_objects.robots import MK0, MK1
 STR_TO_OBJECT['MK0'] = MK0
 STR_TO_OBJECT['MK1'] = MK1

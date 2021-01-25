@@ -70,4 +70,6 @@ class IronOre(Cell):
         self.energy_passage = 20
         self.texts = [self.name, f'Для перемещения', f'энергии > {self.energy_passage}', 'Можно разместить',
                       '<Шахта>']
+        self.ore = 'Железо'
+        self.ore_quantity = 10
         super().__init__(number_x, number_y, size_cell, panel)

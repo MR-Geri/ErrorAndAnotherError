@@ -1,3 +1,4 @@
+from Code.inventory import InventoryRobot
 from Code.settings import *
 from Code.utils import Path, PermissionsRobot
 from Code.dialogs import DialogInfo, DialogFile, DialogState
@@ -18,8 +19,25 @@ class Robot:
         self.unique_name = str(randint(1000000, 9999999))
         # Функции пользователя
         self.move = lambda *args, **kwargs: None
+        self.mine = lambda *args, **kwargs: None
         # Состояния
         self.permissions = PermissionsRobot()
+        self.path_user_code = Path('')
+        # Заменяются версией робота
+        self.name = 'Робот'
+        self.energy = 0
+        self.energy_max = 0
+        self.energy_create = 0
+        self.dmg = 0
+        self.hp = 0
+        self.hp_max = 0
+        self.distance_move = 0
+        self.sell_block = ['Mountain'] + STR_ORES
+        self.inventory = InventoryRobot(0)
+        # Заменяются версией робота
+        self.sound_crash = PATH_CRASHES + 'MK0.wav'
+        self.sound_move = PATH_MOVES + 'MK0.wav'
+        self.sound_mine = PATH_MINES + 'MK0.mp3'
         #
         self.rect = pg.Rect(self.pos[0] * self.size_cell, self.pos[1] * self.size_cell, self.size_cell, self.size_cell)
         self.surface = pg.Surface((self.size_cell, self.size_cell), pg.SRCALPHA)
@@ -58,6 +76,11 @@ class Robot:
         # ВЛИЯЕТ пользователь
         if self.permissions.can_move:
             return self.move(self.get_state(), board, entities)
+        return None
+
+    def mine_core(self, board, entities) -> Union[None, Tuple[int, int]]:
+        if self.permissions.can_mine:
+            return self.mine(self.get_state(), board, entities)
         return None
 
     def info(self) -> None:
@@ -111,7 +134,7 @@ class Robot:
     def func_info(self) -> None:
         self.dialog_state.show([
             f'Максмально энергии > {self.energy_max}', f'Дистанция перемещения > {self.distance_move}',
-            f'Максимально прочности > {self.hp_max}', f'Наносимый урон > {self.dmg}'
+            f'Максимально прочности > {self.hp_max}', f'Наносимый урон > {self.dmg}',
         ])
 
 
@@ -119,7 +142,7 @@ class MK0(Robot):
     def __init__(self, pos: Tuple[int, int], size_cell: int,
                  dialog_info: DialogInfo, dialog_file: DialogFile, dialog_state: DialogState,
                  right_panel: RightPanel, left_panel: LeftPanel) -> None:
-        self.path_user_code = Path('')
+        super().__init__(pos, size_cell, dialog_info, dialog_file, dialog_state, right_panel, left_panel)
         self.name = 'Робот MK0'
         self.energy = 50
         self.energy_max = 200
@@ -128,11 +151,8 @@ class MK0(Robot):
         self.hp = 100
         self.hp_max = 100
         self.distance_move = 1
-        self.sell_block = ['Mountain']
-        #
-        self.sound_crash = PATH_CRASHES + 'MK0.wav'
-        self.sound_move = PATH_MOVES + 'MK0.wav'
-        super().__init__(pos, size_cell, dialog_info, dialog_file, dialog_state, right_panel, left_panel)
+        self.sell_block = ['Mountain'] + STR_ORES
+        self.inventory = InventoryRobot(50)
 
     def render(self) -> None:
         self.surface = pg.Surface((self.size_cell, self.size_cell), pg.SRCALPHA)
@@ -144,7 +164,7 @@ class MK1(Robot):
     def __init__(self, pos: Tuple[int, int], size_cell: int,
                  dialog_info: DialogInfo, dialog_file: DialogFile, dialog_state: DialogState,
                  right_panel: RightPanel, left_panel: LeftPanel) -> None:
-        self.path_user_code = Path('')
+        super().__init__(pos, size_cell, dialog_info, dialog_file, dialog_state, right_panel, left_panel)
         self.name = 'Робот MK1'
         self.energy = 100
         self.energy_max = 400
@@ -153,11 +173,8 @@ class MK1(Robot):
         self.hp = 130
         self.hp_max = 130
         self.distance_move = 1
-        self.sell_block = ['Mountain']
-        #
-        self.sound_crash = PATH_CRASHES + 'MK0.wav'
-        self.sound_move = PATH_MOVES + 'MK0.wav'
-        super().__init__(pos, size_cell, dialog_info, dialog_file, dialog_state, right_panel, left_panel)
+        self.sell_block = ['Mountain'] + STR_ORES
+        self.inventory = InventoryRobot(100)
 
     def render(self) -> None:
         self.surface = pg.Surface((self.size_cell, self.size_cell), pg.SRCALPHA)

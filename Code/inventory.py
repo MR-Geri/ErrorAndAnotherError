@@ -65,3 +65,24 @@ class Inventory:
                                      width=w10, height=interface.height, font_type=PT_MONO)
             text.draw(self.surface)
             interface.move(0)
+
+
+class InventoryRobot:
+    def __init__(self, max_items: int) -> None:
+        self.max_items = max_items
+        #
+        self.resources = {
+            'Железо': {'обработано': 0, 'сырьё': 0},
+            'Сталь': {'обработано': 0, 'сырьё': 0},
+            'Золото': {'обработано': 0, 'сырьё': 0},
+            'Медь': {'обработано': 0, 'сырьё': 0},
+            'Олово': {'обработано': 0, 'сырьё': 0},
+            'Кремний': {'обработано': 0, 'сырьё': 0},
+            'Платина': {'обработано': 0, 'сырьё': 0},
+        }
+
+    def update(self, resource: str, condition: bool = False, quantity: int = 0) -> None:
+        condition = 'обработано' if condition else 'сырьё'
+        temp = self.resources[resource][condition] + quantity
+        if sum([sum(i.values()) for i in self.resources.values()]) + quantity <= self.max_items and temp >= 0:
+            self.resources[resource][condition] = temp
