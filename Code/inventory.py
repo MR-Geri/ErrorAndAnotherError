@@ -86,3 +86,8 @@ class InventoryRobot:
         temp = self.resources[resource][condition] + quantity
         if sum([sum(i.values()) for i in self.resources.values()]) + quantity <= self.max_items and temp >= 0:
             self.resources[resource][condition] = temp
+
+    def empty(self) -> bool:
+        if sum([sum(i.values()) for i in self.resources.values()]) != 0:
+            return True
+        return False

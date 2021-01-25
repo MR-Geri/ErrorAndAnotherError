@@ -88,6 +88,8 @@ class Robot:
         energy = f'Энергия > {self.energy}'
         hp = f'Прочность > {self.hp}'
         texts = [self.name, 'Уникальное имя', self.unique_name, energy, hp]
+        if not self.inventory.empty():
+            texts.extend([])
         self.right_panel.update_text(texts)
 
     def save(self) -> dict:
