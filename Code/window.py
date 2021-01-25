@@ -172,7 +172,7 @@ class SettingsWindow(Window):
         super().__init__(controller, size_display, caption)
         self.interface = Interface(
             pos=(10, 10), max_width=self.win_width, max_height=self.win_height,
-            indent=(0, self.win_height // 100), size=(self.win_width - 20, (self.win_height - 20) // 13))
+            indent=(0, self.win_height // 100), size=(self.win_width - 20, (self.win_height - 20) // 14))
         self.sound = controller.sound
         self.sliders = Sliders()
         self.buttons = Buttons()
@@ -192,6 +192,7 @@ class SettingsWindow(Window):
                 self.controller.volume_sound['crashes'].set_value(data['crashes'])
                 self.controller.volume_sound['moves'].set_value(data['moves'])
                 self.controller.volume_sound['charge'].set_value(data['charge'])
+                self.controller.volume_sound['mine'].set_value(data['mine'])
         except:
             pass
 
@@ -248,7 +249,8 @@ class SettingsWindow(Window):
             func=self.music
         ))
         self.interface.move(0)
-        data = ['Громкость звуков разрушения', 'Громкость звуков передвижение', 'Громкость звуков зарядки']
+        data = ['Громкость звуков разрушения', 'Громкость звуков передвижение', 'Громкость звуков зарядки',
+                'Громкость добычи ресурсов']
         for ind, el in enumerate(self.sound.volumes.keys()):
             self.texts.add(TextMaxSizeCenter(
                 text=data[ind], width=self.interface.width, height=self.interface.height,
@@ -443,12 +445,13 @@ class GameWindow(Window):
         self.sector.draw(self.display, self.camera.get_cord())
         self.left_panel.draw(self.display)
         self.right_panel.draw(self.display)
-        self.esc_menu.draw(self.display)
+        self.inventory_active.draw(self.display)
+        #
         self.dialog_info.draw(self.display)
         self.dialog_file.draw(self.display)
         self.dialog_code_use.draw(self.display)
         self.dialog_state.draw(self.display)
-        self.inventory_active.draw(self.display)
+        self.esc_menu.draw(self.display)
 
     def update(self) -> None:
         pg.display.set_caption(str(self.clock.get_fps()))  # нужно для отладки. FPS в заголовок окна!

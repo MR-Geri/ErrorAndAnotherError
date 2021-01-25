@@ -15,7 +15,9 @@ class Controller:
         self.volume_sound = {
             'crashes': Numbers(0, 1, 0.01, round(1 / 16, 3)),
             'moves': Numbers(0, 1, 0.01, round(1 / 16, 3)),
-            'charge': Numbers(0, 1, 0.01, round(1 / 16, 3))}
+            'charge': Numbers(0, 1, 0.01, round(1 / 16, 3)),
+            'mine': Numbers(0, 1, 0.01, round(1 / 16, 3))
+        }
         self.music = Music(path=ALL_BACKGROUND_MUSIC, volume=self.volume.value)
         self.sound = Sound(self.volume_sound)
         self.permission = Permission(active=display_size)
