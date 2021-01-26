@@ -133,10 +133,13 @@ class Sector:
                         if 'mine' in code:
                             importlib.reload(importlib.import_module(module))
                             entity.mine = importlib.import_module(module).mine
+                        if 'transfer' in code:
+                            importlib.reload(importlib.import_module(module))
+                            entity.transfer = importlib.import_module(module).transfer
                     #
                     self.move(entity, entity.move_core(board=board, entities=entities))
                     self.mine(entity, entity.mine_core(board=board, entities=entities))
-                    self.transfer(entity, *entity.transfer_core(board=board, entities=entities))
+                    self.transfer(entity, entity.transfer_core(board=board, entities=entities))
                     #
                 except FileNotFoundError:
                     pass
@@ -217,9 +220,14 @@ class Sector:
                 entity.inventory.update(resource=cell.ore, quantity=cell.ore_quantity)
                 self.sound.add(entity.sound_mine)
 
-    def transfer(self, entity, pos: Tuple[int, int], resource: str, condition: str, quantity: int) -> None:
-        if resource in entity.inventory and (condition == 'сырьё' or condition == 'обработано'):
-            print(self.board)
+    def transfer(self, entity, data: Union[None, tuple]) -> None:
+        if data:
+            pos, resource, condition, quantity = data
+            if entity and self.entities.entities_sector[pos[1]][pos[0]].inventory \
+                    and resource in entity.inventory and (condition == 'сырьё' or condition == 'обработано') \
+                    and entity.inventory[resource][condition] >= quantity:
+                entity.inventory.update(resource, condition, -quantity)
+                self.entities.entities_sector[pos[1]][pos[0]].inventory.update(resource, condition, quantity)
 
     def render(self) -> None:
         self.surface.fill(pg.Color(COLOR_BACKGROUND))
