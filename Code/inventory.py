@@ -34,12 +34,6 @@ class Inventory:
             return True
         return False
 
-    def save(self) -> None:
-        pass
-
-    def load(self) -> None:
-        pass
-
     def update(self, resource: str, condition: Union[str, bool] = False, quantity: int = 0) -> None:
         if type(condition) == bool:
             condition = 'обработано' if condition else 'сырьё'

@@ -146,8 +146,6 @@ class Sector:
                     pass
                 except IndexError:
                     pass
-                # except Exception as e:
-                #     print(e)
         self.render()
 
     def place_base(self, x: int, y: int) -> None:  # pos: Tuple[int, int]

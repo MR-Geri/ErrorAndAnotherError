@@ -83,7 +83,7 @@ class Base:
             'hp': self.hp, 'hp_max': self.hp_max,
             'distance_create': self.distance_create, 'distance_charging': self.distance_charging,
             'generator': self.generator.__class__.__name__, 'generator_resource': self.generator.resource,
-            'permissions': self.permissions.get_state()}
+            'permissions': self.permissions.get_state(), 'inventory': self.inventory.resources}
         return state
 
     def load(self, state: dict):
@@ -97,6 +97,7 @@ class Base:
         self.distance_charging = state['distance_charging']
         self.energy_max_charging = state['energy_max_charging']
         self.generator = STR_TO_OBJECT[state['generator']](self.energy_increase, state['generator_resource'])
+        self.inventory.set_resources(state['inventory'])
         self.permissions = PermissionsBase(state['permissions'])
 
     def scale(self, size_cell: int) -> None:
