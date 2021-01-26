@@ -216,6 +216,10 @@ class Sector:
                 entity.inventory.update(resource=cell.ore, quantity=cell.ore_quantity)
                 self.sound.add(entity.sound_mine)
 
+    def transfer(self, entity, pos: Tuple[int, int], resource: str, condition: str, quantity: int) -> None:
+        if resource in entity.inventory and (condition == 'сырьё' or condition == 'обработано'):
+            pass
+
     def render(self) -> None:
         self.surface.fill(pg.Color(COLOR_BACKGROUND))
         for cells in self.board:

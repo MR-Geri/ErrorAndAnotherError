@@ -66,10 +66,11 @@ class Path:
 class PermissionsRobot:
     def __init__(self, states: dict = None) -> None:
         if states is None:
-            states = {'can_move': True, 'can_charging': True, 'can_mine': True}
+            states = {'can_move': True, 'can_charging': True, 'can_mine': True, 'can_transfer': True}
         self.can_move = states['can_move']
         self.can_charging = states['can_charging']
         self.can_mine = states['can_mine']
+        self.can_transfer = states['can_transfer']
 
     def set_move(self, flag: bool) -> None:
         self.can_move = flag
@@ -79,6 +80,9 @@ class PermissionsRobot:
 
     def set_mine(self, flag: bool) -> None:
         self.can_mine = flag
+
+    def set_transfer(self, flag: bool) -> None:
+        self.can_transfer = flag
 
     def get_state(self) -> dict:
         return {'can_move': self.can_move, 'can_charging': self.can_charging, 'can_mine': self.can_mine}

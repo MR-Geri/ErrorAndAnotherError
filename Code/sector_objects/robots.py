@@ -20,6 +20,7 @@ class Robot:
         # Функции пользователя
         self.move = lambda *args, **kwargs: None
         self.mine = lambda *args, **kwargs: None
+        self.transfer = lambda *args, **kwargs: None
         # Состояния
         self.permissions = PermissionsRobot()
         self.path_user_code = Path('')
@@ -81,8 +82,15 @@ class Robot:
         return None
 
     def mine_core(self, board, entities) -> Union[None, Tuple[int, int]]:
+        # ВЛИЯЕТ пользователь
         if self.permissions.can_mine:
             return self.mine(self.get_state(), board, entities)
+        return None
+
+    def transfer_core(self, board, entities) -> Union[None, Tuple[int, int]]:
+        # ВЛИЯЕТ пользователь
+        if self.permissions.can_transfer:
+            return self.transfer(self.get_state(), board, entities)
         return None
 
     def info(self) -> None:
@@ -112,7 +120,7 @@ class Robot:
         self.hp_max = state['hp_max']
         self.dmg = state['dmg']
         self.distance_move = state['distance_move']
-        self.inventory.resources = state['inventory']
+        self.inventory.set_resources(state['inventory'])
         #
         self.permissions = PermissionsRobot(state['permissions'])
 
@@ -138,7 +146,7 @@ class Robot:
 
     def func_info(self) -> None:
         self.dialog_state.show([
-            f'Максмально энергии > {self.energy_max}', f'Дистанция перемещения > {self.distance_move}',
+            f'Максимально энергии > {self.energy_max}', f'Дистанция перемещения > {self.distance_move}',
             f'Максимально прочности > {self.hp_max}', f'Наносимый урон > {self.dmg}',
             f'Размер инвентаря > {self.inventory_max}',
         ])

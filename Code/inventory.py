@@ -42,7 +42,7 @@ class Inventory:
 
     def update(self, resource: str, condition: bool = False, quantity: int = 0) -> None:
         condition = 'обработано' if condition else 'сырьё'
-        if 1000000 >= self.resources[resource][condition] + quantity >= 0:
+        if 100000 >= self.resources[resource][condition] + quantity >= 0:
             self.resources[resource][condition] += quantity
             self.texts[resource][condition].set_text(f'{self.resources[resource][condition]}')
             self.render()
@@ -91,6 +91,10 @@ class Inventory:
                 texts.extend(list(i.values()))
             for text in texts:
                 text.draw(self.surface)
+
+    def set_resources(self, resource: dict) -> None:
+        self.resources = resource
+        self.render_init()
 
     def draw(self, surface: pg.Surface) -> None:
         surface.blit(self.surface, self.rect)
