@@ -136,6 +136,7 @@ class Sector:
                     #
                     self.move(entity, entity.move_core(board=board, entities=entities))
                     self.mine(entity, entity.mine_core(board=board, entities=entities))
+                    self.transfer(entity, *entity.transfer_core(board=board, entities=entities))
                     #
                 except FileNotFoundError:
                     pass
@@ -218,7 +219,7 @@ class Sector:
 
     def transfer(self, entity, pos: Tuple[int, int], resource: str, condition: str, quantity: int) -> None:
         if resource in entity.inventory and (condition == 'сырьё' or condition == 'обработано'):
-            pass
+            print(self.board)
 
     def render(self) -> None:
         self.surface.fill(pg.Color(COLOR_BACKGROUND))

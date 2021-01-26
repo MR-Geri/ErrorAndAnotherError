@@ -85,7 +85,8 @@ class PermissionsRobot:
         self.can_transfer = flag
 
     def get_state(self) -> dict:
-        return {'can_move': self.can_move, 'can_charging': self.can_charging, 'can_mine': self.can_mine}
+        return {'can_move': self.can_move, 'can_charging': self.can_charging, 'can_mine': self.can_mine,
+                'can_transfer': self.can_transfer}
 
 
 class PermissionsBase:
