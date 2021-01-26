@@ -305,8 +305,7 @@ class GameWindow(Window):
         self.left_panel = LeftPanel(panel_width, self.win_height, pos=(0, 0), music=self.music, pad=pad, size=size)
         self.right_panel = RightPanel(panel_width, self.win_height, pos=(self.win_width - panel_width, 0), pad=pad,
                                       size=size)
-        self.inventory = Inventory(*self.right_panel.inventory_settings)
-        self.inventory_active = self.inventory
+        self.inventory_active = None
         # Масштабирование
         self.size_cell_min = int(
             min(self.win_width - 2 * panel_width, self.win_height) / max(SECTOR_X_NUMBER, SECTOR_Y_NUMBER))
@@ -325,7 +324,7 @@ class GameWindow(Window):
         self.sector = Sector(
             number_x=SECTOR_X_NUMBER, number_y=SECTOR_Y_NUMBER, size_cell=self.size_cell, sound=self.sound,
             dialog_info=self.dialog_info, dialog_file=self.dialog_file, dialog_state=self.dialog_state,
-            right_panel=self.right_panel, left_panel=self.left_panel)
+            right_panel=self.right_panel, left_panel=self.left_panel, inventory_active=self.inventory_active)
         #
         self.camera = Camera(
             SECTOR_X_NUMBER * self.size_cell,
@@ -420,15 +419,16 @@ class GameWindow(Window):
                             self.left_panel.button_del_file.func = entity.func_del_file
                         if entity.inventory and self.inventory_active != entity.inventory:
                             self.inventory_active = entity.inventory
-                        elif not entity.inventory and self.inventory_active != self.inventory:
-                            self.inventory_active = self.inventory
+                        elif self.sector.base.inventory and not entity.inventory and \
+                                self.inventory_active != self.sector.base.inventory:
+                            self.inventory_active = self.sector.base.inventory
                     except AttributeError:
                         pass
                     except Exception as e:
                         print(f'window -> click Exception: {e}')
                 else:
-                    if self.inventory_active != self.inventory:
-                        self.inventory_active = self.inventory
+                    if self.sector.base and self.inventory_active != self.sector.base.inventory:
+                        self.inventory_active = self.sector.base.inventory
                     try:
                         self.left_panel.button_file.func = None
                         self.left_panel.button_info.func = None
@@ -445,7 +445,8 @@ class GameWindow(Window):
         self.sector.draw(self.display, self.camera.get_cord())
         self.left_panel.draw(self.display)
         self.right_panel.draw(self.display)
-        self.inventory_active.draw(self.display)
+        if self.inventory_active:
+            self.inventory_active.draw(self.display)
         #
         self.dialog_info.draw(self.display)
         self.dialog_file.draw(self.display)

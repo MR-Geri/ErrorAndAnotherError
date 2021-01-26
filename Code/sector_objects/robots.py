@@ -35,6 +35,7 @@ class Robot:
         self.distance_move = 0
         self.sell_block = ['Mountain'] + STR_ORES
         self.inventory_max = 0
+        self.distance_resource = 0
         self.inventory = InventoryRobot(*self.right_panel.inventory_settings, max_items=self.inventory_max)
         # Заменяются версией робота
         self.sound_crash = PATH_CRASHES + 'MK0.wav'
@@ -54,7 +55,7 @@ class Robot:
             'energy': self.energy, 'energy_max': self.energy_max,
             'damage': self.dmg, 'dmg': self.dmg,
             'sell_block': self.sell_block, 'distance_move': self.distance_move, 'inventory_max': self.inventory_max,
-            'inventory': self.inventory.resources
+            'distance_resource': self.distance_resource, 'inventory': self.inventory.resources
         }
         for k, v in data.items():
             data[k] = type(v)(v)
@@ -106,7 +107,7 @@ class Robot:
             'path_user_code': self.path_user_code.text, 'name': self.__class__.__name__, 'energy': self.energy,
             'energy_max': self.energy_max, 'dmg': self.dmg, 'hp': self.hp, 'hp_max': self.hp_max,
             'distance_move': self.distance_move, 'permissions': self.permissions.get_state(),
-            'inventory': self.inventory.resources
+            'distance_resource': self.distance_resource, 'inventory': self.inventory.resources
         }
         return state
 
@@ -120,6 +121,7 @@ class Robot:
         self.hp_max = state['hp_max']
         self.dmg = state['dmg']
         self.distance_move = state['distance_move']
+        self.distance_resource = state['distance_resource']
         self.inventory.set_resources(state['inventory'])
         #
         self.permissions = PermissionsRobot(state['permissions'])
@@ -148,7 +150,7 @@ class Robot:
         self.dialog_state.show([
             f'Максимально энергии > {self.energy_max}', f'Дистанция перемещения > {self.distance_move}',
             f'Максимально прочности > {self.hp_max}', f'Наносимый урон > {self.dmg}',
-            f'Размер инвентаря > {self.inventory_max}',
+            f'Размер инвентаря > {self.inventory_max}', f'Дистанция передачи предметов > {self.distance_resource}'
         ])
 
 
@@ -168,6 +170,7 @@ class MK0(Robot):
         self.sell_block = ['Mountain'] + STR_ORES
         #
         self.inventory_max = 50
+        self.distance_resource = 1
         self.inventory = InventoryRobot(*self.right_panel.inventory_settings, max_items=self.inventory_max)
 
     def render(self) -> None:
@@ -192,6 +195,7 @@ class MK1(Robot):
         self.sell_block = ['Mountain'] + STR_ORES
         #
         self.inventory_max = 150
+        self.distance_resource = 1
         self.inventory = InventoryRobot(*self.right_panel.inventory_settings, max_items=self.inventory_max)
 
     def render(self) -> None:

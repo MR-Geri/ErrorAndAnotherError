@@ -1,3 +1,4 @@
+from Code.inventory import Inventory
 from Code.settings import *
 from Code.utils import Path, PermissionsBase
 from Code.dialogs import DialogInfo, DialogFile, DialogState
@@ -18,7 +19,7 @@ class Base:
         self.dialog_state = dialog_state
         self.right_panel = right_panel
         self.left_panel = left_panel
-        self.inventory = None  # Не менять!
+        self.inventory = Inventory(*self.right_panel.inventory_settings)
         # Функции пользователя
         self.energy_transfer = lambda *args, **kwargs: None
         # Состояния

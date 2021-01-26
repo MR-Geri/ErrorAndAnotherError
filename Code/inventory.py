@@ -40,8 +40,9 @@ class Inventory:
     def load(self) -> None:
         pass
 
-    def update(self, resource: str, condition: bool = False, quantity: int = 0) -> None:
-        condition = 'обработано' if condition else 'сырьё'
+    def update(self, resource: str, condition: Union[str, bool] = False, quantity: int = 0) -> None:
+        if type(condition) == bool:
+            condition = 'обработано' if condition else 'сырьё'
         if 100000 >= self.resources[resource][condition] + quantity >= 0:
             self.resources[resource][condition] += quantity
             self.texts[resource][condition].set_text(f'{self.resources[resource][condition]}')
@@ -105,8 +106,9 @@ class InventoryRobot(Inventory):
         self.max_items = max_items
         super().__init__(pos, width, height)
 
-    def update(self, resource: str, condition: bool = False, quantity: int = 0) -> None:
-        condition = 'обработано' if condition else 'сырьё'
+    def update(self, resource: str, condition: Union[str, bool] = False, quantity: int = 0) -> None:
+        if type(condition) == bool:
+            condition = 'обработано' if condition else 'сырьё'
         temp = self.resources[resource][condition] + quantity
         if sum([sum(i.values()) for i in self.resources.values()]) + quantity <= self.max_items and temp >= 0:
             self.resources[resource][condition] = temp

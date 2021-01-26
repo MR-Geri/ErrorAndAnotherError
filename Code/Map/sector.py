@@ -13,7 +13,7 @@ from Code.sound import Sound
 class Sector:
     def __init__(self, number_x: int, number_y: int, size_cell: int, sound: Sound, dialog_info: DialogInfo,
                  dialog_file: DialogFile, dialog_state: DialogState,
-                 right_panel: RightPanel, left_panel: LeftPanel) -> None:
+                 right_panel: RightPanel, left_panel: LeftPanel, inventory_active) -> None:
         self.number_x, self.number_y = number_x, number_y  # Длина и высота сектора в единицах
         self.size_cell = size_cell
         self.size_sector = (number_x * size_cell, number_y * size_cell)
@@ -26,6 +26,7 @@ class Sector:
         self.dialog_state = dialog_state
         self.right_panel = right_panel
         self.left_panel = left_panel
+        self.inventory_active = inventory_active
         # Инициализация
         self.gen_board()
         #
@@ -145,6 +146,8 @@ class Sector:
                     pass
                 except IndexError:
                     pass
+                # except Exception as e:
+                #     print(e)
         self.render()
 
     def place_base(self, x: int, y: int) -> None:  # pos: Tuple[int, int]
@@ -153,6 +156,7 @@ class Sector:
             self.base = Base(pos=(x, y), size_cell=self.size_cell, board=self.board, entities=self.entities,
                              dialog_info=self.dialog_info, dialog_file=self.dialog_file, dialog_state=self.dialog_state,
                              right_panel=self.right_panel, left_panel=self.left_panel)
+            self.inventory_active = self.base.inventory
             self.entities.add(self.base)
         else:
             if self.base:
@@ -223,9 +227,12 @@ class Sector:
     def transfer(self, entity, data: Union[None, tuple]) -> None:
         if data:
             pos, resource, condition, quantity = data
-            if entity and self.entities.entities_sector[pos[1]][pos[0]].inventory \
-                    and resource in entity.inventory and (condition == 'сырьё' or condition == 'обработано') \
-                    and entity.inventory[resource][condition] >= quantity:
+            if entity and self.entities.entities_sector[pos[1]][pos[0]] and \
+                    self.entities.entities_sector[pos[1]][pos[0]].inventory and resource in entity.inventory.resources \
+                    and (condition == 'сырьё' or condition == 'обработано') \
+                    and entity.inventory.resources[resource][condition] >= quantity \
+                    and abs(pos[0] - entity.pos[0]) <= entity.distance_resource \
+                    and abs(pos[1] - entity.pos[1]) <= entity.distance_resource:
                 entity.inventory.update(resource, condition, -quantity)
                 self.entities.entities_sector[pos[1]][pos[0]].inventory.update(resource, condition, quantity)
 
