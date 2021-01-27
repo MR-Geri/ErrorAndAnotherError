@@ -19,9 +19,9 @@ class Base:
         self.dialog_state = dialog_state
         self.right_panel = right_panel
         self.left_panel = left_panel
-        self.inventory = Inventory(*self.right_panel.inventory_settings)
         # Функции пользователя
         self.energy_transfer = lambda *args, **kwargs: None
+        self.item_transfer = lambda *args, **kwargs: None
         # Состояния
         self.permissions = PermissionsBase()
         # Характеристики
@@ -37,6 +37,9 @@ class Base:
         self.energy_possibility = ['MK0', 'MK1']
         #
         self.sound_charge = PATH_CHARGE + 'MK0.wav'
+        #
+        self.distance_resource = 5
+        self.inventory = Inventory(*self.right_panel.inventory_settings)
         # Установленные предметы
         self.generator = RadioisotopeGenerator(self.energy_increase)
         #
@@ -50,7 +53,8 @@ class Base:
             'pos': tuple(self.pos), 'x': self.pos[0], 'y': self.pos[1], 'hp': self.hp, 'hp_max': self.hp_max,
             'energy': self.energy, 'energy_max': self.energy_max, 'distance_create': self.distance_create,
             'distance_charging': self.distance_charging, 'energy_possibility': self.energy_possibility,
-            'energy_max_charging': self.energy_max_charging
+            'energy_max_charging': self.energy_max_charging,
+            'distance_resource': self.distance_resource, 'inventory': self.inventory.resources
         }
         for k, v in data.items():
             data[k] = type(v)(v)
@@ -83,7 +87,9 @@ class Base:
             'hp': self.hp, 'hp_max': self.hp_max,
             'distance_create': self.distance_create, 'distance_charging': self.distance_charging,
             'generator': self.generator.__class__.__name__, 'generator_resource': self.generator.resource,
-            'permissions': self.permissions.get_state(), 'inventory': self.inventory.resources}
+            'permissions': self.permissions.get_state(), 'inventory': self.inventory.resources,
+            'distance_resource': self.distance_resource
+        }
         return state
 
     def load(self, state: dict):
@@ -97,6 +103,7 @@ class Base:
         self.distance_charging = state['distance_charging']
         self.energy_max_charging = state['energy_max_charging']
         self.generator = STR_TO_OBJECT[state['generator']](self.energy_increase, state['generator_resource'])
+        self.distance_resource = state['distance_resource']
         self.inventory.set_resources(state['inventory'])
         self.permissions = PermissionsBase(state['permissions'])
 
@@ -118,8 +125,16 @@ class Base:
             self.info()
 
     def energy_transfer_core(self, board, entities) -> Union[None, list]:
-        # НЕ ВЛИЯЕТ пользователь
-        return self.energy_transfer(self.get_state(), board, entities)
+        # ВЛИЯЕТ пользователь
+        if self.permissions.can_charging:
+            return self.energy_transfer(self.get_state(), board, entities)
+        return None
+
+    def item_transfer_core(self, board, entities) -> Union[None, tuple]:
+        # ВЛИЯЕТ пользователь
+        if self.permissions.can_item_transfer:
+            return self.item_transfer(self.get_state(), board, entities)
+        return None
 
     def func_file(self) -> None:
         self.dialog_file.show(self.path_user_code)  # Установка файла
@@ -132,5 +147,5 @@ class Base:
         self.dialog_state.show([
             f'Максимально энергии > {self.energy_max}', f'Дальность зарядки > {self.distance_charging}',
             f'Максимальная передача > {self.energy_max_charging}', f'Дальность создания > {self.distance_create}',
-            f'Максимальная прочность > {self.hp_max}'
+            f'Максимальная прочность > {self.hp_max}', f'Дальность передачи предметов > {self.distance_resource}'
         ])

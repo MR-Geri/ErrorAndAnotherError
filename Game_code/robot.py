@@ -19,10 +19,10 @@ def mine(state, board, entities) -> Union[Tuple[int, int], None]:
     return None
 
 
-def transfer(state, board, entities):
+def item_transfer(state, board, entities):
     invent = state['inventory']
     for element in invent:
         for i in invent[element]:
             if invent[element][i] > 0:
-                return (7, 39), element, i, invent[element][i]
+                return (30, 44), element, i, invent[element][i]
     return None

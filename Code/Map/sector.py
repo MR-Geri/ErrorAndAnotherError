@@ -110,10 +110,14 @@ class Sector:
                             if 'energy_transfer' in code:
                                 importlib.reload(importlib.import_module(module))
                                 entity.energy_transfer = importlib.import_module(module).energy_transfer
+                            if 'item_transfer' in code:
+                                importlib.reload(importlib.import_module(module))
+                                entity.item_transfer = importlib.import_module(module).item_transfer
                         data = entity.energy_transfer_core(board=board, entities=entities)
                         if data:
                             for energy, who_pos in data:
                                 self.energy_transfer(entity, energy, who_pos)
+                        self.transfer(entity, entity.item_transfer_core(board=board, entities=entities))
                     except FileNotFoundError:
                         pass
                     except IndexError:
@@ -134,13 +138,13 @@ class Sector:
                         if 'mine' in code:
                             importlib.reload(importlib.import_module(module))
                             entity.mine = importlib.import_module(module).mine
-                        if 'transfer' in code:
+                        if 'item_transfer' in code:
                             importlib.reload(importlib.import_module(module))
-                            entity.transfer = importlib.import_module(module).transfer
+                            entity.item_transfer = importlib.import_module(module).item_transfer
                     #
                     self.move(entity, entity.move_core(board=board, entities=entities))
                     self.mine(entity, entity.mine_core(board=board, entities=entities))
-                    self.transfer(entity, entity.transfer_core(board=board, entities=entities))
+                    self.transfer(entity, entity.item_transfer_core(board=board, entities=entities))
                     #
                 except FileNotFoundError:
                     pass
@@ -148,7 +152,7 @@ class Sector:
                     pass
         self.render()
 
-    def place_base(self, x: int, y: int) -> None:  # pos: Tuple[int, int]
+    def place_base(self, x: int, y: int) -> None:
         if type(self.board[y][x]) not in SELL_BLOCKED and not self.base and \
                0 <= y < SECTOR_Y_NUMBER and 0 <= x < SECTOR_X_NUMBER:
             self.base = Base(pos=(x, y), size_cell=self.size_cell, board=self.board, entities=self.entities,

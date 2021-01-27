@@ -20,7 +20,7 @@ class Robot:
         # Функции пользователя
         self.move = lambda *args, **kwargs: None
         self.mine = lambda *args, **kwargs: None
-        self.transfer = lambda *args, **kwargs: None
+        self.item_transfer = lambda *args, **kwargs: None
         # Состояния
         self.permissions = PermissionsRobot()
         self.path_user_code = Path('')
@@ -88,10 +88,10 @@ class Robot:
             return self.mine(self.get_state(), board, entities)
         return None
 
-    def transfer_core(self, board, entities) -> Union[None, Tuple[int, int]]:
+    def item_transfer_core(self, board, entities) -> Union[None, tuple]:
         # ВЛИЯЕТ пользователь
-        if self.permissions.can_transfer:
-            return self.transfer(self.get_state(), board, entities)
+        if self.permissions.can_item_transfer:
+            return self.item_transfer(self.get_state(), board, entities)
         return None
 
     def info(self) -> None:
