@@ -117,7 +117,7 @@ class Sector:
                         if data:
                             for energy, who_pos in data:
                                 self.energy_transfer(entity, energy, who_pos)
-                        self.transfer(entity, entity.item_transfer_core(board=board, entities=entities))
+                        self.item_transfer(entity, entity.item_transfer_core(board=board, entities=entities))
                     except FileNotFoundError:
                         pass
                     except IndexError:
@@ -144,7 +144,7 @@ class Sector:
                     #
                     self.move(entity, entity.move_core(board=board, entities=entities))
                     self.mine(entity, entity.mine_core(board=board, entities=entities))
-                    self.transfer(entity, entity.item_transfer_core(board=board, entities=entities))
+                    self.item_transfer(entity, entity.item_transfer_core(board=board, entities=entities))
                     #
                 except FileNotFoundError:
                     pass
@@ -189,12 +189,23 @@ class Sector:
                     robot_ = robot(pos=(i_x, i_y), size_cell=self.size_cell, dialog_file=self.dialog_file,
                                    dialog_info=self.dialog_info, dialog_state=self.dialog_state,
                                    right_panel=self.right_panel, left_panel=self.left_panel)
-                    if self.base.energy >= robot_.energy_create:
+                    if self.base.energy >= robot_.energy_create and self.base.inventory.check(robot_.resource_create):
                         self.base.energy -= robot_.energy_create
                         self.base.entities.add(robot_)
                         # Происходит обновление базы -> обновим панель
                         if self.right_panel.info_update == self.base.info:
                             self.base.info()
+                    else:
+                        e1, e2 = self.base.energy, robot_.energy_create
+                        res = self.base.inventory.resources
+                        mess = ['Для создания необходимо ещё:']
+                        if e1 < e2:
+                            mess.append(f'{e2 - e1} энергии.')
+                        for resource in robot_.resource_create:
+                            name, condition, quantity = resource
+                            if res[name][condition] < quantity:
+                                mess.append(f'{quantity - res[name][condition]} - {name} - {condition}')
+                        self.dialog_info.show(mess)
                     return
         self.dialog_info.show(['Вокруг базы нет места', 'для нового объекта'])
 
@@ -226,7 +237,7 @@ class Sector:
                 entity.inventory.update(resource=cell.ore, quantity=cell.ore_quantity)
                 self.sound.add(entity.sound_mine)
 
-    def transfer(self, entity, data: Union[None, tuple]) -> None:
+    def item_transfer(self, entity, data: Union[None, tuple]) -> None:
         if data:
             pos, resource, condition, quantity = data
             if entity and self.entities.entities_sector[pos[1]][pos[0]] and \

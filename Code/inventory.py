@@ -34,6 +34,13 @@ class Inventory:
             return True
         return False
 
+    def check(self, resources: list) -> bool:
+        for resource in resources:
+            name, condition, quantity = resource
+            if self.resources[name][condition] < quantity:
+                return False
+        return True
+
     def update(self, resource: str, condition: Union[str, bool] = False, quantity: int = 0) -> None:
         if type(condition) == bool:
             condition = 'продукт' if condition else 'сырьё'

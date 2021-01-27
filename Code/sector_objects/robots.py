@@ -163,6 +163,7 @@ class MK0(Robot):
         self.energy = 50
         self.energy_max = 200
         self.energy_create = 100
+        self.resource_create = []
         self.dmg = 0
         self.hp = 100
         self.hp_max = 100
@@ -188,6 +189,7 @@ class MK1(Robot):
         self.energy = 100
         self.energy_max = 400
         self.energy_create = 150
+        self.resource_create = []
         self.dmg = 0
         self.hp = 130
         self.hp_max = 130
@@ -195,6 +197,32 @@ class MK1(Robot):
         self.sell_block = ['Mountain'] + STR_ORES
         #
         self.inventory_max = 150
+        self.distance_resource = 1
+        self.inventory = InventoryRobot(*self.right_panel.inventory_settings, max_items=self.inventory_max)
+
+    def render(self) -> None:
+        self.surface = pg.Surface((self.size_cell, self.size_cell), pg.SRCALPHA)
+        radius = int(self.size_cell / 2)
+        pg.draw.circle(self.surface, pg.Color(255, 0, 0), (radius, radius), radius)
+
+
+class MK2(Robot):
+    def __init__(self, pos: Tuple[int, int], size_cell: int,
+                 dialog_info: DialogInfo, dialog_file: DialogFile, dialog_state: DialogState,
+                 right_panel: RightPanel, left_panel: LeftPanel) -> None:
+        super().__init__(pos, size_cell, dialog_info, dialog_file, dialog_state, right_panel, left_panel)
+        self.name = 'Робот MK2'
+        self.energy = 200
+        self.energy_max = 550
+        self.energy_create = 200
+        self.resource_create = [('Медь', 'продукт', 150), ('Олово', 'продукт', 50), ('Железо', 'продукт', 80)]
+        self.dmg = 0
+        self.hp = 100
+        self.hp_max = 100
+        self.distance_move = 2
+        self.sell_block = ['Mountain'] + STR_ORES
+        #
+        self.inventory_max = 300
         self.distance_resource = 1
         self.inventory = InventoryRobot(*self.right_panel.inventory_settings, max_items=self.inventory_max)
 
