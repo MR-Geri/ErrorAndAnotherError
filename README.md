@@ -1,6 +1,18 @@
 # Крутое название
 ---
-D:\PycharmProjects\projectPygame\Game_code
+D:\PycharmProjects\projectPygame\Game_code  
+![alt text](https://github.com/MR-Geri/projectPygame/blob/master/idea/menu.png)
+0. Возможности:
+    - TextInput поддерживает:
+        - Полное очищение (Shift + del | Shift + Backspace)
+        - Перемещение курсора
+        - Вставку (Ctrl + V)
+    - Меню прокрутки поддерживает:
+        - Прокрутку с помощью ползунка
+        - Прокрутку с помощью колеса мыши
+    - Игра поддерживает PLAY|PAUSE (Press Space)
+    - Игра поддерживает воспроизведение ваших треков:
+        - В папку ../Data/Sounds/background_music/ поместите ваши треки и они отобразятся в игре
 1. Логика мира:
     - Сектор выглядит так:  
         ![alt text](https://github.com/MR-Geri/projectPygame/blob/master/idea/sector.png)
@@ -14,12 +26,14 @@ D:\PycharmProjects\projectPygame\Game_code
     - У робота есть permissions
      в котором указано может ли робот сейчас выполнять то или иное действие.
      ```
-   class PermissionsRobot:
+    class PermissionsRobot:
         def __init__(self, states: dict = None) -> None:
             if states is None:
-                states = {'can_move': True, 'can_charging': True}
+                states = {'can_move': True, 'can_charging': True, 'can_mine': True, 'can_item_transfer': True}
             self.can_move = states['can_move']
             self.can_charging = states['can_charging']
+            self.can_mine = states['can_mine']
+            self.can_item_transfer = states['can_item_transfer']
     
         def set_move(self, flag: bool) -> None:
             self.can_move = flag
@@ -27,8 +41,15 @@ D:\PycharmProjects\projectPygame\Game_code
         def set_charging(self, flag: bool) -> None:
             self.can_charging = flag
     
+        def set_mine(self, flag: bool) -> None:
+            self.can_mine = flag
+    
+        def set_item_transfer(self, flag: bool) -> None:
+            self.can_item_transfer = flag
+    
         def get_state(self) -> dict:
-            return {'can_move': self.can_move, 'can_charging': self.can_charging}
+            return {'can_move': self.can_move, 'can_charging': self.can_charging, 'can_mine': self.can_mine,
+                    'can_item_transfer': self.can_item_transfer}
    ```
     - На permissions могут влиять другие объекты. 
      например **База** блокирует перемещение для **Робота**:
@@ -59,9 +80,10 @@ D:\PycharmProjects\projectPygame\Game_code
    class PermissionsBase:
         def __init__(self, states: dict = None) -> None:
             if states is None:
-                states = {'can_charging': True, 'can_generate': True}
+                states = {'can_charging': True, 'can_generate': True, 'can_item_transfer': True}
             self.can_charging = states['can_charging']
             self.can_generate = states['can_generate']
+            self.can_item_transfer = states['can_item_transfer']
     
         def set_charging(self, flag: bool) -> None:
             self.can_charging = flag
@@ -69,8 +91,12 @@ D:\PycharmProjects\projectPygame\Game_code
         def set_generate(self, flag: bool) -> None:
             self.can_generate = flag
     
+        def set_item_transfer(self, flag: bool) -> None:
+            self.can_item_transfer = flag
+    
         def get_state(self) -> dict:
-            return {'can_charging': self.can_charging, 'can_generate': self.can_generate}
+            return {'can_charging': self.can_charging, 'can_generate': self.can_generate,
+                    'can_item_transfer': self.can_item_transfer}
    ```
     - На permissions могут влиять другие объекты. 
     - Функиции 
@@ -80,5 +106,9 @@ D:\PycharmProjects\projectPygame\Game_code
 4. Разовые функции:
     - place_base(x: int, y: int) -> Размещение базы на поле
     - create_robot(robot: ALL_ROBOT) -> Создание робота
-    
+5. Виды роботов:
+    - Разнорабочие:
+        1. MK0
+        2. MK1
+6. 
 ---
