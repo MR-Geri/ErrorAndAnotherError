@@ -1,7 +1,7 @@
 # Крутое название
 ---
 D:\PycharmProjects\projectPygame\Game_code  
-![alt text](https://github.com/MR-Geri/projectPygame/blob/master/idea/menu.png)
+![alt text](https://github.com/MR-Geri/projectPygame/blob/master/idea/menu.png)  
 0. Возможности:
     - TextInput поддерживает:
         - Полное очищение (Shift + del | Shift + Backspace)
