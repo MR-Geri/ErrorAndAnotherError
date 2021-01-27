@@ -63,6 +63,16 @@ class Mountain(Cell):
         super().__init__(number_x, number_y, size_cell, panel)
 
 
+class Desert(Cell):
+    def __init__(self, number_x: int, number_y: int, size_cell: int, panel: RightPanel) -> None:
+        self.color = pg.Color('#F0E500')
+        self.name = ' Пустыня '
+        self.energy_passage = 12
+        self.texts = [self.name, f'Для перемещения', f'энергии > {self.energy_passage}', 'Можно разместить',
+                      '<База>']
+        super().__init__(number_x, number_y, size_cell, panel)
+
+
 class IronOre(Cell):
     def __init__(self, number_x: int, number_y: int, size_cell: int, panel: RightPanel) -> None:
         self.color = pg.Color('#A46B4C')

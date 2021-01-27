@@ -1,7 +1,7 @@
 from typing import Union, Tuple
 from os import walk
 import pygame as pg
-from random import randint, sample
+from random import randint, sample, choice
 
 
 # Настройки окна
@@ -47,11 +47,12 @@ STR_TO_OBJECT = {'RadioisotopeGenerator': RadioisotopeGenerator}
 ALL_TEXT = Union[Text, TextMaxSize, TextMaxSizeCenter, TextCenter]
 from Code.running_line import RunningLineMaxSizeCenter
 ALL_RUNNING_LINE = Union[RunningLineMaxSizeCenter]
-from Code.Map.cell import Plain, Swamp, Mountain, IronOre, GoldOre, CooperOre, TinOre, SiliconOre, PlatinumOre
+from Code.Map.cell import (Plain, Swamp, Mountain, Desert,
+                           IronOre, GoldOre, CooperOre, TinOre, SiliconOre, PlatinumOre)
 STR_TO_OBJECT['Plain'] = Plain
 STR_TO_OBJECT['Swamp'] = Swamp
 STR_TO_OBJECT['Mountain'] = Mountain
-STR_TO_OBJECT['']
+STR_TO_OBJECT['Desert'] = Desert
 
 STR_TO_OBJECT['IronOre'] = IronOre
 STR_TO_OBJECT['GoldOre'] = GoldOre
@@ -75,6 +76,14 @@ BUTTONS = [Button, ButtonTwoStates, ChoiceButton]
 MAX_SIZE_MOUNTAIN = (10, 10)
 MAX_QUANTITY_MOUNTAIN = 7
 MIN_QUANTITY_MOUNTAIN_CELL = 7
+
+MAX_SIZE_SWAMP = (20, 20)
+MAX_QUANTITY_SWAMP = 5
+MIN_QUANTITY_SWAMP_CELL = 8
+
+MAX_SIZE_DESERT = (25, 25)
+MAX_QUANTITY_DESERT = 5
+MIN_QUANTITY_DESERT_CELL = 10
 #
 MAX_SIZE_IRON = (4, 4)
 MAX_QUANTITY_IRON = 3
@@ -100,10 +109,6 @@ MAX_SIZE_PLATINUM = (2, 2)
 MAX_QUANTITY_PLATINUM = 1
 MIN_QUANTITY_PLATINUM_CELL = 1
 #
-MAX_SIZE_SWAMP = (20, 20)
-MAX_QUANTITY_SWAMP = 5
-MIN_QUANTITY_SWAMP_CELL = 8
-
 SELL_BLOCKED = [Mountain]
 #
 ROBOTS = [MK0, MK1]

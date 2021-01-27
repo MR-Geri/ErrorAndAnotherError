@@ -1,7 +1,6 @@
 from Code.settings import *
 from Code.info_panel import RightPanel
 
-import random
 from collections import defaultdict
 
 
@@ -15,11 +14,11 @@ class Biome:
         self.size_cell = size_cell
         self.right_panel = right_panel
         #
-        self.number_xy = (random.randint(1, self.max_size_biome[0]), random.randint(1, self.max_size_biome[1]))
-        self.size = random.randint(min_quantity, self.max_size_biome[0] * self.max_size_biome[1])
+        self.number_xy = (randint(1, self.max_size_biome[0]), randint(1, self.max_size_biome[1]))
+        self.size = randint(min_quantity, self.max_size_biome[0] * self.max_size_biome[1])
         self.pos = (
-            random.randint(self.number_xy[0], self.number_x - self.number_xy[0]),
-            random.randint(self.number_xy[1], self.number_y - self.number_xy[1])
+            randint(self.number_xy[0], self.number_x - self.number_xy[0]),
+            randint(self.number_xy[1], self.number_y - self.number_xy[1])
         )
         #
         self.cells, self.cords_cells = self.gen_all_cell()
@@ -37,7 +36,7 @@ class Biome:
         pos_0 = self.pos[0] + self.number_xy[0] // 2, self.pos[1] + self.number_xy[1] // 2
         possible = self.new_possible([pos_0], pos_0)
         for i in range(self.size):
-            pos = random.choice(possible)
+            pos = choice(possible)
             possible = self.new_possible(possible, pos)
             cells[pos[1]][pos[0]] = self.cell(*pos, self.size_cell, self.right_panel)
             cords_cells.add(pos)
@@ -53,6 +52,7 @@ class GeneratorBiomes:
         #
         self.mountain = []
         self.swamp = []
+        self.desert = []
         self.iron_ore = []
         self.gold_ore = []
         self.cooper_ore = []
@@ -62,6 +62,7 @@ class GeneratorBiomes:
         self.for_biomes = [
             (MAX_QUANTITY_MOUNTAIN, MIN_QUANTITY_MOUNTAIN_CELL, MAX_SIZE_MOUNTAIN, Mountain, self.mountain),
             (MAX_QUANTITY_SWAMP, MIN_QUANTITY_SWAMP_CELL, MAX_SIZE_SWAMP, Swamp, self.swamp),
+            (MAX_QUANTITY_DESERT, MIN_QUANTITY_DESERT_CELL, MAX_SIZE_DESERT, Desert, self.desert),
             (MAX_QUANTITY_IRON, MIN_QUANTITY_IRON_CELL, MAX_SIZE_IRON, IronOre, self.iron_ore),
             (MAX_QUANTITY_GOLD, MIN_QUANTITY_GOLD_CELL, MAX_SIZE_GOLD, GoldOre, self.gold_ore),
             (MAX_QUANTITY_COOPER, MIN_QUANTITY_COOPER_CELL, MAX_SIZE_COOPER, CooperOre, self.cooper_ore),
