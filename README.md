@@ -69,6 +69,16 @@ D:\PycharmProjects\projectPygame\Game_code
         - Перемещение:
             1. Называется **move**
             2. Должна вернуть позицию **(x, y)** -> **Tuple[int, int]** или ***None***
+        - Добыча ресурсов:
+            1. Называется **mine**
+            2. Должна вернуть позицию **(x, y)** -> **Tuple[int, int]** или ***None***
+        - Передача ресурсов:
+            1. Называется **item_transfer**
+            2. Должна вернуть **tuple(pos, resource, condition, quantity)** или ***None***:
+                - pos => позиция **(x, y)** -> **Tuple[int, int]**
+                - resource => название ресурса -> **str**
+                - condition => состояние ресурса -> **str**
+                - quantity => количество -> **int**
 4. Логика баз:
     - База получает урон только от противников.
     - База создаёт роботов вокруг себя по кругу, если есть свободное место, инчае не создаёт.
@@ -103,12 +113,18 @@ D:\PycharmProjects\projectPygame\Game_code
         - Передача энергии:
             1. Называется **energy_transfer**
             2. Должна вернуть количество энергии которое нужно передать, позицию куда нужно передать **(energy, (x, y))** -> **Tuple[int, Tuple[int, int]]** или ***None***
+        - Передача ресурсов:
+            1. Называется **item_transfer**
+            2. Должна вернуть **tuple(pos, resource, condition, quantity)** или ***None***:
+                - pos => позиция **(x, y)** -> **Tuple[int, int]**
+                - resource => название ресурса -> **str**
+                - condition => состояние ресурса -> **str**
+                - quantity => количество -> **int**
 5. Разовые функции:
     - place_base(x: int, y: int) -> Размещение базы на поле
     - create_robot(robot: ALL_ROBOT) -> Создание робота
 6. Виды роботов:
     - Разнорабочие:
-        1. MK0
-        2. MK1
-7. 
+        - MK0
+        - MK1
 ---
