@@ -18,16 +18,16 @@ def energy_transfer(state, board, entities) -> Union[list, None]:
 
 
 def item_transfer(state, board, entities):
-    pos = state['pos']
-    for y in range(pos[1] - state['distance_resource'], pos[1] + state['distance_resource'] + 1):
-        for x in range(pos[0] - state['distance_resource'], pos[0] + state['distance_resource'] + 1):
-            if state['pos'] != (x, y) and state['permissions'].can_item_transfer:
-                robot = entities[y][x]
-                if robot:
-                    invent = state['inventory']
-                    for element in invent:
-                        for i in invent[element]:
-                            if invent[element][i] > 0 and sum([sum(i.values()) for i in robot['inventory'].values()]) \
-                                    < robot['inventory_max']:
-                                return robot['pos'], element, i, 10
+    # pos = state['pos']
+    # for y in range(pos[1] - state['distance_resource'], pos[1] + state['distance_resource'] + 1):
+    #     for x in range(pos[0] - state['distance_resource'], pos[0] + state['distance_resource'] + 1):
+    #         if state['pos'] != (x, y) and state['permissions'].can_item_transfer:
+    #             robot = entities[y][x]
+    #             if robot:
+    #                 invent = state['inventory']
+    #                 for element in invent:
+    #                     for i in invent[element]:
+    #                         if invent[element][i] > 0 and sum([sum(i.values()) for i in robot['inventory'].values()]) \
+    #                                 < robot['inventory_max']:
+    #                             return robot['pos'], element, i, 10
     return None

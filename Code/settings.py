@@ -47,13 +47,20 @@ STR_TO_OBJECT = {'RadioisotopeGenerator': RadioisotopeGenerator}
 ALL_TEXT = Union[Text, TextMaxSize, TextMaxSizeCenter, TextCenter]
 from Code.running_line import RunningLineMaxSizeCenter
 ALL_RUNNING_LINE = Union[RunningLineMaxSizeCenter]
-from Code.Map.cell import Plain, Swamp, Mountain, IronOre
+from Code.Map.cell import Plain, Swamp, Mountain, IronOre, GoldOre, CooperOre, TinOre, SiliconOre, PlatinumOre
 STR_TO_OBJECT['Plain'] = Plain
 STR_TO_OBJECT['Swamp'] = Swamp
 STR_TO_OBJECT['Mountain'] = Mountain
+STR_TO_OBJECT['']
+
 STR_TO_OBJECT['IronOre'] = IronOre
-ALL_CELL = Union[Plain, Swamp, Mountain, IronOre]
-STR_ORES = ['IronOre']
+STR_TO_OBJECT['GoldOre'] = GoldOre
+STR_TO_OBJECT['CooperOre'] = CooperOre
+STR_TO_OBJECT['TinOre'] = TinOre
+STR_TO_OBJECT['SiliconOre'] = SiliconOre
+STR_TO_OBJECT['PlatinumOre'] = PlatinumOre
+ALL_CELL = Union[Plain, Swamp, Mountain, IronOre, GoldOre, CooperOre, TinOre, SiliconOre, PlatinumOre]
+STR_ORES = ['IronOre', 'GoldOre', 'CooperOre', 'TinOre', 'SiliconOre', 'PlatinumOre']
 from Code.sector_objects.robots import MK0, MK1
 STR_TO_OBJECT['MK0'] = MK0
 STR_TO_OBJECT['MK1'] = MK1
@@ -66,12 +73,32 @@ BUTTONS = [Button, ButtonTwoStates, ChoiceButton]
 
 # Биомы
 MAX_SIZE_MOUNTAIN = (10, 10)
-MAX_QUANTITY_MOUNTAIN = 3
-MIN_QUANTITY_MOUNTAIN_CELL = 4
+MAX_QUANTITY_MOUNTAIN = 7
+MIN_QUANTITY_MOUNTAIN_CELL = 7
 #
-MAX_SIZE_IRON = (3, 3)
-MAX_QUANTITY_IRON = 1
-MIN_QUANTITY_IRON_CELL = 3
+MAX_SIZE_IRON = (4, 4)
+MAX_QUANTITY_IRON = 3
+MIN_QUANTITY_IRON_CELL = 5
+
+MAX_SIZE_GOLD = (2, 2)
+MAX_QUANTITY_GOLD = 2
+MIN_QUANTITY_GOLD_CELL = 3
+
+MAX_SIZE_COOPER = (5, 5)
+MAX_QUANTITY_COOPER = 4
+MIN_QUANTITY_COOPER_CELL = 6
+
+MAX_SIZE_TIN = (4, 4)
+MAX_QUANTITY_TIN = 3
+MIN_QUANTITY_TIN_CELL = 5
+
+MAX_SIZE_SILICON = (3, 3)
+MAX_QUANTITY_SILICON = 1
+MIN_QUANTITY_SILICON_CELL = 4
+
+MAX_SIZE_PLATINUM = (2, 2)
+MAX_QUANTITY_PLATINUM = 1
+MIN_QUANTITY_PLATINUM_CELL = 1
 #
 MAX_SIZE_SWAMP = (20, 20)
 MAX_QUANTITY_SWAMP = 5

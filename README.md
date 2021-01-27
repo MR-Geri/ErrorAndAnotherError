@@ -1,6 +1,5 @@
 # Крутое название
----
-D:\PycharmProjects\projectPygame\Game_code  
+---  
 ![alt text](https://github.com/MR-Geri/projectPygame/blob/master/idea/menu.png)  
 1. Возможности:
     - TextInput поддерживает:
@@ -14,6 +13,11 @@ D:\PycharmProjects\projectPygame\Game_code
     - Игра поддерживает воспроизведение ваших треков:
         - В папку ../Data/Sounds/background_music/ поместите ваши треки и они отобразятся в плеере игры
     - Вызов меню для использования разового кода происходит по нажатию на клавишу (~)
+    - Игроку доступны константы, которые он может импортировать из файла const
+        ```
+        ORES = ['IronOre', 'GoldOre', 'CooperOre', 'TinOre', 'SiliconOre', 'PlatinumOre']
+        BIOMES = ['Plain', 'Swamp', 'Mountain']
+      ```
 2. Логика мира:
     - Сектор выглядит так:  
         ![alt text](https://github.com/MR-Geri/projectPygame/blob/master/idea/sector.png)
@@ -79,7 +83,7 @@ D:\PycharmProjects\projectPygame\Game_code
             1. Называется **item_transfer**
             2. Должна вернуть **tuple(pos, resource, condition, quantity)** или ***None***:
                 - pos => позиция **(x, y)** -> **Tuple[int, int]**
-                - resource => название ресурса -> **str**
+                - resource => название ресурса ['сырьё' or 'продукт'] <=> [False or True] -> **str** или **bool**
                 - condition => состояние ресурса -> **str**
                 - quantity => количество -> **int**
 4. Логика баз:

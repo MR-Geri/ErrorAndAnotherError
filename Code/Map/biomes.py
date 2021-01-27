@@ -44,27 +44,6 @@ class Biome:
         return cells, cords_cells
 
 
-class BiomeMountain(Biome):
-    def __init__(self, number_x: int, number_y: int, max_size_biome: Tuple[int, int],
-                 min_quantity: int, size_cell: int, right_panel: RightPanel) -> None:
-        super().__init__(number_x=number_x, number_y=number_y, max_size_biome=max_size_biome,
-                         min_quantity=min_quantity, size_cell=size_cell, cell=Mountain, right_panel=right_panel)
-
-
-class BiomeSwamp(Biome):
-    def __init__(self, number_x: int, number_y: int, max_size_biome: Tuple[int, int],
-                 min_quantity: int, size_cell: int, right_panel: RightPanel) -> None:
-        super().__init__(number_x=number_x, number_y=number_y, max_size_biome=max_size_biome,
-                         min_quantity=min_quantity, size_cell=size_cell, cell=Swamp, right_panel=right_panel)
-
-
-class BiomeIron(Biome):
-    def __init__(self, number_x: int, number_y: int, max_size_biome: Tuple[int, int],
-                 min_quantity: int, size_cell: int, right_panel: RightPanel) -> None:
-        super().__init__(number_x=number_x, number_y=number_y, max_size_biome=max_size_biome,
-                         min_quantity=min_quantity, size_cell=size_cell, cell=IronOre, right_panel=right_panel)
-
-
 class GeneratorBiomes:
     def __init__(self, number_x: int, number_y: int, size_cell: int, right_panel: RightPanel):
         self.number_x = number_x
@@ -75,10 +54,20 @@ class GeneratorBiomes:
         self.mountain = []
         self.swamp = []
         self.iron_ore = []
+        self.gold_ore = []
+        self.cooper_ore = []
+        self.tin_ore = []
+        self.silicon_ore = []
+        self.platinum_ore = []
         self.for_biomes = [
-            (BiomeMountain, MAX_QUANTITY_MOUNTAIN, MIN_QUANTITY_MOUNTAIN_CELL, MAX_SIZE_MOUNTAIN, self.mountain),
-            (BiomeSwamp, MAX_QUANTITY_SWAMP, MIN_QUANTITY_SWAMP_CELL, MAX_SIZE_SWAMP, self.swamp),
-            (BiomeIron, MAX_QUANTITY_IRON, MIN_QUANTITY_IRON_CELL, MAX_SIZE_IRON, self.iron_ore)
+            (MAX_QUANTITY_MOUNTAIN, MIN_QUANTITY_MOUNTAIN_CELL, MAX_SIZE_MOUNTAIN, Mountain, self.mountain),
+            (MAX_QUANTITY_SWAMP, MIN_QUANTITY_SWAMP_CELL, MAX_SIZE_SWAMP, Swamp, self.swamp),
+            (MAX_QUANTITY_IRON, MIN_QUANTITY_IRON_CELL, MAX_SIZE_IRON, IronOre, self.iron_ore),
+            (MAX_QUANTITY_GOLD, MIN_QUANTITY_GOLD_CELL, MAX_SIZE_GOLD, GoldOre, self.gold_ore),
+            (MAX_QUANTITY_COOPER, MIN_QUANTITY_COOPER_CELL, MAX_SIZE_COOPER, CooperOre, self.cooper_ore),
+            (MAX_QUANTITY_TIN, MIN_QUANTITY_TIN_CELL, MAX_SIZE_TIN, TinOre, self.tin_ore),
+            (MAX_QUANTITY_SILICON, MIN_QUANTITY_SILICON_CELL, MAX_SIZE_SILICON, SiliconOre, self.silicon_ore),
+            (MAX_QUANTITY_PLATINUM, MIN_QUANTITY_PLATINUM_CELL, MAX_SIZE_PLATINUM, PlatinumOre, self.platinum_ore)
         ]
         #
         self.biomes = []
@@ -101,11 +90,11 @@ class GeneratorBiomes:
         return True
 
     def gen_biomes(self) -> None:
-        for biome, quantity, min_quantity, max_size_biome, link_biome in self.for_biomes:
+        for quantity, min_quantity, max_size_biome, cell, link_biome in self.for_biomes:
             for i in range(quantity):
                 while True:
-                    temp_biome = biome(self.number_x, self.number_y, max_size_biome, min_quantity, self.size_cell,
-                                       self.right_panel)
+                    temp_biome = Biome(self.number_x, self.number_y, max_size_biome, min_quantity, self.size_cell,
+                                       cell, self.right_panel)
                     if self.entering_biome(temp_biome):
                         break
                 link_biome.append(temp_biome)

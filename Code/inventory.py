@@ -9,22 +9,22 @@ class Inventory:
         self.surface = pg.Surface((width, height))
         self.w80, self.w10 = int(self.rect.width * 0.5), int(self.rect.width * 0.25)
         self.resources = {
-            'Железо': {'обработано': 0, 'сырьё': 0},
-            'Сталь': {'обработано': 0, 'сырьё': 0},
-            'Золото': {'обработано': 0, 'сырьё': 0},
-            'Медь': {'обработано': 0, 'сырьё': 0},
-            'Олово': {'обработано': 0, 'сырьё': 0},
-            'Кремний': {'обработано': 0, 'сырьё': 0},
-            'Платина': {'обработано': 0, 'сырьё': 0},
+            'Железо': {'продукт': 0, 'сырьё': 0},
+            'Сталь': {'продукт': 0, 'сырьё': 0},
+            'Золото': {'продукт': 0, 'сырьё': 0},
+            'Медь': {'продукт': 0, 'сырьё': 0},
+            'Олово': {'продукт': 0, 'сырьё': 0},
+            'Кремний': {'продукт': 0, 'сырьё': 0},
+            'Платина': {'продукт': 0, 'сырьё': 0},
         }
         self.texts = {
-            'Железо': {'обработано': None, 'сырьё': None},
-            'Сталь': {'обработано': None, 'сырьё': None},
-            'Золото': {'обработано': None, 'сырьё': None},
-            'Медь': {'обработано': None, 'сырьё': None},
-            'Олово': {'обработано': None, 'сырьё': None},
-            'Кремний': {'обработано': None, 'сырьё': None},
-            'Платина': {'обработано': None, 'сырьё': None}
+            'Железо': {'продукт': None, 'сырьё': None},
+            'Сталь': {'продукт': None, 'сырьё': None},
+            'Золото': {'продукт': None, 'сырьё': None},
+            'Медь': {'продукт': None, 'сырьё': None},
+            'Олово': {'продукт': None, 'сырьё': None},
+            'Кремний': {'продукт': None, 'сырьё': None},
+            'Платина': {'продукт': None, 'сырьё': None}
         }
         self.if_update: bool = False
         self.render_init()
@@ -36,7 +36,7 @@ class Inventory:
 
     def update(self, resource: str, condition: Union[str, bool] = False, quantity: int = 0) -> None:
         if type(condition) == bool:
-            condition = 'обработано' if condition else 'сырьё'
+            condition = 'продукт' if condition else 'сырьё'
         if 100000 >= self.resources[resource][condition] + quantity >= 0:
             self.resources[resource][condition] += quantity
             self.texts[resource][condition].set_text(f'{self.resources[resource][condition]}')
@@ -62,10 +62,10 @@ class Inventory:
             text = TextMaxSizeCenter(text=element, pos=interface.pos, width=self.w80, height=interface.height,
                                      font_type=PT_MONO)
             text.draw(self.surface)
-            text = TextMaxSizeCenter(text=str(self.resources[element]['обработано']),
+            text = TextMaxSizeCenter(text=str(self.resources[element]['продукт']),
                                      pos=(interface.pos[0] + self.w80, interface.pos[1]),
                                      width=self.w10, height=interface.height, font_type=PT_MONO)
-            self.texts[element]['обработано'] = text
+            self.texts[element]['продукт'] = text
             text.draw(self.surface)
             text = TextMaxSizeCenter(text=str(self.resources[element]['сырьё']),
                                      pos=(interface.pos[0] + self.w80 + self.w10, interface.pos[1]),
@@ -102,7 +102,7 @@ class InventoryRobot(Inventory):
 
     def update(self, resource: str, condition: Union[str, bool] = False, quantity: int = 0) -> None:
         if type(condition) == bool:
-            condition = 'обработано' if condition else 'сырьё'
+            condition = 'продукт' if condition else 'сырьё'
         temp = self.resources[resource][condition] + quantity
         if sum([sum(i.values()) for i in self.resources.values()]) + quantity <= self.max_items and temp >= 0:
             self.resources[resource][condition] = temp

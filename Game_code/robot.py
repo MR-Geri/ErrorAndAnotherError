@@ -1,4 +1,5 @@
 from typing import Tuple, Union
+from const import *
 
 
 def move(state, board, entities) -> Union[Tuple[int, int], None]:
@@ -12,7 +13,7 @@ def move(state, board, entities) -> Union[Tuple[int, int], None]:
 def mine(state, board, entities) -> Union[Tuple[int, int], None]:
     pos = state['pos']
     if sum([sum(i.values()) for i in state['inventory'].values()]) < state['inventory_max'] and \
-            board[pos[1]][pos[0] + 1]['name'] in ['IronOre']:
+            board[pos[1]][pos[0] + 1]['name'] in ORES:
         state['permissions'].can_move = False
         return pos[0] + 1, pos[1]
     state['permissions'].can_move = True
@@ -24,5 +25,5 @@ def item_transfer(state, board, entities):
     for element in invent:
         for i in invent[element]:
             if invent[element][i] > 0:
-                return (30, 44), element, i, invent[element][i]
+                return (15, 17), element, i, invent[element][i]
     return None
