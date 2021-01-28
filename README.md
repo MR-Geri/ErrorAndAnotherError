@@ -129,10 +129,47 @@
                 - resource => название ресурса -> **str**
                 - condition => состояние ресурса -> **str**
                 - quantity => количество -> **int**
-5. Функции разового кода:
+5. Логика плавилен:
+    - Плавильня получает урон только от противников.
+    - База передаёт предметы в неограниченном количестве
+        1. Если у объекта, которому передаётся предмет, заполнено хранилище, то ресурс теряется.
+    - У плавильни есть permissions в котором указано может ли плавильня сейчас выполнять то или иное действие.
+     ```
+   class PermissionsFoundry:
+        def __init__(self, states: dict = None) -> None:
+            if states is None:
+                states = {'can_melt': True, 'can_item_transfer': True, 'can_charging': True}
+            self.can_melt = states['can_melt']
+            self.can_item_transfer = states['can_item_transfer']
+            self.can_charging = states['can_charging']
+    
+        def set_melt(self, flag: bool) -> None:
+            self.can_melt = flag
+    
+        def set_item_transfer(self, flag: bool) -> None:
+            self.can_item_transfer = flag
+    
+        def set_charging(self, flag: bool) -> None:
+            self.can_charging = flag
+    
+        def get_state(self) -> dict:
+            return {'can_melt': self.can_melt, 'can_item_transfer': self.can_item_transfer,
+                    'can_charging': self.can_charging}
+   ```
+    - На permissions могут влиять другие объекты. 
+    - Функции 
+        - Передача ресурсов:
+            1. Называется **item_transfer**
+            2. Должна вернуть **tuple(pos, resource, condition, quantity)** или ***None***:
+                - pos => позиция **(x, y)** -> **Tuple[int, int]**
+                - resource => название ресурса -> **str**
+                - condition => состояние ресурса -> **str**
+                - quantity => количество -> **int**
+6. Функции разового кода:
     - place_base(x: int, y: int) -> Размещение базы на поле
+    - place_foundry(x: int, y: int) -> Размещение плавильни на поле
     - create_robot(robot: ALL_ROBOT) -> Создание робота
-6. Виды роботов:
+7. Виды роботов:
     - Разнорабочие:
         - MK0
         - MK1
