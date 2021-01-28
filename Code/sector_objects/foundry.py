@@ -27,6 +27,8 @@ class Foundry:
         self.hp = 1000
         self.hp_max = 1000
         #
+        self.sound_charge = PATH_CHARGE + 'MK0.wav'
+        #
         self.distance_resource = 5
         self.inventory = Inventory(*self.right_panel.inventory_settings)
         #

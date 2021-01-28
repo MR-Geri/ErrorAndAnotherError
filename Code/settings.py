@@ -63,10 +63,11 @@ STR_TO_OBJECT['PlatinumOre'] = PlatinumOre
 STR_TO_OBJECT['AluminiumOre'] = AluminiumOre
 ALL_CELL = Union[Plain, Swamp, Mountain, IronOre, AluminiumOre, GoldOre, CooperOre, TinOre, SiliconOre, PlatinumOre]
 STR_ORES = ['IronOre', 'AluminiumOre', 'GoldOre', 'CooperOre', 'TinOre', 'SiliconOre', 'PlatinumOre']
-from Code.sector_objects.robots import MK0, MK1
+from Code.sector_objects.robots import MK0, MK1, MK2
 STR_TO_OBJECT['MK0'] = MK0
 STR_TO_OBJECT['MK1'] = MK1
-ALL_ROBOT = Union[MK0, MK1]
+STR_TO_OBJECT['MK2'] = MK2
+ALL_ROBOT = Union[MK0, MK1, MK2]
 from Code.sector_objects.bases import Base
 from Code.sector_objects.foundry import Foundry
 STR_TO_OBJECT['Base'] = Base
@@ -118,7 +119,7 @@ MIN_QUANTITY_PLATINUM_CELL = 1
 #
 SELL_BLOCKED = [Mountain]
 #
-ROBOTS = [MK0, MK1]
+ROBOTS = [MK0, MK1, MK2]
 BASES = [Base]
 FOUNDRIES = [Foundry]
 #
