@@ -114,9 +114,10 @@ class PermissionsBase:
 class PermissionsFoundry:
     def __init__(self, states: dict = None) -> None:
         if states is None:
-            states = {'can_melt': True, 'can_item_transfer': True}
+            states = {'can_melt': True, 'can_item_transfer': True, 'can_charging': True}
         self.can_melt = states['can_melt']
         self.can_item_transfer = states['can_item_transfer']
+        self.can_charging = states['can_charging']
 
     def set_melt(self, flag: bool) -> None:
         self.can_melt = flag
@@ -124,8 +125,12 @@ class PermissionsFoundry:
     def set_item_transfer(self, flag: bool) -> None:
         self.can_item_transfer = flag
 
+    def set_charging(self, flag: bool) -> None:
+        self.can_charging = flag
+
     def get_state(self) -> dict:
-        return {'can_charging': self.can_melt, 'can_item_transfer': self.can_item_transfer}
+        return {'can_melt': self.can_melt, 'can_item_transfer': self.can_item_transfer,
+                'can_charging': self.can_charging}
 
 
 class Dial:

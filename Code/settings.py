@@ -5,8 +5,6 @@ from random import randint, sample, choice
 
 
 # Настройки окна
-from Code.sector_objects.foundry import Foundry
-
 WIN_WIDTH, WIN_HEIGHT = 1280, 720
 FULL_SCREEN = False
 MENU_TITLE = 'Название игры'
@@ -50,7 +48,7 @@ ALL_TEXT = Union[Text, TextMaxSize, TextMaxSizeCenter, TextCenter]
 from Code.running_line import RunningLineMaxSizeCenter
 ALL_RUNNING_LINE = Union[RunningLineMaxSizeCenter]
 from Code.Map.cell import (Plain, Swamp, Mountain, Desert,
-                           IronOre, GoldOre, CooperOre, TinOre, SiliconOre, PlatinumOre)
+                           IronOre, GoldOre, CooperOre, TinOre, SiliconOre, PlatinumOre, AluminiumOre)
 STR_TO_OBJECT['Plain'] = Plain
 STR_TO_OBJECT['Swamp'] = Swamp
 STR_TO_OBJECT['Mountain'] = Mountain
@@ -62,14 +60,17 @@ STR_TO_OBJECT['CooperOre'] = CooperOre
 STR_TO_OBJECT['TinOre'] = TinOre
 STR_TO_OBJECT['SiliconOre'] = SiliconOre
 STR_TO_OBJECT['PlatinumOre'] = PlatinumOre
-ALL_CELL = Union[Plain, Swamp, Mountain, IronOre, GoldOre, CooperOre, TinOre, SiliconOre, PlatinumOre]
-STR_ORES = ['IronOre', 'GoldOre', 'CooperOre', 'TinOre', 'SiliconOre', 'PlatinumOre']
+STR_TO_OBJECT['AluminiumOre'] = AluminiumOre
+ALL_CELL = Union[Plain, Swamp, Mountain, IronOre, AluminiumOre, GoldOre, CooperOre, TinOre, SiliconOre, PlatinumOre]
+STR_ORES = ['IronOre', 'AluminiumOre', 'GoldOre', 'CooperOre', 'TinOre', 'SiliconOre', 'PlatinumOre']
 from Code.sector_objects.robots import MK0, MK1
 STR_TO_OBJECT['MK0'] = MK0
 STR_TO_OBJECT['MK1'] = MK1
 ALL_ROBOT = Union[MK0, MK1]
 from Code.sector_objects.bases import Base
+from Code.sector_objects.foundry import Foundry
 STR_TO_OBJECT['Base'] = Base
+STR_TO_OBJECT['Foundry'] = Foundry
 #
 from Code.buttons import Button, ButtonTwoStates, ChoiceButton
 BUTTONS = [Button, ButtonTwoStates, ChoiceButton]
@@ -90,6 +91,10 @@ MIN_QUANTITY_DESERT_CELL = 10
 MAX_SIZE_IRON = (4, 4)
 MAX_QUANTITY_IRON = 3
 MIN_QUANTITY_IRON_CELL = 5
+
+MAX_SIZE_ALUMINIUM = (4, 4)
+MAX_QUANTITY_ALUMINIUM = 4
+MIN_QUANTITY_ALUMINIUM_CELL = 6
 
 MAX_SIZE_GOLD = (2, 2)
 MAX_QUANTITY_GOLD = 2

@@ -75,6 +75,10 @@ class Sector:
                 entity = entity(
                     pos=data['pos'], size_cell=size_cell, dialog_info=self.dialog_info, dialog_file=self.dialog_file,
                     dialog_state=self.dialog_state, right_panel=self.right_panel, left_panel=self.left_panel)
+            elif entity in FOUNDRIES:
+                entity = entity(
+                    pos=data['pos'], size_cell=size_cell, dialog_info=self.dialog_info, dialog_file=self.dialog_file,
+                    dialog_state=self.dialog_state, right_panel=self.right_panel, left_panel=self.left_panel)
             entity.load(data)
             self.entities.add(entity)
         self.render()
@@ -120,15 +124,18 @@ class Sector:
                                     entity.item_transfer = importlib.import_module(module).item_transfer
                             except:
                                 pass
+                    except FileNotFoundError:
+                        pass
+                    except IndexError:
+                        pass
+                    try:
                         data = entity.energy_transfer_core(board=board, entities=entities)
                         if data:
                             for energy, who_pos in data:
                                 self.energy_transfer(entity, energy, who_pos)
                         self.item_transfer(entity, entity.item_transfer_core(board=board, entities=entities))
-                    except FileNotFoundError:
-                        pass
-                    except IndexError:
-                        pass
+                    except Exception as e:
+                        print(e)
                     #
                     if entity.generator is not None and entity.permissions.can_generate:
                         entity.generator.update(tick_complete)
@@ -143,11 +150,11 @@ class Sector:
                                     entity.item_transfer = importlib.import_module(module).item_transfer
                             except:
                                 pass
-                        entity.process()
                     except FileNotFoundError:
                         pass
                     except IndexError:
                         pass
+                    entity.process()
         if robots:
             for entity in robots:
                 entities = self.get_entities()
@@ -173,15 +180,16 @@ class Sector:
                                 entity.item_transfer = importlib.import_module(module).item_transfer
                         except:
                             pass
-                    #
-                    self.move(entity, entity.move_core(board=board, entities=entities))
-                    self.mine(entity, entity.mine_core(board=board, entities=entities))
-                    self.item_transfer(entity, entity.item_transfer_core(board=board, entities=entities))
-                    #
                 except FileNotFoundError:
                     pass
                 except IndexError:
                     pass
+                try:
+                    self.move(entity, entity.move_core(board=board, entities=entities))
+                    self.mine(entity, entity.mine_core(board=board, entities=entities))
+                    self.item_transfer(entity, entity.item_transfer_core(board=board, entities=entities))
+                except Exception as e:
+                    print(e)
         self.render()
 
     def place_foundry(self, x: int, y: int) -> None:

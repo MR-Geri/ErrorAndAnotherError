@@ -37,7 +37,8 @@ class Foundry:
 
     def get_state(self) -> dict:
         data = {
-            'pos': tuple(self.pos), 'x': self.pos[0], 'y': self.pos[1], 'hp': self.hp, 'hp_max': self.hp_max,
+            'name': self.__class__.__name__, 'pos': tuple(self.pos), 'x': self.pos[0], 'y': self.pos[1],
+            'hp': self.hp, 'hp_max': self.hp_max,
             'energy': self.energy, 'energy_max': self.energy_max,
             'distance_resource': self.distance_resource, 'inventory': self.inventory.resources
         }
@@ -65,7 +66,8 @@ class Foundry:
             'pos': self.pos,
             'path_user_code': self.path_user_code.text, 'name': self.__class__.__name__,
             'energy': self.energy, 'energy_max': self.energy_max, 'hp': self.hp, 'hp_max': self.hp_max,
-            'permissions': self.permissions.get_state(), 'inventory': self.inventory.resources
+            'permissions': self.permissions.get_state(), 'inventory': self.inventory.resources,
+            'distance_resource': self.distance_resource
         }
         return state
 
@@ -87,8 +89,9 @@ class Foundry:
 
     def process(self) -> None:
         for resource in self.inventory.resources:
-            name, condition, quantity = resource
-            if quantity <= self.energy and condition == 'сырьё':
+            quantity = self.inventory.resources[resource]['сырьё']
+            if 0 < self.energy:
+                quantity = self.energy if quantity > self.energy else quantity
                 self.energy_decrease(quantity)
                 self.inventory.update(resource, False, -quantity)
                 self.inventory.update(resource, True, quantity)
@@ -98,6 +101,13 @@ class Foundry:
         self.energy -= energy
         if self.right_panel.info_update == self.info:
             self.info()
+
+    def energy_receiving(self, energy: int) -> None:
+        # ВЛИЯЕТ пользователь
+        if self.permissions.can_charging:
+            self.energy = min(energy + self.energy, self.energy_max)
+            if self.right_panel.info_update == self.info:
+                self.info()
 
     def item_transfer_core(self, board, entities) -> Union[None, tuple]:
         # ВЛИЯЕТ пользователь

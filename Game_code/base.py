@@ -1,3 +1,4 @@
+from const import *
 from typing import Union
 
 
@@ -10,24 +11,18 @@ def energy_transfer(state, board, entities) -> Union[list, None]:
                 robot = entities[y][x]
                 if robot:
                     if robot['energy'] < robot['energy_max']:
-                        robot['permissions'].set_move(False)
                         robots.append((5, (x, y)))
-                    else:
-                        robot['permissions'].set_move(True)
+                        if robot['name'] in ROBOTS:
+                            robot['permissions'].set_move(False)
+                        elif robot['name'] in ROBOTS:
+                            robot['permissions'].set_move(True)
     return robots if robots else None
 
 
 def item_transfer(state, board, entities):
-    # pos = state['pos']
-    # for y in range(pos[1] - state['distance_resource'], pos[1] + state['distance_resource'] + 1):
-    #     for x in range(pos[0] - state['distance_resource'], pos[0] + state['distance_resource'] + 1):
-    #         if state['pos'] != (x, y) and state['permissions'].can_item_transfer:
-    #             robot = entities[y][x]
-    #             if robot:
-    #                 invent = state['inventory']
-    #                 for element in invent:
-    #                     for i in invent[element]:
-    #                         if invent[element][i] > 0 and sum([sum(i.values()) for i in robot['inventory'].values()]) \
-    #                                 < robot['inventory_max']:
-    #                             return robot['pos'], element, i, 10
+    pos = 22, 4
+    invent = state['inventory']
+    for element in invent:
+        if invent[element]['сырьё'] > 0:
+            return pos, element, 'сырьё', 50
     return None

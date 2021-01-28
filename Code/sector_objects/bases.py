@@ -34,7 +34,7 @@ class Base:
         self.distance_create = 1
         self.distance_charging = 1
         self.energy_max_charging = 5
-        self.energy_possibility = ['MK0', 'MK1']
+        self.energy_possibility = ['MK0', 'MK1', 'Foundry']
         #
         self.sound_charge = PATH_CHARGE + 'MK0.wav'
         #
@@ -50,7 +50,8 @@ class Base:
 
     def get_state(self) -> dict:
         data = {
-            'pos': tuple(self.pos), 'x': self.pos[0], 'y': self.pos[1], 'hp': self.hp, 'hp_max': self.hp_max,
+            'pos': tuple(self.pos), 'x': self.pos[0], 'y': self.pos[1], 'name': self.__class__.__name__,
+            'hp': self.hp, 'hp_max': self.hp_max,
             'energy': self.energy, 'energy_max': self.energy_max, 'distance_create': self.distance_create,
             'distance_charging': self.distance_charging, 'energy_possibility': self.energy_possibility,
             'energy_max_charging': self.energy_max_charging,

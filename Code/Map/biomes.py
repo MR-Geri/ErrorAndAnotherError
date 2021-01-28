@@ -54,6 +54,7 @@ class GeneratorBiomes:
         self.swamp = []
         self.desert = []
         self.iron_ore = []
+        self.aluminium_ore = []
         self.gold_ore = []
         self.cooper_ore = []
         self.tin_ore = []
@@ -64,6 +65,7 @@ class GeneratorBiomes:
             (MAX_QUANTITY_SWAMP, MIN_QUANTITY_SWAMP_CELL, MAX_SIZE_SWAMP, Swamp, self.swamp),
             (MAX_QUANTITY_DESERT, MIN_QUANTITY_DESERT_CELL, MAX_SIZE_DESERT, Desert, self.desert),
             (MAX_QUANTITY_IRON, MIN_QUANTITY_IRON_CELL, MAX_SIZE_IRON, IronOre, self.iron_ore),
+            (MAX_QUANTITY_ALUMINIUM, MIN_QUANTITY_ALUMINIUM_CELL, MAX_SIZE_ALUMINIUM, AluminiumOre, self.aluminium_ore),
             (MAX_QUANTITY_GOLD, MIN_QUANTITY_GOLD_CELL, MAX_SIZE_GOLD, GoldOre, self.gold_ore),
             (MAX_QUANTITY_COOPER, MIN_QUANTITY_COOPER_CELL, MAX_SIZE_COOPER, CooperOre, self.cooper_ore),
             (MAX_QUANTITY_TIN, MIN_QUANTITY_TIN_CELL, MAX_SIZE_TIN, TinOre, self.tin_ore),

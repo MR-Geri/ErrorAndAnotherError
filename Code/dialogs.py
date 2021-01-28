@@ -146,7 +146,7 @@ class DialogCodeUse:
         self.render()
 
     @staticmethod
-    def read(line_input, dialog_info, place_base, create_robot):
+    def read(line_input, dialog_info, place_base, create_robot, place_foundry):
         from Code.sector_objects.robots import MK0, MK1, MK2
         t = line_input.text.text
         try:
@@ -161,7 +161,8 @@ class DialogCodeUse:
             dialog_info.show([f'Нет такой команды'])
 
     def processing_read(self) -> None:
-        self.read(self.line_input, self.dialog_info, self.sector.place_base, self.sector.create_robot)
+        self.read(self.line_input, self.dialog_info, self.sector.place_base, self.sector.create_robot,
+                  self.sector.place_foundry)
         self.sector.render()
         self.if_active = False
 
