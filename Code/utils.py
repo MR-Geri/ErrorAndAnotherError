@@ -111,6 +111,23 @@ class PermissionsBase:
                 'can_item_transfer': self.can_item_transfer}
 
 
+class PermissionsFoundry:
+    def __init__(self, states: dict = None) -> None:
+        if states is None:
+            states = {'can_melt': True, 'can_item_transfer': True}
+        self.can_melt = states['can_melt']
+        self.can_item_transfer = states['can_item_transfer']
+
+    def set_melt(self, flag: bool) -> None:
+        self.can_melt = flag
+
+    def set_item_transfer(self, flag: bool) -> None:
+        self.can_item_transfer = flag
+
+    def get_state(self) -> dict:
+        return {'can_charging': self.can_melt, 'can_item_transfer': self.can_item_transfer}
+
+
 class Dial:
     def __init__(self, pos: Tuple[int, int], side: int, max_value: int, circle_color: COLOR, line_color: COLOR) -> None:
         self.rect = pg.Rect(*pos, side, side)

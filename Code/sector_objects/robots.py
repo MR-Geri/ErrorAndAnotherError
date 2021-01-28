@@ -229,4 +229,4 @@ class MK2(Robot):
     def render(self) -> None:
         self.surface = pg.Surface((self.size_cell, self.size_cell), pg.SRCALPHA)
         radius = int(self.size_cell / 2)
-        pg.draw.circle(self.surface, pg.Color(255, 0, 0), (radius, radius), radius)
+        pg.draw.circle(self.surface, pg.Color(255, 255, 0), (radius, radius), radius)

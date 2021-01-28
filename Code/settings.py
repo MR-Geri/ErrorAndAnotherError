@@ -5,6 +5,8 @@ from random import randint, sample, choice
 
 
 # Настройки окна
+from Code.sector_objects.foundry import Foundry
+
 WIN_WIDTH, WIN_HEIGHT = 1280, 720
 FULL_SCREEN = False
 MENU_TITLE = 'Название игры'
@@ -113,4 +115,5 @@ SELL_BLOCKED = [Mountain]
 #
 ROBOTS = [MK0, MK1]
 BASES = [Base]
+FOUNDRIES = [Foundry]
 #

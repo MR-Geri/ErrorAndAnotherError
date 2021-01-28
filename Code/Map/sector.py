@@ -1,5 +1,6 @@
 import importlib
 
+from Code.sector_objects.foundry import Foundry
 from Code.settings import *
 
 from Code.dialogs import DialogInfo, DialogFile, DialogState
@@ -107,12 +108,18 @@ class Sector:
                         code = entity.path_user_code.code()
                         if code:
                             module = entity.path_user_code.module()
-                            if 'energy_transfer' in code:
-                                importlib.reload(importlib.import_module(module))
-                                entity.energy_transfer = importlib.import_module(module).energy_transfer
-                            if 'item_transfer' in code:
-                                importlib.reload(importlib.import_module(module))
-                                entity.item_transfer = importlib.import_module(module).item_transfer
+                            try:
+                                if 'energy_transfer' in code:
+                                    importlib.reload(importlib.import_module(module))
+                                    entity.energy_transfer = importlib.import_module(module).energy_transfer
+                            except:
+                                pass
+                            try:
+                                if 'item_transfer' in code:
+                                    importlib.reload(importlib.import_module(module))
+                                    entity.item_transfer = importlib.import_module(module).item_transfer
+                            except:
+                                pass
                         data = entity.energy_transfer_core(board=board, entities=entities)
                         if data:
                             for energy, who_pos in data:
@@ -125,6 +132,22 @@ class Sector:
                     #
                     if entity.generator is not None and entity.permissions.can_generate:
                         entity.generator.update(tick_complete)
+                elif type_ in FOUNDRIES:
+                    try:
+                        code = entity.path_user_code.code()
+                        if code:
+                            module = entity.path_user_code.module()
+                            try:
+                                if 'item_transfer' in code:
+                                    importlib.reload(importlib.import_module(module))
+                                    entity.item_transfer = importlib.import_module(module).item_transfer
+                            except:
+                                pass
+                        entity.process()
+                    except FileNotFoundError:
+                        pass
+                    except IndexError:
+                        pass
         if robots:
             for entity in robots:
                 entities = self.get_entities()
@@ -132,15 +155,24 @@ class Sector:
                     code = entity.path_user_code.code()
                     if code:
                         module = entity.path_user_code.module()
-                        if 'move' in code:
-                            importlib.reload(importlib.import_module(module))
-                            entity.move = importlib.import_module(module).move
-                        if 'mine' in code:
-                            importlib.reload(importlib.import_module(module))
-                            entity.mine = importlib.import_module(module).mine
-                        if 'item_transfer' in code:
-                            importlib.reload(importlib.import_module(module))
-                            entity.item_transfer = importlib.import_module(module).item_transfer
+                        try:
+                            if 'move' in code:
+                                importlib.reload(importlib.import_module(module))
+                                entity.move = importlib.import_module(module).move
+                        except:
+                            pass
+                        try:
+                            if 'mine' in code:
+                                importlib.reload(importlib.import_module(module))
+                                entity.mine = importlib.import_module(module).mine
+                        except:
+                            pass
+                        try:
+                            if 'item_transfer' in code:
+                                importlib.reload(importlib.import_module(module))
+                                entity.item_transfer = importlib.import_module(module).item_transfer
+                        except:
+                            pass
                     #
                     self.move(entity, entity.move_core(board=board, entities=entities))
                     self.mine(entity, entity.mine_core(board=board, entities=entities))
@@ -151,6 +183,15 @@ class Sector:
                 except IndexError:
                     pass
         self.render()
+
+    def place_foundry(self, x: int, y: int) -> None:
+        if type(self.board[y][x]) not in SELL_BLOCKED and 0 <= y < SECTOR_Y_NUMBER and 0 <= x < SECTOR_X_NUMBER:
+            foundry = Foundry(pos=(x, y), size_cell=self.size_cell, dialog_info=self.dialog_info,
+                              dialog_file=self.dialog_file, dialog_state=self.dialog_state,
+                              right_panel=self.right_panel, left_panel=self.left_panel)
+            self.entities.add(foundry)
+        else:
+            self.dialog_info.show(['Неподходящая поверхность для плавильни'])
 
     def place_base(self, x: int, y: int) -> None:
         if type(self.board[y][x]) not in SELL_BLOCKED and not self.base and \
@@ -190,6 +231,9 @@ class Sector:
                                    dialog_info=self.dialog_info, dialog_state=self.dialog_state,
                                    right_panel=self.right_panel, left_panel=self.left_panel)
                     if self.base.energy >= robot_.energy_create and self.base.inventory.check(robot_.resource_create):
+                        for resource in robot_.resource_create:
+                            name, condition, quantity = resource
+                            self.base.inventory.update(name, condition, -quantity)
                         self.base.energy -= robot_.energy_create
                         self.base.entities.add(robot_)
                         # Происходит обновление базы -> обновим панель
@@ -205,7 +249,7 @@ class Sector:
                             name, condition, quantity = resource
                             if res[name][condition] < quantity:
                                 mess.append(f'{quantity - res[name][condition]} - {name} - {condition}')
-                        self.dialog_info.show(mess)
+                        self.dialog_state.show(mess)
                     return
         self.dialog_info.show(['Вокруг базы нет места', 'для нового объекта'])
 

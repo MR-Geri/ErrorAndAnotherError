@@ -16,7 +16,7 @@
     - Игроку доступны константы, которые он может импортировать из файла const
         ```
         ORES = ['IronOre', 'GoldOre', 'CooperOre', 'TinOre', 'SiliconOre', 'PlatinumOre']
-        BIOMES = ['Plain', 'Swamp', 'Mountain']
+        BIOMES = ['Plain', 'Swamp', 'Mountain', 'Desert']
       ```
 2. Логика мира:
     - Сектор выглядит так:  
@@ -72,7 +72,7 @@
                 robot['permissions'].set_move(True)
         return None
     ```
-    - Функиции 
+    - Функции 
         - Перемещение:
             1. Называется **move**
             2. Должна вернуть позицию **(x, y)** -> **Tuple[int, int]** или ***None***
@@ -118,7 +118,7 @@
                     'can_item_transfer': self.can_item_transfer}
    ```
     - На permissions могут влиять другие объекты. 
-    - Функиции 
+    - Функции 
         - Передача энергии:
             1. Называется **energy_transfer**
             2. Должна вернуть количество энергии которое нужно передать, позицию куда нужно передать **(energy, (x, y))** -> **Tuple[int, Tuple[int, int]]** или ***None***
@@ -129,7 +129,7 @@
                 - resource => название ресурса -> **str**
                 - condition => состояние ресурса -> **str**
                 - quantity => количество -> **int**
-5. Функиции разового кода:
+5. Функции разового кода:
     - place_base(x: int, y: int) -> Размещение базы на поле
     - create_robot(robot: ALL_ROBOT) -> Создание робота
 6. Виды роботов:
