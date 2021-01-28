@@ -51,7 +51,10 @@ class Foundry:
 
     def render(self) -> None:
         self.surface = pg.Surface((self.size_cell, self.size_cell), pg.SRCALPHA)
-        self.surface.fill('#00FF09')
+        self.surface.fill('#2B21BB')
+        s3 = int(self.size_cell / 3)
+        pg.draw.rect(self.surface, pg.Color('#4D6E75'), (s3, 0, self.size_cell - 2*s3, self.size_cell))
+        pg.draw.rect(self.surface, pg.Color('#4D6E75'), (0, s3, self.size_cell, self.size_cell - 2*s3))
 
     def draw(self, surface: pg.Surface) -> None:
         surface.blit(self.surface, self.rect)
