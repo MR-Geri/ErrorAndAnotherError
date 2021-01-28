@@ -76,6 +76,12 @@ class Robot:
             if self.right_panel.info_update == self.info:
                 self.info()
 
+    def energy_decrease(self, energy: int) -> None:
+        # НЕ ВЛИЯЕТ пользователь
+        self.energy -= energy
+        if self.right_panel.info_update == self.info:
+            self.info()
+
     def move_core(self, board, entities) -> Union[None, Tuple[int, int]]:
         # ВЛИЯЕТ пользователь
         if self.permissions.can_move:

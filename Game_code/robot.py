@@ -13,7 +13,7 @@ def move(state, board, entities) -> Union[Tuple[int, int], None]:
 def mine(state, board, entities) -> Union[Tuple[int, int], None]:
     pos = state['pos']
     if sum([sum(i.values()) for i in state['inventory'].values()]) < state['inventory_max'] and \
-            board[pos[1]][pos[0] + 1]['name'] in ORES:
+            board[pos[1]][pos[0] + 1]['name'] in ORES and state['energy'] > 100:
         state['permissions'].can_move = False
         return pos[0] + 1, pos[1]
     state['permissions'].can_move = True

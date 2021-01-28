@@ -286,8 +286,10 @@ class Sector:
             if abs(pos[1] - y) <= 1 and abs(pos[0] - x) <= 1 and \
                     0 <= pos[0] < SECTOR_X_NUMBER and 0 <= pos[1] < SECTOR_Y_NUMBER:
                 cell = self.board[pos[1]][pos[0]]
-                entity.inventory.update(resource=cell.ore, quantity=cell.ore_quantity)
-                self.sound.add(entity.sound_mine)
+                if entity.energy >= cell.ore_quantity * 3:
+                    entity.inventory.update(resource=cell.ore, quantity=cell.ore_quantity)
+                    entity.energy_decrease(cell.ore_quantity * 3)
+                    self.sound.add(entity.sound_mine)
 
     def item_transfer(self, entity, data: Union[None, tuple]) -> None:
         if data:
