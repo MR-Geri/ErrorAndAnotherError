@@ -292,6 +292,7 @@ class SettingsWindow(Window):
                         data['crashes'] = self.controller.volume_sound['crashes'].value
                         data['moves'] = self.controller.volume_sound['moves'].value
                         data['charge'] = self.controller.volume_sound['charge'].value
+                        data['mine'] = self.controller.volume_sound['mine'].value
                         json.dump(data, file)
                 self.controller.action_window(self.last_window)
 

@@ -27,7 +27,7 @@ class Processor:
 
     def ticked(self) -> None:
         t = time.time()
-        if t - self.tick >=  1 / self.time_update:
+        if t - self.tick >= 1 / self.time_update:
             self.tick = t
             self.tick_complete += 1
             self.update()
