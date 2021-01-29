@@ -7,7 +7,7 @@ from random import randint, sample, choice
 # Настройки окна
 WIN_WIDTH, WIN_HEIGHT = 1280, 720
 FULL_SCREEN = False
-MENU_TITLE = 'Название игры'
+MENU_TITLE = 'Error and another error =/'
 FPS = 60
 UPDATE_CHANGE_TIME = 1440
 CLOCK = pg.time.Clock()

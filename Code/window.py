@@ -155,7 +155,7 @@ class MenuWindow(Window):
         self.running_line.draw(self.display)
 
     def update(self) -> None:
-        pg.display.set_caption(str(self.clock.get_fps()))  # нужно для отладки. FPS в заголовок окна!
+        # pg.display.set_caption(str(self.clock.get_fps()))  # нужно для отладки. FPS в заголовок окна!
         self.running_line.update(self.music.get_text())
         self.buttons.update_text()
 
@@ -268,7 +268,7 @@ class SettingsWindow(Window):
             self.interface.move(0, self.interface.height)
 
     def update(self) -> None:
-        pg.display.set_caption(str(self.clock.get_fps()))  # нужно для отладки. FPS в заголовок окна!
+        # pg.display.set_caption(str(self.clock.get_fps()))  # нужно для отладки. FPS в заголовок окна!
         if self.text_permission.text != f'{self.permission.active[0]} x {self.permission.active[1]}':
             self.text_permission.set_text(f'{self.permission.active[0]} x {self.permission.active[1]}')
 
@@ -455,7 +455,7 @@ class GameWindow(Window):
         self.esc_menu.draw(self.display)
 
     def update(self) -> None:
-        pg.display.set_caption(str(self.clock.get_fps()))  # нужно для отладки. FPS в заголовок окна!
+        # pg.display.set_caption(str(self.clock.get_fps()))  # нужно для отладки. FPS в заголовок окна!
         if not self.get_action_window() and self.processor.state:
             self.processor.ticked()
             self.camera.move(self.camera_left, self.camera_right, self.camera_up, self.camera_down)
