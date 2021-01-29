@@ -288,7 +288,7 @@ class Sector:
                 cell = self.board[pos[1]][pos[0]]
                 if entity.energy >= cell.ore_quantity * 3:
                     entity.inventory.update(resource=cell.ore, quantity=cell.ore_quantity)
-                    entity.energy_decrease(cell.ore_quantity * 3)
+                    entity.energy_decrease(cell.energy_extraction)
                     self.sound.add(entity.sound_mine)
 
     def item_transfer(self, entity, data: Union[None, tuple]) -> None:

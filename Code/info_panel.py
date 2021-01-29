@@ -72,16 +72,31 @@ class LeftPanel(Panel):
         self.dial = Dial(self.interface.pos, self.interface.height, UPDATE_CHANGE_TIME,
                          (255, 255, 255), (255, 255, 255))
         self.time = TextMaxSizeCenter(
-            text=f"", width=self.interface.width - 2 * self.interface.height, height=self.interface.height,
+            text=f"", width=self.interface.width - 4 * self.interface.height, height=self.interface.height,
             pos=(self.interface.pos[0] + self.interface.height, self.interface.pos[1]), font_type=PT_MONO
         )
+        self.buttons.add(Button(
+            pos=(self.interface.width - 3 * self.interface.height, self.interface.pos[1]),
+            width=self.interface.height,
+            height=self.interface.height,
+            func=self.processor.down_speed, color_disabled=(30, 30, 30), color_active=(40, 40, 40),
+            text=TextMaxSizeCenter(text='<', width=self.interface.height, height=self.interface.height,
+                                   font_type=PT_MONO)
+        ))
         self.buttons.add(ButtonTwoStates(
-            pos=(self.interface.width - self.interface.height, self.interface.pos[1]), width=self.interface.height,
+            pos=(self.interface.width - 2 * self.interface.height, self.interface.pos[1]), width=self.interface.height,
             height=self.interface.height,
             func=self.processor.change, color_disabled=(30, 30, 30), color_active=(40, 40, 40),
             text=TextMaxSizeCenter(text='||', width=self.interface.height, height=self.interface.height,
                                    font_type=PT_MONO),
             texts=('►', '||'), get_state=self.processor.get_state
+        ))
+        self.buttons.add(Button(
+            pos=(self.interface.width - self.interface.height, self.interface.pos[1]), width=self.interface.height,
+            height=self.interface.height,
+            func=self.processor.up_speed, color_disabled=(30, 30, 30), color_active=(40, 40, 40),
+            text=TextMaxSizeCenter(text='>', width=self.interface.height, height=self.interface.height,
+                                   font_type=PT_MONO)
         ))
         self.interface.move(0)
         #

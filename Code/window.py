@@ -521,6 +521,10 @@ class GameWindow(Window):
                     self.dialog_code_use.changes_active()
                 if en.type == pg.KEYUP and en.key == pg.K_SPACE:
                     self.processor.change()
+                if en.type == pg.KEYUP and en.key == pg.K_GREATER:
+                    self.processor.up_speed()
+                if en.type == pg.KEYUP and en.key == pg.K_LESS:
+                    self.processor.down_speed()
                 #
                 if en.type == pg.KEYDOWN and en.key == pg.K_w:
                     self.camera_up = True
