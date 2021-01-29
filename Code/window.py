@@ -68,6 +68,7 @@ class Window:
 class MenuWindow(Window):
     def __init__(self, controller: object, size_display: Tuple[int, int], caption: str) -> None:
         super(MenuWindow, self).__init__(controller, size_display, caption)
+        pg.display.set_icon(pg.image.load('../error.ico'))
         width3 = int(round(self.win_width / 3, 0))
         self.interface = Interface(
             pos=(self.win_width // 100, self.win_height // 6 + self.win_height // 100), max_width=self.win_width,
@@ -170,6 +171,7 @@ class MenuWindow(Window):
 class SettingsWindow(Window):
     def __init__(self, controller: object, size_display: Tuple[int, int], caption: str) -> None:
         super().__init__(controller, size_display, caption)
+        pg.display.set_icon(pg.image.load('../error.ico'))
         self.interface = Interface(
             pos=(10, 10), max_width=self.win_width, max_height=self.win_height,
             indent=(0, self.win_height // 100), size=(self.win_width - 20, (self.win_height - 20) // 14))
@@ -300,6 +302,7 @@ class SettingsWindow(Window):
 class GameWindow(Window):
     def __init__(self, controller: object, size_display: Tuple[int, int], caption: str) -> None:
         super().__init__(controller, size_display, caption)
+        pg.display.set_icon(pg.image.load('../error.ico'))
         # Панели
         panel_width = self.win_width // INFO_PANEL_K
         pad, size = panel_width * 0.02, panel_width * 0.96
