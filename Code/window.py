@@ -521,9 +521,9 @@ class GameWindow(Window):
                     self.dialog_code_use.changes_active()
                 if en.type == pg.KEYUP and en.key == pg.K_SPACE:
                     self.processor.change()
-                if en.type == pg.KEYUP and en.key == pg.K_GREATER:
+                if en.type == pg.KEYUP and en.key == pg.K_PERIOD:
                     self.processor.up_speed()
-                if en.type == pg.KEYUP and en.key == pg.K_LESS:
+                if en.type == pg.KEYUP and en.key == pg.K_COMMA:
                     self.processor.down_speed()
                 #
                 if en.type == pg.KEYDOWN and en.key == pg.K_w:
