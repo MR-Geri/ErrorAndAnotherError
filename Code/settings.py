@@ -26,19 +26,19 @@ SECTOR_X_NUMBER = 50  # Размер сектора
 #
 INFO_PANEL_K = 5
 # Path
-PT_MONO = '../Data/Font/PT Mono.ttf'
-MS_MINCHO = '../Data/Font/MS Mincho.ttf'
+PT_MONO = 'Data/Font/PT Mono.ttf'
+MS_MINCHO = 'Data/Font/MS Mincho.ttf'
 
-MENU_BACKGROUND = '../Data/Images/game.jpg'
+MENU_BACKGROUND = 'Data/Images/game.jpg'
 
-PATH_CRASHES = '../Data/Sounds/crashes/'
-PATH_MOVES = '../Data/Sounds/moves/'
-PATH_CHARGE = '../Data/Sounds/charge/'
-PATH_MINES = '../Data/Sounds/mines/'
-ALL_BACKGROUND_MUSIC = [[root + i for i in files] for root, _, files in walk('../Data/Sounds/background_music/')][0]
+PATH_CRASHES = 'Data/Sounds/crashes/'
+PATH_MOVES = 'Data/Sounds/moves/'
+PATH_CHARGE = 'Data/Sounds/charge/'
+PATH_MINES = 'Data/Sounds/mines/'
+ALL_BACKGROUND_MUSIC = [[root + i for i in files] for root, _, files in walk('Data/Sounds/background_music/')][0]
 
-PLAYER_CODE = '../Game_code/'
-SAVE = '../Data/Save/'
+PLAYER_CODE = 'Game_code/'
+SAVE = 'Data/Save/'
 # Типизация
 COLOR = Union[Tuple[int, int, int], str]
 from Code.texts import Text, TextMaxSize, TextMaxSizeCenter, TextCenter

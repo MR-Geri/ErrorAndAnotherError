@@ -11,7 +11,7 @@ class Controller:
         with open(SAVE + 'settings.json', 'r') as file:
             data = json.load(file)
             display_size = tuple(data['display_size'])
-        self.icon = pg.image.load('../error.png')
+        self.icon = pg.image.load('error.png')
         self.volume = Numbers(0, 1, 0.01, round(1 / 16, 3))
         self.volume_sound = {
             'crashes': Numbers(0, 1, 0.01, round(1 / 16, 3)),
@@ -70,10 +70,3 @@ class Controller:
     def all_off(self) -> None:
         for window in self.windows.keys():
             self.windows[window].join()
-
-
-if __name__ == '__main__':
-    pg.mixer.pre_init(44100, -16, 1, 512)
-    pg.init()
-    controller = Controller()
-    controller.menu.run()
