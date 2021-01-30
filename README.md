@@ -1,5 +1,7 @@
 # Error and another error =/
----   
+---
+Идея: Создать игру, в которой нужно будет применять знания python и писать свою логику поведения объектов.
+---
 ![alt text](https://github.com/MR-Geri/projectPygame/blob/master/idea/menu.png)  
 1. Возможности:
     - TextInput поддерживает:
