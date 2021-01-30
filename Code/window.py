@@ -16,8 +16,8 @@ from Code.slider import Slider, Sliders
 
 
 class Window:
-    def __init__(self, controller: object, size_display: Tuple[int, int], caption: str) -> None:
-        self.caption = caption
+    def __init__(self, controller: object, size_display: Tuple[int, int], display) -> None:
+        self.display = display
         self.is_run = False
         self.last_window = None
         self.controller = controller
@@ -26,11 +26,6 @@ class Window:
         self.permission = self.controller.permission
         self.win_width, self.win_height = size_display
         #
-        if FULL_SCREEN:
-            self.display = pg.display.set_mode(size_display, pg.FULLSCREEN)
-        else:
-            self.display = pg.display.set_mode(size_display)
-        pg.display.set_caption(self.caption)
         self.bd = pg.Surface(size_display)
         self.bd.fill(pg.Color(COLOR_BACKGROUND))
         #
@@ -66,9 +61,8 @@ class Window:
 
 
 class MenuWindow(Window):
-    def __init__(self, controller: object, size_display: Tuple[int, int], caption: str) -> None:
-        super(MenuWindow, self).__init__(controller, size_display, caption)
-        pg.display.set_icon(pg.image.load('../error.ico'))
+    def __init__(self, controller: object, size_display: Tuple[int, int], display: pg.Surface) -> None:
+        super(MenuWindow, self).__init__(controller, size_display, display)
         width3 = int(round(self.win_width / 3, 0))
         self.interface = Interface(
             pos=(self.win_width // 100, self.win_height // 6 + self.win_height // 100), max_width=self.win_width,
@@ -169,9 +163,8 @@ class MenuWindow(Window):
 
 
 class SettingsWindow(Window):
-    def __init__(self, controller: object, size_display: Tuple[int, int], caption: str) -> None:
-        super().__init__(controller, size_display, caption)
-        pg.display.set_icon(pg.image.load('../error.ico'))
+    def __init__(self, controller: object, size_display: Tuple[int, int], display: pg.Surface) -> None:
+        super().__init__(controller, size_display, display)
         self.interface = Interface(
             pos=(10, 10), max_width=self.win_width, max_height=self.win_height,
             indent=(0, self.win_height // 100), size=(self.win_width - 20, (self.win_height - 20) // 14))
@@ -300,9 +293,8 @@ class SettingsWindow(Window):
 
 
 class GameWindow(Window):
-    def __init__(self, controller: object, size_display: Tuple[int, int], caption: str) -> None:
-        super().__init__(controller, size_display, caption)
-        pg.display.set_icon(pg.image.load('../error.ico'))
+    def __init__(self, controller: object, size_display: Tuple[int, int], display: pg.Surface) -> None:
+        super().__init__(controller, size_display, display)
         # Панели
         panel_width = self.win_width // INFO_PANEL_K
         pad, size = panel_width * 0.02, panel_width * 0.96
@@ -351,6 +343,7 @@ class GameWindow(Window):
                                              width=int(self.win_width * (6 / 8)), height=int(self.win_height * 1/3),
                                              dialog_info=self.dialog_info, sector=self.sector)
         self.left_panel.init(self.processor)
+        #
 
     def save(self) -> None:
         board, entities = self.sector.save()

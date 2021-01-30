@@ -147,7 +147,7 @@ class DialogCodeUse:
 
     @staticmethod
     def read(line_input, dialog_info, place_base, create_robot, place_foundry):
-        from Code.sector_objects.robots import MK0, MK1, MK2
+        from Code.sector_objects.robots import MK0, MK1, MK2, MK3
         t = line_input.text.text
         try:
             eval(str(t))

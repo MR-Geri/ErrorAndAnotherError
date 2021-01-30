@@ -236,3 +236,30 @@ class MK2(Robot):
         self.surface = pg.Surface((self.size_cell, self.size_cell), pg.SRCALPHA)
         radius = int(self.size_cell / 2)
         pg.draw.circle(self.surface, pg.Color(255, 255, 0), (radius, radius), radius)
+
+
+class MK3(Robot):
+    def __init__(self, pos: Tuple[int, int], size_cell: int,
+                 dialog_info: DialogInfo, dialog_file: DialogFile, dialog_state: DialogState,
+                 right_panel: RightPanel, left_panel: LeftPanel) -> None:
+        super().__init__(pos, size_cell, dialog_info, dialog_file, dialog_state, right_panel, left_panel)
+        self.name = 'Робот MK2'
+        self.energy = 200
+        self.energy_max = 600
+        self.energy_create = 200
+        self.resource_create = [('Медь', 'продукт', 100), ('Олово', 'продукт', 50), ('Железо', 'продукт', 180),
+                                ('Платина', 'продукт', 15)]
+        self.dmg = 0
+        self.hp = 200
+        self.hp_max = 200
+        self.distance_move = 3
+        self.sell_block = ['Mountain'] + STR_ORES
+        #
+        self.inventory_max = 300
+        self.distance_resource = 1
+        self.inventory = InventoryRobot(*self.right_panel.inventory_settings, max_items=self.inventory_max)
+
+    def render(self) -> None:
+        self.surface = pg.Surface((self.size_cell, self.size_cell), pg.SRCALPHA)
+        radius = int(self.size_cell / 2)
+        pg.draw.circle(self.surface, pg.Color(255, 169, 0), (radius, radius), radius)

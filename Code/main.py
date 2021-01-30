@@ -11,6 +11,7 @@ class Controller:
         with open(SAVE + 'settings.json', 'r') as file:
             data = json.load(file)
             display_size = tuple(data['display_size'])
+        self.icon = pg.image.load('../error.png')
         self.volume = Numbers(0, 1, 0.01, round(1 / 16, 3))
         self.volume_sound = {
             'crashes': Numbers(0, 1, 0.01, round(1 / 16, 3)),
@@ -21,16 +22,22 @@ class Controller:
         self.music = Music(path=ALL_BACKGROUND_MUSIC, volume=self.volume.value)
         self.sound = Sound(self.volume_sound)
         self.permission = Permission(active=display_size)
+        if FULL_SCREEN:
+            self.display = pg.display.set_mode(self.permission.active, pg.FULLSCREEN)
+        else:
+            self.display = pg.display.set_mode(self.permission.active)
+        pg.display.set_caption(MENU_TITLE)
+        pg.display.set_icon(self.icon)
         #
-        self.game = GameWindow(self, display_size, MENU_TITLE)
-        self.menu = MenuWindow(self, display_size, MENU_TITLE)
-        self.settings = SettingsWindow(self, display_size, MENU_TITLE)
+        self.game = GameWindow(self, display_size, self.display)
+        self.menu = MenuWindow(self, display_size, self.display)
+        self.settings = SettingsWindow(self, display_size, self.display)
         #
         self.windows = {'menu': self.menu, 'settings': self.settings, 'game': self.game}
 
     def new_game(self) -> None:
         del self.game
-        self.game = GameWindow(self, self.permission.active, MENU_TITLE)
+        self.game = GameWindow(self, self.permission.active, self.display)
         self.windows['game'] = self.game
 
     def init(self) -> None:
@@ -39,13 +46,18 @@ class Controller:
             data['display_size'] = list(self.permission.active)
             with open(SAVE + 'settings.json', 'w') as file:
                 json.dump(data, file)
+        if FULL_SCREEN:
+            self.display = pg.display.set_mode(self.permission.active, pg.FULLSCREEN)
+        else:
+            self.display = pg.display.set_mode(self.permission.active)
+        pg.display.set_icon(self.icon)
         del self.menu
         del self.settings
         del self.game
         del self.windows
-        self.menu = MenuWindow(self, self.permission.active, MENU_TITLE)
-        self.settings = SettingsWindow(self, self.permission.active, MENU_TITLE)
-        self.game = GameWindow(self, self.permission.active, MENU_TITLE)
+        self.menu = MenuWindow(self, self.permission.active, self.display)
+        self.settings = SettingsWindow(self, self.permission.active, self.display)
+        self.game = GameWindow(self, self.permission.active, self.display)
         #
         self.windows = {'menu': self.menu, 'settings': self.settings, 'game': self.game}
 
