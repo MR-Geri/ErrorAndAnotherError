@@ -153,8 +153,7 @@ class DialogCodeUse:
             eval(str(t))
         except SyntaxError:
             exec(str(t))
-        except NameError as e:
-            print(e)
+        except NameError:
             dialog_info.show([f'Не существует такого объекта'])
         except Exception as e:
             print(e)

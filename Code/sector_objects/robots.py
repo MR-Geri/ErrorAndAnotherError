@@ -243,7 +243,7 @@ class MK3(Robot):
                  dialog_info: DialogInfo, dialog_file: DialogFile, dialog_state: DialogState,
                  right_panel: RightPanel, left_panel: LeftPanel) -> None:
         super().__init__(pos, size_cell, dialog_info, dialog_file, dialog_state, right_panel, left_panel)
-        self.name = 'Робот MK2'
+        self.name = 'Робот MK3'
         self.energy = 200
         self.energy_max = 600
         self.energy_create = 200
@@ -255,8 +255,8 @@ class MK3(Robot):
         self.distance_move = 3
         self.sell_block = ['Mountain'] + STR_ORES
         #
-        self.inventory_max = 300
-        self.distance_resource = 1
+        self.inventory_max = 400
+        self.distance_resource = 2
         self.inventory = InventoryRobot(*self.right_panel.inventory_settings, max_items=self.inventory_max)
 
     def render(self) -> None:
