@@ -118,7 +118,7 @@ MAX_SIZE_PLATINUM = (2, 2)
 MAX_QUANTITY_PLATINUM = 1
 MIN_QUANTITY_PLATINUM_CELL = 1
 #
-SELL_BLOCKED = [Mountain]
+SELL_BLOCKED = [Mountain, IronOre, AluminiumOre, GoldOre, CooperOre, TinOre, SiliconOre, PlatinumOre]
 #
 ROBOTS = [MK0, MK1, MK2]
 BASES = [Base, IronOre, AluminiumOre, GoldOre, CooperOre, TinOre, SiliconOre, PlatinumOre]
