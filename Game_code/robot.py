@@ -25,5 +25,5 @@ def item_transfer(state, board, entities):
     for element in invent:
         for i in invent[element]:
             if invent[element][i] > 0:
-                return (22, 3), element, i, invent[element][i]
+                return (12, 14), element, i, invent[element][i]
     return None

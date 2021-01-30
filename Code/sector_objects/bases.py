@@ -142,6 +142,8 @@ class Base:
 
     def func_del_file(self) -> None:
         self.path_user_code.set_text('')
+        self.energy_transfer = lambda *args, **kwargs: None
+        self.item_transfer = lambda *args, **kwargs: None
         self.left_panel.button_del_file.func = None
 
     def func_info(self) -> None:

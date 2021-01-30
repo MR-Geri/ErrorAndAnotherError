@@ -162,10 +162,12 @@ class Sector:
                     code = entity.path_user_code.code()
                     if code:
                         module = entity.path_user_code.module()
+                        print(module)
                         try:
                             if 'move' in code:
                                 importlib.reload(importlib.import_module(module))
                                 entity.move = importlib.import_module(module).move
+                                print(1)
                         except:
                             pass
                         try:

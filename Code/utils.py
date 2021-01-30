@@ -44,6 +44,7 @@ class Path:
 
     def set_text(self, text: str) -> None:
         self.text = text
+        self.last_code = None
 
     def module(self) -> Union[str, None]:
         return self.text.split(r'projectPygame\ '[:-1])[1].split('.py')[0].replace(r'\ '[0], '.')

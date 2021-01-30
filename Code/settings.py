@@ -121,6 +121,6 @@ MIN_QUANTITY_PLATINUM_CELL = 1
 SELL_BLOCKED = [Mountain]
 #
 ROBOTS = [MK0, MK1, MK2]
-BASES = [Base]
+BASES = [Base, IronOre, AluminiumOre, GoldOre, CooperOre, TinOre, SiliconOre, PlatinumOre]
 FOUNDRIES = [Foundry]
 #
