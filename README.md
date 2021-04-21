@@ -22,7 +22,8 @@
         ```
         ORES = ['IronOre', 'GoldOre', 'CooperOre', 'TinOre', 'SiliconOre', 'PlatinumOre']
         BIOMES = ['Plain', 'Swamp', 'Mountain', 'Desert']
-        ROBOTS = ['MK0', 'MK1']
+        ROBOTS = ['MK0', 'MK1', 'MK2', 'MK3']
+
       ```
 2. Логика мира:
     - Сектор выглядит так:  
@@ -66,7 +67,7 @@
                     'can_item_transfer': self.can_item_transfer}
    ```
     - На permissions могут влиять другие объекты. 
-     например **База** блокирует перемещение для **Робота**:
+     Например **База** блокирует перемещение для **Робота**:
     ```
     # Логика базы для зарядки робота
     def energy_transfer(state, board, entities) -> Union[Tuple[int, Tuple[int, int]], None]:
@@ -175,7 +176,7 @@
 6. Функции разового кода:
     - place_base(x: int, y: int) -> Размещение базы на поле
     - place_foundry(x: int, y: int) -> Размещение плавильни на поле
-    - create_robot(robot: ALL_ROBOT) -> Создание робота
+    - create_robot(robot: ROBOTS) -> Создание робота
 7. Виды роботов:
     - Разнорабочие:
         - MK0

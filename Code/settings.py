@@ -29,7 +29,7 @@ INFO_PANEL_K = 5
 PT_MONO = 'Data/Font/PT Mono.ttf'
 MS_MINCHO = 'Data/Font/MS Mincho.ttf'
 
-MENU_BACKGROUND = 'Data/Images/game.jpg'
+MENU_BACKGROUND = 'Data/Images/error.jpg'
 
 PATH_CRASHES = 'Data/Sounds/crashes/'
 PATH_MOVES = 'Data/Sounds/moves/'
@@ -120,7 +120,7 @@ MIN_QUANTITY_PLATINUM_CELL = 1
 #
 SELL_BLOCKED = [Mountain, IronOre, AluminiumOre, GoldOre, CooperOre, TinOre, SiliconOre, PlatinumOre]
 #
-ROBOTS = [MK0, MK1, MK2]
+ROBOTS = [MK0, MK1, MK2, MK3]
 BASES = [Base, IronOre, AluminiumOre, GoldOre, CooperOre, TinOre, SiliconOre, PlatinumOre]
 FOUNDRIES = [Foundry]
 #

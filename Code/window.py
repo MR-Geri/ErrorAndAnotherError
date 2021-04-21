@@ -362,6 +362,7 @@ class GameWindow(Window):
             data = json.load(file)
             self.size_cell = self.size_cell_min + data['degree_scale'] * self.coefficient_scale
             self.sector.load(data['board'], data['entities'], self.size_cell)
+            self.inventory_active = self.sector.base.inventory
             self.camera.load(data['camera'], self.coefficient_scale)
             self.scale(0)
             processor = data['processor']
