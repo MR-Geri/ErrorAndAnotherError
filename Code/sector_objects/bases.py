@@ -152,3 +152,73 @@ class Base:
             f'Максимальная передача > {self.energy_max_charging}', f'Дальность создания > {self.distance_create}',
             f'Максимальная прочность > {self.hp_max}', f'Дальность передачи предметов > {self.distance_resource}'
         ])
+
+
+class EnemyBase:
+    def __init__(self, pos: Tuple[int, int], size_cell: int, board: list, entities: Entities,
+                 dialog_info: DialogInfo, dialog_file: DialogFile, dialog_state: DialogState,
+                 right_panel: RightPanel, left_panel: LeftPanel) -> None:
+        self.pos = list(pos)
+        self.size_cell = size_cell
+        self.board = board
+        self.entities = entities
+        self.dialog_info = dialog_info
+        self.dialog_file = dialog_file
+        self.dialog_state = dialog_state
+        self.right_panel = right_panel
+        self.left_panel = left_panel
+        # Характеристики
+        self.name = 'Гнездо'
+        self.energy = 1000
+        self.energy_max = 4000
+        self.hp = 1000
+        self.hp_max = 1000
+        self.distance_create = 1
+        #
+        # self.sound_charge = PATH_CHARGE + 'MK0.wav'
+        #
+        self.rect = pg.Rect(self.pos[0] * self.size_cell, self.pos[1] * self.size_cell, self.size_cell, self.size_cell)
+        self.surface = pg.Surface((self.size_cell, self.size_cell), pg.SRCALPHA)
+        #
+        self.render()
+
+    def render(self) -> None:
+        self.surface = pg.Surface((self.size_cell, self.size_cell), pg.SRCALPHA)
+        self.surface.fill('#00FFC9')
+
+    def draw(self, surface: pg.Surface) -> None:
+        surface.blit(self.surface, self.rect)
+
+    def info(self) -> None:
+        self.right_panel.info_update = self.info
+        energy = f'Энергия > {self.energy}'
+        hp = f'Прочность > {self.hp}'
+        texts = [self.name, energy, hp]
+        self.right_panel.update_text(texts)
+
+    def save(self) -> dict:
+        state = {
+            'pos': self.pos, 'name': self.__class__.__name__,
+            'energy': self.energy, 'energy_max': self.energy_max, 'hp': self.hp, 'hp_max': self.hp_max,
+            'distance_create': self.distance_create,
+        }
+        return state
+
+    def load(self, state: dict):
+        self.pos = state['pos']
+        self.energy = state['energy']
+        self.energy_max = state['energy_max']
+        self.hp = state['hp']
+        self.hp_max = state['hp_max']
+        self.distance_create = state['distance_create']
+
+    def scale(self, size_cell: int) -> None:
+        self.size_cell = size_cell
+        self.rect = pg.Rect(self.pos[0] * self.size_cell, self.pos[1] * self.size_cell, self.size_cell, self.size_cell)
+        self.render()
+
+    def func_info(self) -> None:
+        self.dialog_state.show([
+            f'Максимально энергии > {self.energy_max}', f'Дальность создания > {self.distance_create}',
+            f'Максимальная прочность > {self.hp_max}',
+        ])
