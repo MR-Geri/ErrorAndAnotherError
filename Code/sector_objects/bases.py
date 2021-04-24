@@ -184,7 +184,7 @@ class EnemyBase:
 
     def render(self) -> None:
         self.surface = pg.Surface((self.size_cell, self.size_cell), pg.SRCALPHA)
-        self.surface.fill('#00FFC9')
+        self.surface.fill('#FF0000')
 
     def draw(self, surface: pg.Surface) -> None:
         surface.blit(self.surface, self.rect)
