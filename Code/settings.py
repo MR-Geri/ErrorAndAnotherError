@@ -1,6 +1,7 @@
 from typing import Union, Tuple
 from os import walk
 import pygame as pg
+import math
 from random import randint, sample, choice
 
 
@@ -63,15 +64,22 @@ STR_TO_OBJECT['PlatinumOre'] = PlatinumOre
 STR_TO_OBJECT['AluminiumOre'] = AluminiumOre
 ALL_CELL = Union[Plain, Swamp, Mountain, IronOre, AluminiumOre, GoldOre, CooperOre, TinOre, SiliconOre, PlatinumOre]
 STR_ORES = ['IronOre', 'AluminiumOre', 'GoldOre', 'CooperOre', 'TinOre', 'SiliconOre', 'PlatinumOre']
+#
 from Code.sector_objects.robots import MK0, MK1, MK2, MK3
 STR_TO_OBJECT['MK0'] = MK0
 STR_TO_OBJECT['MK1'] = MK1
 STR_TO_OBJECT['MK2'] = MK2
 STR_TO_OBJECT['MK3'] = MK3
 ALL_ROBOT = Union[MK0, MK1, MK2, MK3]
-from Code.sector_objects.bases import Base
+#
+from Code.sector_objects.enemy import Warrior
+STR_TO_OBJECT['Warrior'] = Warrior
+ALL_ENEMY = Union[Warrior]
+#
+from Code.sector_objects.bases import Base, EnemyBase
 from Code.sector_objects.foundry import Foundry
 STR_TO_OBJECT['Base'] = Base
+STR_TO_OBJECT['EnemyBase'] = EnemyBase
 STR_TO_OBJECT['Foundry'] = Foundry
 #
 from Code.buttons import Button, ButtonTwoStates, ChoiceButton
@@ -121,6 +129,8 @@ MIN_QUANTITY_PLATINUM_CELL = 1
 SELL_BLOCKED = [Mountain, IronOre, AluminiumOre, GoldOre, CooperOre, TinOre, SiliconOre, PlatinumOre]
 #
 ROBOTS = [MK0, MK1, MK2, MK3]
-BASES = [Base, IronOre, AluminiumOre, GoldOre, CooperOre, TinOre, SiliconOre, PlatinumOre]
+BASES = [Base]
+ENEMY_BASES = [EnemyBase]
+ENEMY = [Warrior]
 FOUNDRIES = [Foundry]
 #

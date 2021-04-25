@@ -1,5 +1,4 @@
 from Code.settings import *
-import math
 
 
 class InterfaceError(Exception):
@@ -161,3 +160,11 @@ class Dial:
             self.render(value)
             self.value = value
         surface.blit(self.surface, self.rect)
+
+
+def random_cord() -> Tuple[int, int]:
+    return randint(0, SECTOR_X_NUMBER - 1), randint(0, SECTOR_Y_NUMBER - 1)
+
+
+def get_distance(pos_one: Tuple[int, int], pos_two: Tuple[int, int] = (0, 0)) -> Tuple[int, int]:
+    return abs(pos_one[0] - pos_two[0]), abs(pos_one[1] - pos_two[1])

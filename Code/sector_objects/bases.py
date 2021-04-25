@@ -175,12 +175,13 @@ class EnemyBase:
         self.hp_max = 1000
         self.distance_create = 1
         #
-        # self.sound_charge = PATH_CHARGE + 'MK0.wav'
-        #
         self.rect = pg.Rect(self.pos[0] * self.size_cell, self.pos[1] * self.size_cell, self.size_cell, self.size_cell)
         self.surface = pg.Surface((self.size_cell, self.size_cell), pg.SRCALPHA)
         #
         self.render()
+
+    def check(self) -> None:
+        pass
 
     def render(self) -> None:
         self.surface = pg.Surface((self.size_cell, self.size_cell), pg.SRCALPHA)
@@ -199,8 +200,8 @@ class EnemyBase:
     def save(self) -> dict:
         state = {
             'pos': self.pos, 'name': self.__class__.__name__,
-            'energy': self.energy, 'energy_max': self.energy_max, 'hp': self.hp, 'hp_max': self.hp_max,
-            'distance_create': self.distance_create,
+            'energy': self.energy, 'energy_max': self.energy_max,
+            'hp': self.hp, 'hp_max': self.hp_max, 'distance_create': self.distance_create
         }
         return state
 
@@ -216,9 +217,3 @@ class EnemyBase:
         self.size_cell = size_cell
         self.rect = pg.Rect(self.pos[0] * self.size_cell, self.pos[1] * self.size_cell, self.size_cell, self.size_cell)
         self.render()
-
-    def func_info(self) -> None:
-        self.dialog_state.show([
-            f'Максимально энергии > {self.energy_max}', f'Дальность создания > {self.distance_create}',
-            f'Максимальная прочность > {self.hp_max}',
-        ])

@@ -2,10 +2,10 @@ import importlib
 
 from Code.sector_objects.foundry import Foundry
 from Code.settings import *
-
+from Code import utils
 from Code.dialogs import DialogInfo, DialogFile, DialogState
 from Code.info_panel import RightPanel, LeftPanel
-from Code.sector_objects.bases import Base
+from Code.sector_objects.bases import Base, EnemyBase
 from Code.sector_objects.entities import Entities
 from Code.Map.biomes import GeneratorBiomes
 from Code.sound import Sound
@@ -19,8 +19,12 @@ class Sector:
         self.size_cell = size_cell
         self.size_sector = (number_x * size_cell, number_y * size_cell)
         self.surface = pg.Surface(self.size_sector)
+        #
         self.board = None
         self.base = None
+        self.enemy_base = None
+        self.enemy =
+        #
         self.sound = sound
         self.dialog_info = dialog_info
         self.dialog_file = dialog_file
@@ -71,14 +75,16 @@ class Sector:
                     dialog_info=self.dialog_info, dialog_file=self.dialog_file, dialog_state=self.dialog_state,
                     right_panel=self.right_panel, left_panel=self.left_panel)
                 self.base = entity
-            elif entity in ROBOTS:
+            elif entity in ROBOTS or entity in FOUNDRIES:
                 entity = entity(
                     pos=data['pos'], size_cell=size_cell, dialog_info=self.dialog_info, dialog_file=self.dialog_file,
                     dialog_state=self.dialog_state, right_panel=self.right_panel, left_panel=self.left_panel)
-            elif entity in FOUNDRIES:
+            elif entity in ENEMY_BASES:
                 entity = entity(
-                    pos=data['pos'], size_cell=size_cell, dialog_info=self.dialog_info, dialog_file=self.dialog_file,
-                    dialog_state=self.dialog_state, right_panel=self.right_panel, left_panel=self.left_panel)
+                    pos=data['pos'], size_cell=size_cell, board=board, entities=self.entities,
+                    dialog_info=self.dialog_info, dialog_file=self.dialog_file, dialog_state=self.dialog_state,
+                    right_panel=self.right_panel, left_panel=self.left_panel)
+                self.enemy_base = entity
             entity.load(data)
             self.entities.add(entity)
         self.render()
@@ -203,7 +209,7 @@ class Sector:
 
     def place_base(self, x: int, y: int) -> None:
         if type(self.board[y][x]) not in SELL_BLOCKED and not self.base and \
-               0 <= y < SECTOR_Y_NUMBER and 0 <= x < SECTOR_X_NUMBER:
+                0 <= y < SECTOR_Y_NUMBER and 0 <= x < SECTOR_X_NUMBER:
             self.base = Base(pos=(x, y), size_cell=self.size_cell, board=self.board, entities=self.entities,
                              dialog_info=self.dialog_info, dialog_file=self.dialog_file, dialog_state=self.dialog_state,
                              right_panel=self.right_panel, left_panel=self.left_panel)
@@ -214,6 +220,18 @@ class Sector:
                 self.dialog_info.show(['База уже существует'])
             else:
                 self.dialog_info.show(['Неподходящая поверхность для базы'])
+
+    def place_enemy_base(self) -> None:
+        pos = utils.random_cord()
+        while sum(utils.get_distance(pos, self.base.pos)) < 16 and not type(self.board[pos[1]][pos[0]]) in SELL_BLOCKED:
+            pos = utils.random_cord()
+        self.enemy_base = EnemyBase(pos=pos, size_cell=self.size_cell, board=self.board, entities=self.entities,
+                                    dialog_info=self.dialog_info, dialog_file=self.dialog_file,
+                                    dialog_state=self.dialog_state, right_panel=self.right_panel,
+                                    left_panel=self.left_panel)
+        self.entities.add(self.enemy_base)
+        self.dialog_info.show(['Внимание!!!', 'На поле появилось гнездо противника',
+                               f'Обратите внимание на ячейку {pos}'])
 
     def energy_transfer(self, entity, energy: int, pos: Tuple[int, int]) -> None:
         if energy > 0 and pos:
@@ -227,6 +245,9 @@ class Sector:
                             self.entities.entities_sector[pos[1]][pos[0]].energy_receiving(energy)
                         self.base.energy_decrease(energy)
                         self.sound.add(self.base.sound_charge)
+
+    def create_enemy(self) -> None:
+        pass
 
     def create_robot(self, robot: ALL_ROBOT) -> None:
         n_x, k_x = self.base.pos[0] - self.base.distance_create, self.base.pos[0] + self.base.distance_create + 1
