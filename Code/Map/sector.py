@@ -23,7 +23,6 @@ class Sector:
         self.board = None
         self.base = None
         self.enemy_base = None
-        self.enemy =
         #
         self.sound = sound
         self.dialog_info = dialog_info
@@ -229,7 +228,7 @@ class Sector:
                                     dialog_info=self.dialog_info, dialog_file=self.dialog_file,
                                     dialog_state=self.dialog_state, right_panel=self.right_panel,
                                     left_panel=self.left_panel)
-        self.entities.add(self.enemy_base)
+        self.entities.add_enemy(self.enemy_base)
         self.dialog_info.show(['Внимание!!!', 'На поле появилось гнездо противника',
                                f'Обратите внимание на ячейку {pos}'])
 
@@ -245,6 +244,9 @@ class Sector:
                             self.entities.entities_sector[pos[1]][pos[0]].energy_receiving(energy)
                         self.base.energy_decrease(energy)
                         self.sound.add(self.base.sound_charge)
+
+    def check_enemy(self, tick_complete: int) -> None:
+        pass
 
     def create_enemy(self) -> None:
         pass
@@ -264,7 +266,7 @@ class Sector:
                             name, condition, quantity = resource
                             self.base.inventory.update(name, condition, -quantity)
                         self.base.energy -= robot_.energy_create
-                        self.base.entities.add(robot_)
+                        self.entities.add(robot_)
                         # Происходит обновление базы -> обновим панель
                         if self.right_panel.info_update == self.base.info:
                             self.base.info()

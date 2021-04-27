@@ -38,9 +38,9 @@ class Robot:
         self.distance_resource = 0
         self.inventory = InventoryRobot(*self.right_panel.inventory_settings, max_items=self.inventory_max)
         # Заменяются версией робота
-        self.sound_crash = PATH_CRASHES + 'MK0.wav'
-        self.sound_move = PATH_MOVES + 'MK0.wav'
-        self.sound_mine = PATH_MINES + 'MK0.mp3'
+        self.sound_crash = PATH_CRASHES + 'MK0.ogg'
+        self.sound_move = PATH_MOVES + 'MK0.ogg'
+        self.sound_mine = PATH_MINES + 'MK0.ogg'
         #
         self.rect = pg.Rect(self.pos[0] * self.size_cell, self.pos[1] * self.size_cell, self.size_cell, self.size_cell)
         self.surface = pg.Surface((self.size_cell, self.size_cell), pg.SRCALPHA)

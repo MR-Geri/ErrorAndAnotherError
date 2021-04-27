@@ -1,4 +1,3 @@
-from Code.inventory import InventoryRobot
 from Code.settings import *
 from Code.dialogs import DialogInfo, DialogFile, DialogState
 from Code.info_panel import RightPanel, LeftPanel

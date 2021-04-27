@@ -36,7 +36,7 @@ class Base:
         self.energy_max_charging = 5
         self.energy_possibility = ['MK0', 'MK1', 'MK2', 'MK3', 'Foundry']
         #
-        self.sound_charge = PATH_CHARGE + 'MK0.wav'
+        self.sound_charge = PATH_CHARGE + 'MK0.ogg'
         #
         self.distance_resource = 5
         self.inventory = Inventory(*self.right_panel.inventory_settings)
@@ -180,8 +180,14 @@ class EnemyBase:
         #
         self.render()
 
-    def check(self) -> None:
-        pass
+    def get_state(self) -> dict:
+        data = {
+            'pos': tuple(self.pos), 'x': self.pos[0], 'y': self.pos[1], 'name': self.__class__.__name__,
+            'hp': self.hp, 'hp_max': self.hp_max
+        }
+        for k, v in data.items():
+            data[k] = type(v)(v)
+        return data
 
     def render(self) -> None:
         self.surface = pg.Surface((self.size_cell, self.size_cell), pg.SRCALPHA)

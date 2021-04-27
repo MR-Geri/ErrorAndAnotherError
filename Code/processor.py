@@ -40,7 +40,7 @@ class Processor:
         if self.sector.enemy_base is None and self.tick_complete > UPDATE_CHANGE_TIME * 2:
             self.sector.place_enemy_base()
         if self.sector.enemy_base:
-            self.sector.enemy_base.check(self.tick_complete)
+            self.sector.check_enemy(self.tick_complete)
 
     def update(self) -> None:
         self.sector.update(self.tick_complete)
