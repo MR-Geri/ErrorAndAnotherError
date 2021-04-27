@@ -31,14 +31,13 @@ class Processor:
             self.tick = t
             self.tick_complete += 1
             self.update()
-            self.enemy_check()
+            self.check_enemy()
         if self.tick_complete % UPDATE_CHANGE_TIME:
             self.day = not self.day
 
-    def enemy_check(self) -> None:
-        # Спавн базы противника
+    def check_enemy(self) -> None:
         if self.sector.enemy_base is None and self.tick_complete > UPDATE_CHANGE_TIME * 2:
-            self.sector.place_enemy_base()
+            self.sector.place_enemy_base(self.tick_complete)
         if self.sector.enemy_base:
             self.sector.check_enemy(self.tick_complete)
 

@@ -9,15 +9,15 @@ class Entities:
         self.sound = sound
         self.sector_size = sector_size
         self.entities_sector = {y: {x: None for x in range(self.sector_size[0])} for y in range(self.sector_size[1])}
-        self.enemy = defaultdict(int)
+        self.enemies = defaultdict(int)
         self.entity = defaultdict(int)
 
     def add_enemy(self, enemy) -> None:
         x, y = enemy.pos
         if self.entities_sector[y][x]:
-            pass
+            self.sound.add(self.entities_sector[y][x].sound_crash)
         self.entities_sector[y][x] = enemy
-        self.enemy[enemy.__class__.__name__] += 1
+        self.enemies[enemy.__class__.__name__] += 1
 
     def add(self, entity) -> None:
         x, y = entity.pos

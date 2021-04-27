@@ -74,7 +74,7 @@ class Sector:
                     dialog_info=self.dialog_info, dialog_file=self.dialog_file, dialog_state=self.dialog_state,
                     right_panel=self.right_panel, left_panel=self.left_panel)
                 self.base = entity
-            elif entity in ROBOTS or entity in FOUNDRIES:
+            elif entity in ROBOTS or entity in FOUNDRIES or entity in ENEMY:
                 entity = entity(
                     pos=data['pos'], size_cell=size_cell, dialog_info=self.dialog_info, dialog_file=self.dialog_file,
                     dialog_state=self.dialog_state, right_panel=self.right_panel, left_panel=self.left_panel)
@@ -82,7 +82,7 @@ class Sector:
                 entity = entity(
                     pos=data['pos'], size_cell=size_cell, board=board, entities=self.entities,
                     dialog_info=self.dialog_info, dialog_file=self.dialog_file, dialog_state=self.dialog_state,
-                    right_panel=self.right_panel, left_panel=self.left_panel)
+                    right_panel=self.right_panel, left_panel=self.left_panel, last_spawn_tick=data['last_spawn_tick'])
                 self.enemy_base = entity
             entity.load(data)
             self.entities.add(entity)
@@ -109,6 +109,9 @@ class Sector:
             for x in self.entities.entities_sector[y]:
                 entity = self.entities.entities_sector[y][x]
                 type_ = type(entity)
+                if entity and entity.hp <= 0:
+                    self.entities.entities_sector[y][x] = None
+                    continue
                 if type_ in ROBOTS:
                     robots.append(entity)
                 elif type_ in BASES:
@@ -220,15 +223,16 @@ class Sector:
             else:
                 self.dialog_info.show(['Неподходящая поверхность для базы'])
 
-    def place_enemy_base(self) -> None:
+    def place_enemy_base(self, tick_complete: int) -> None:
         pos = utils.random_cord()
-        while sum(utils.get_distance(pos, self.base.pos)) < 16 and not type(self.board[pos[1]][pos[0]]) in SELL_BLOCKED:
+        while sum(utils.get_distance(pos, self.base.pos)) < 16 and \
+                not self.board[pos[1]][pos[0]].__class__.__name__ in SELL_BLOCKED:
             pos = utils.random_cord()
         self.enemy_base = EnemyBase(pos=pos, size_cell=self.size_cell, board=self.board, entities=self.entities,
                                     dialog_info=self.dialog_info, dialog_file=self.dialog_file,
                                     dialog_state=self.dialog_state, right_panel=self.right_panel,
-                                    left_panel=self.left_panel)
-        self.entities.add_enemy(self.enemy_base)
+                                    left_panel=self.left_panel, last_spawn_tick=tick_complete)
+        self.entities.add(self.enemy_base)
         self.dialog_info.show(['Внимание!!!', 'На поле появилось гнездо противника',
                                f'Обратите внимание на ячейку {pos}'])
 
@@ -246,10 +250,25 @@ class Sector:
                         self.sound.add(self.base.sound_charge)
 
     def check_enemy(self, tick_complete: int) -> None:
-        pass
-
-    def create_enemy(self) -> None:
-        pass
+        enemies = self.entities.enemies
+        if sum(enemies.values()) < 5 and tick_complete - self.enemy_base.last_spawn_tick > 200:
+            n_x = self.enemy_base.pos[0] - self.enemy_base.distance_create
+            k_x = self.enemy_base.pos[0] + self.enemy_base.distance_create + 1
+            n_y = self.enemy_base.pos[1] - self.enemy_base.distance_create
+            k_y = self.enemy_base.pos[1] + self.enemy_base.distance_create + 1
+            #
+            for i_y, y in enumerate(self.board):
+                for i_x, x in enumerate(y):
+                    if k_y > i_y >= n_y and k_x > i_x >= n_x and type(x) not in SELL_BLOCKED and \
+                            self.entities.entities_sector[i_y][i_x] is None:
+                        enemy = choice(ENEMY)(
+                            pos=(i_x, i_y), size_cell=self.size_cell, dialog_info=self.dialog_info,
+                            dialog_file=self.dialog_file,
+                            dialog_state=self.dialog_state, right_panel=self.right_panel, left_panel=self.left_panel
+                        )
+                        self.entities.add_enemy(enemy)
+                        self.enemy_base.last_spawn_tick = tick_complete
+                        return
 
     def create_robot(self, robot: ALL_ROBOT) -> None:
         n_x, k_x = self.base.pos[0] - self.base.distance_create, self.base.pos[0] + self.base.distance_create + 1
@@ -266,7 +285,7 @@ class Sector:
                             name, condition, quantity = resource
                             self.base.inventory.update(name, condition, -quantity)
                         self.base.energy -= robot_.energy_create
-                        self.entities.add(robot_)
+                        self.base.entities.add(robot_)
                         # Происходит обновление базы -> обновим панель
                         if self.right_panel.info_update == self.base.info:
                             self.base.info()
@@ -291,7 +310,7 @@ class Sector:
             if entity.distance_move >= abs(pos[1] - y) and entity.distance_move >= abs(pos[0] - x) \
                     and pos != (x, y) and entities_sector[y][x] is not None and 0 <= pos[0] < SECTOR_X_NUMBER and \
                     0 <= pos[1] < SECTOR_Y_NUMBER:
-                if type(entities_sector[pos[1]][pos[0]]) in BASES:
+                if type(entities_sector[pos[1]][pos[0]]) in BASES + ENEMY_BASES:
                     self.sound.add(entities_sector[y][x].sound_crash)
                     entities_sector[y][x] = None
                 elif entity.energy >= self.board[pos[1]][pos[0]].energy_passage:

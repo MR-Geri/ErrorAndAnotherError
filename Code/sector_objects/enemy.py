@@ -21,13 +21,23 @@ class Enemy:
         self.distance_move = 0
         self.sell_block = ['Mountain'] + STR_ORES
         # Заменяются классом противника
-        self.sound_crash = PATH_CRASHES + 'MK0.wav'
-        self.sound_move = PATH_MOVES + 'MK0.wav'
+        self.sound_crash = PATH_CRASHES + 'MK0.ogg'
+        self.sound_move = PATH_MOVES + 'MK0.ogg'
         #
         self.rect = pg.Rect(self.pos[0] * self.size_cell, self.pos[1] * self.size_cell, self.size_cell, self.size_cell)
         self.surface = pg.Surface((self.size_cell, self.size_cell), pg.SRCALPHA)
         #
         self.render()
+
+    def get_state(self) -> dict:
+        data = {
+            'name': self.__class__.__name__, 'pos': tuple(self.pos), 'x': self.pos[0], 'y': self.pos[1],
+            'hp': self.hp, 'damage': self.dmg, 'dmg': self.dmg, 'sell_block': self.sell_block,
+            'distance_move': self.distance_move
+        }
+        for k, v in data.items():
+            data[k] = type(v)(v)
+        return data
 
     def pos_update(self, pos: Tuple[int, int]) -> None:
         self.pos = list(pos)

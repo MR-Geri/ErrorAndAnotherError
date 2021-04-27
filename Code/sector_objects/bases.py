@@ -157,7 +157,7 @@ class Base:
 class EnemyBase:
     def __init__(self, pos: Tuple[int, int], size_cell: int, board: list, entities: Entities,
                  dialog_info: DialogInfo, dialog_file: DialogFile, dialog_state: DialogState,
-                 right_panel: RightPanel, left_panel: LeftPanel) -> None:
+                 right_panel: RightPanel, left_panel: LeftPanel, last_spawn_tick: int) -> None:
         self.pos = list(pos)
         self.size_cell = size_cell
         self.board = board
@@ -169,11 +169,10 @@ class EnemyBase:
         self.left_panel = left_panel
         # Характеристики
         self.name = 'Гнездо'
-        self.energy = 1000
-        self.energy_max = 4000
         self.hp = 1000
         self.hp_max = 1000
         self.distance_create = 1
+        self.last_spawn_tick = last_spawn_tick
         #
         self.rect = pg.Rect(self.pos[0] * self.size_cell, self.pos[1] * self.size_cell, self.size_cell, self.size_cell)
         self.surface = pg.Surface((self.size_cell, self.size_cell), pg.SRCALPHA)
@@ -183,7 +182,7 @@ class EnemyBase:
     def get_state(self) -> dict:
         data = {
             'pos': tuple(self.pos), 'x': self.pos[0], 'y': self.pos[1], 'name': self.__class__.__name__,
-            'hp': self.hp, 'hp_max': self.hp_max
+            'hp': self.hp, 'hp_max': self.hp_max, 'last_spawn_tick': self.last_spawn_tick
         }
         for k, v in data.items():
             data[k] = type(v)(v)
@@ -198,23 +197,20 @@ class EnemyBase:
 
     def info(self) -> None:
         self.right_panel.info_update = self.info
-        energy = f'Энергия > {self.energy}'
         hp = f'Прочность > {self.hp}'
-        texts = [self.name, energy, hp]
+        texts = [self.name, hp]
         self.right_panel.update_text(texts)
 
     def save(self) -> dict:
         state = {
-            'pos': self.pos, 'name': self.__class__.__name__,
-            'energy': self.energy, 'energy_max': self.energy_max,
+            'pos': self.pos, 'name': self.__class__.__name__, 'last_spawn_tick': self.last_spawn_tick,
             'hp': self.hp, 'hp_max': self.hp_max, 'distance_create': self.distance_create
         }
         return state
 
     def load(self, state: dict):
         self.pos = state['pos']
-        self.energy = state['energy']
-        self.energy_max = state['energy_max']
+        self.last_spawn_tick = state['last_spawn_tick']
         self.hp = state['hp']
         self.hp_max = state['hp_max']
         self.distance_create = state['distance_create']
