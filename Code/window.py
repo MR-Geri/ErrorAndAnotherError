@@ -409,10 +409,12 @@ class GameWindow(Window):
                 if entity is not None:
                     self.left_panel.button_file.func = None
                     self.left_panel.button_del_file.func = None
+                    self.left_panel.button_info.func = None
                     try:
                         entity.info()
                         if entity.func_file:
                             self.left_panel.button_file.func = entity.func_file
+                        if entity.func_info:
                             self.left_panel.button_info.func = entity.func_info
                         if entity.path_user_code.text:
                             self.left_panel.button_del_file.func = entity.func_del_file

@@ -131,6 +131,6 @@ SELL_BLOCKED = [Mountain, IronOre, AluminiumOre, GoldOre, CooperOre, TinOre, Sil
 ROBOTS = [MK0, MK1, MK2, MK3]
 BASES = [Base]
 ENEMY_BASES = [EnemyBase]
-ENEMY = [Warrior]
+ENEMIES = [Warrior]
 FOUNDRIES = [Foundry]
 #

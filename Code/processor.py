@@ -36,9 +36,9 @@ class Processor:
             self.day = not self.day
 
     def check_enemy(self) -> None:
-        if self.sector.enemy_base is None and self.tick_complete > UPDATE_CHANGE_TIME * 2:
+        if (self.tick_complete // UPDATE_CHANGE_TIME // 2) // len(self.sector.enemy_bases):
             self.sector.place_enemy_base(self.tick_complete)
-        if self.sector.enemy_base:
+        if self.sector.enemy_bases:
             self.sector.check_enemy(self.tick_complete)
 
     def update(self) -> None:

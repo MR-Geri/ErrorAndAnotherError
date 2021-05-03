@@ -113,6 +113,12 @@ class Base:
         self.rect = pg.Rect(self.pos[0] * self.size_cell, self.pos[1] * self.size_cell, self.size_cell, self.size_cell)
         self.render()
 
+    def hp_update(self, hp) -> None:
+        # НЕ ВЛИЯЕТ пользователь
+        self.hp = max(0, hp)
+        if self.right_panel.info_update == self.info:
+            self.info()
+
     def energy_increase(self, energy: int) -> None:
         # НЕ ВЛИЯЕТ пользователь
         self.energy += energy if self.energy + energy <= self.energy_max else 0
@@ -187,6 +193,12 @@ class EnemyBase:
         for k, v in data.items():
             data[k] = type(v)(v)
         return data
+
+    def hp_update(self, hp) -> None:
+        # НЕ ВЛИЯЕТ пользователь
+        self.hp = max(0, hp)
+        if self.right_panel.info_update == self.info:
+            self.info()
 
     def render(self) -> None:
         self.surface = pg.Surface((self.size_cell, self.size_cell), pg.SRCALPHA)

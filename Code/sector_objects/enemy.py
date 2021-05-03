@@ -19,6 +19,7 @@ class Enemy:
         self.hp = 0
         self.hp_max = 0
         self.distance_move = 0
+        self.distance_attack = 0
         self.sell_block = ['Mountain'] + STR_ORES
         # Заменяются классом противника
         self.sound_crash = PATH_CRASHES + 'MK0.ogg'
@@ -38,6 +39,26 @@ class Enemy:
         for k, v in data.items():
             data[k] = type(v)(v)
         return data
+
+    def move_core(self, sector) -> Union[None, Tuple[int, int]]:
+        pos_base = sector.base.pos
+        x, y = self.pos
+        delta_x = (pos_base[0] - x) // abs(pos_base[0] - x) if abs(pos_base[0] - x) != 1 else 0
+        delta_y = (pos_base[1] - y) // abs(pos_base[1] - y) if abs(pos_base[1] - y) != 1 else 0
+        x += delta_x
+        y += delta_y
+        if delta_x == 0 and delta_y == 0 or sector.entities.entities_sector[y][x] is not None:
+            return None
+        return x, y
+
+    def attack_core(self, sector) -> Union[None, Tuple[int, int]]:
+        return sector.base.pos
+
+    def hp_update(self, hp) -> None:
+        # НЕ ВЛИЯЕТ пользователь
+        self.hp = max(0, hp)
+        if self.right_panel.info_update == self.info:
+            self.info()
 
     def pos_update(self, pos: Tuple[int, int]) -> None:
         self.pos = list(pos)
@@ -88,8 +109,9 @@ class Warrior(Enemy):
                  dialog_state: DialogState, right_panel: RightPanel, left_panel: LeftPanel) -> None:
         super().__init__(pos, size_cell, dialog_info, dialog_file, dialog_state, right_panel, left_panel)
         self.name = 'Воин'
-        self.dmg = 0
+        self.dmg = 50
         self.hp = 100
         self.hp_max = 100
+        self.distance_attack = 1
         self.distance_move = 1
         self.sell_block = ['Mountain'] + STR_ORES

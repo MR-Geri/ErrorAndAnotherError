@@ -69,6 +69,12 @@ class Robot:
         if self.right_panel.info_update == self.info:
             self.info()
 
+    def hp_update(self, hp) -> None:
+        # НЕ ВЛИЯЕТ пользователь
+        self.hp = max(0, hp)
+        if self.right_panel.info_update == self.info:
+            self.info()
+
     def energy_receiving(self, energy: int) -> None:
         # ВЛИЯЕТ пользователь
         if self.permissions.can_charging:
