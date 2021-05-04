@@ -1,3 +1,4 @@
+from collections import deque
 from Code.settings import *
 from Code.dialogs import DialogInfo, DialogFile, DialogState
 from Code.info_panel import RightPanel, LeftPanel
@@ -30,6 +31,33 @@ class Enemy:
         #
         self.render()
 
+    def check(self, x, y, board):
+        return True if 0 <= x < SECTOR_X_NUMBER and 0 <= y < SECTOR_Y_NUMBER and board[y][x] != 1 else False
+
+    def get_next_nodes(self, x, y, board) -> list:
+        ways = [-1, 0], [0, -1], [1, 0], [0, 1]
+        return [(x + dx, y + dy) for dx, dy in ways if self.check(x + dx, y + dy, board)]
+
+    def has_path(self, x1, y1, x2, y2, board):
+        graph = {}
+        for y, row in enumerate(board):
+            for x, col in enumerate(row):
+                if col != 1:
+                    graph[(x, y)] = graph.get((x, y), []) + self.get_next_nodes(x, y, board)
+        #
+        queue = deque([(x1, y1)])
+        visited = {(x1, y1): None}
+        while queue:
+            cur_node = queue.popleft()
+            if cur_node == (x2, y2):
+                break
+            next_nodes = graph[cur_node]
+            for next_node in next_nodes:
+                if next_node not in visited:
+                    queue.append(next_node)
+                    visited[next_node] = cur_node
+        return (x2, y2) in visited
+
     def get_state(self) -> dict:
         data = {
             'name': self.__class__.__name__, 'pos': tuple(self.pos), 'x': self.pos[0], 'y': self.pos[1],
@@ -41,15 +69,22 @@ class Enemy:
         return data
 
     def move_core(self, sector) -> Union[None, Tuple[int, int]]:
+        data = []
+        for y in range(SECTOR_Y_NUMBER):
+            temp = []
+            for x in range(SECTOR_X_NUMBER):
+                if sector.board[y][x].__class__.__name__ in self.sell_block or sector.entities.entities_sector[y][x]:
+                    temp.append(1)
+                else:
+                    temp.append(0)
+            data.append(temp)
+        #
         pos_base = sector.base.pos
-        x, y = self.pos
-        delta_x = (pos_base[0] - x) // abs(pos_base[0] - x) if abs(pos_base[0] - x) != 1 else 0
-        delta_y = (pos_base[1] - y) // abs(pos_base[1] - y) if abs(pos_base[1] - y) != 1 else 0
-        x += delta_x
-        y += delta_y
-        if delta_x == 0 and delta_y == 0 or sector.entities.entities_sector[y][x] is not None:
-            return None
-        return x, y
+        if self.has_path(*self.pos, *pos_base, data):
+            path_segment = pos_base
+            while path_segment and path_segment in self.visited:
+                self.temp.append(path_segment)
+                path_segment = self.visited[path_segment]
 
     def attack_core(self, sector) -> Union[None, Tuple[int, int]]:
         return sector.base.pos
