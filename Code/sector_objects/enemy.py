@@ -2,6 +2,7 @@ from collections import deque
 from Code.settings import *
 from Code.dialogs import DialogInfo, DialogFile, DialogState
 from Code.info_panel import RightPanel, LeftPanel
+from Code.utils import has_path
 
 
 class Enemy:
@@ -31,9 +32,6 @@ class Enemy:
         #
         self.render()
 
-    def check(self, x, y, board):
-        return True if 0 <= x < SECTOR_X_NUMBER and 0 <= y < SECTOR_Y_NUMBER and board[y][x] != 1 else False
-
     def get_state(self) -> dict:
         data = {
             'name': self.__class__.__name__, 'pos': tuple(self.pos), 'x': self.pos[0], 'y': self.pos[1],
@@ -44,31 +42,6 @@ class Enemy:
             data[k] = type(v)(v)
         return data
 
-    def get_next_nodes(self, x, y, board) -> list:
-        ways = [(x, y) for x in range(-self.distance_move, self.distance_move + 1) 
-                for y in range(-self.distance_move, self.distance_move + 1)]
-        return [(x + dx, y + dy) for dx, dy in ways if self.check(x + dx, y + dy, board)]
-
-    def has_path(self, x1, y1, x2, y2, board):
-        graph = {}
-        for y, row in enumerate(board):
-            for x, col in enumerate(row):
-                if col != 1:
-                    graph[(x, y)] = graph.get((x, y), []) + self.get_next_nodes(x, y, board)
-        #
-        queue = deque([(x1, y1)])
-        visited = {(x1, y1): None}
-        while queue:
-            cur_node = queue.popleft()
-            if cur_node == (x2, y2):
-                break
-            next_nodes = graph[cur_node]
-            for next_node in next_nodes:
-                if next_node not in visited:
-                    queue.append(next_node)
-                    visited[next_node] = cur_node
-        return (x2, y2) in visited, visited
-
     def move_core(self, sector) -> Union[None, Tuple[int, int]]:
         pos_base = sector.base.pos
         data = [
@@ -78,7 +51,7 @@ class Enemy:
             for y in range(SECTOR_Y_NUMBER)
         ]
         #
-        flag, visited = self.has_path(*self.pos, *pos_base, data)
+        flag, visited = has_path(*self.pos, *pos_base, np.array(data, int), self.distance_move)
         if flag:
             path_segment = tuple(pos_base)
             while path_segment and path_segment in visited:

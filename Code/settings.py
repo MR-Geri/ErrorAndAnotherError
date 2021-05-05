@@ -1,6 +1,8 @@
+from collections import deque
 from typing import Union, Tuple
 from os import walk
 import pygame as pg
+import numpy as np
 import math
 from random import randint, sample, choice
 
