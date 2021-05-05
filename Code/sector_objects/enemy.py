@@ -1,7 +1,7 @@
-from collections import deque
 from Code.settings import *
 from Code.dialogs import DialogInfo, DialogFile, DialogState
 from Code.info_panel import RightPanel, LeftPanel
+from Code.finding_path import a_star_search
 from Code.utils import has_path
 
 
@@ -50,8 +50,7 @@ class Enemy:
              for x in range(SECTOR_X_NUMBER)]
             for y in range(SECTOR_Y_NUMBER)
         ]
-        #
-        flag, visited = has_path(*self.pos, *pos_base, np.array(data, int), self.distance_move)
+        flag, visited = a_star_search(*self.pos, *pos_base, np.array(data, int), self.distance_move)
         if flag:
             path_segment = tuple(pos_base)
             while path_segment and path_segment in visited:

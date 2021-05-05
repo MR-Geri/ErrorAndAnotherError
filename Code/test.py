@@ -1,11 +1,9 @@
 import time
-from collections import deque
-from typing import Tuple, Union
-from numba import njit
+from finding_path import *
 import numpy as np
 
 SECTOR_X_NUMBER, SECTOR_Y_NUMBER = 50, 50
-pos_start, pos_target = [14, 6], [22, 25]
+pos_start, pos_target = (14, 6), (22, 25)
 distance_move = 1
 my_board = [
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -110,55 +108,10 @@ my_board = [
      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
 
 
-@njit(cache=True, fastmath=True)
-def check(x, y, board):
-    return True if 0 <= x < SECTOR_X_NUMBER and 0 <= y < SECTOR_Y_NUMBER and board[y, x] != 1 else False
-
-
-@njit(cache=True, fastmath=True)
-def get_next_nodes(x, y, board) -> list:
-    ways = [(x, y) for x in range(-distance_move, distance_move + 1)
-            for y in range(-distance_move, distance_move + 1)]
-    return [(x + dx, y + dy) for dx, dy in ways if check(x + dx, y + dy, board)]
-
-
-def has_path(x1, y1, x2, y2, board):
-    graph = {}
-    for y, row in enumerate(board):
-        for x, col in enumerate(row):
-            if col != 1:
-                graph[(x, y)] = graph.get((x, y), []) + get_next_nodes(x, y, board)
-    #
-    queue = deque([(x1, y1)])
-    visited = {(x1, y1): None}
-    while queue:
-        cur_node = queue.popleft()
-        if cur_node == (x2, y2):
-            break
-        next_nodes = graph[cur_node]
-        for next_node in next_nodes:
-            if next_node not in visited:
-                queue.append(next_node)
-                visited[next_node] = cur_node
-    return (x2, y2) in visited, visited
-
-
-def move_core():
-    #
-    flag, visited = has_path(*pos_start, *pos_target, np.array(my_board, int))
-    if flag:
-        path_segment = tuple(pos_target)
-        while path_segment and path_segment in visited:
-            path_segment = visited[path_segment]
-            if path_segment and visited[path_segment] == tuple(pos_start):
-                return path_segment
-    return None
-
-
 if __name__ == '__main__':
     t = time.time()
     n = 100
     for _ in range(n):
-        print(move_core())
+        print(a_star_search(np.array(my_board, int), pos_start, pos_target, 1))
     t = time.time() - t
     print(t, t / n)

@@ -169,35 +169,3 @@ def random_cord() -> Tuple[int, int]:
 
 def get_distance(pos_one: Tuple[int, int], pos_two: Tuple[int, int] = (0, 0)) -> Tuple[int, int]:
     return abs(pos_one[0] - pos_two[0]), abs(pos_one[1] - pos_two[1])
-
-
-@njit(cache=True, fastmath=True)
-def check(x, y, board):
-    return True if 0 <= x < SECTOR_X_NUMBER and 0 <= y < SECTOR_Y_NUMBER and board[y, x] != 1 else False
-
-
-@njit(cache=True, fastmath=True)
-def get_next_nodes(x, y, board, distance) -> list:
-    ways = [(x, y) for x in range(-distance, distance + 1) for y in range(-distance, distance + 1)]
-    return [(x + dx, y + dy) for dx, dy in ways if check(x + dx, y + dy, board)]
-
-
-def has_path(x1, y1, x2, y2, board, distance):
-    graph = {}
-    for y, row in enumerate(board):
-        for x, col in enumerate(row):
-            if col != 1:
-                graph[(x, y)] = graph.get((x, y), []) + get_next_nodes(x, y, board, distance)
-    #
-    queue = deque([(x1, y1)])
-    visited = {(x1, y1): None}
-    while queue:
-        cur_node = queue.popleft()
-        if cur_node == (x2, y2):
-            break
-        next_nodes = graph[cur_node]
-        for next_node in next_nodes:
-            if next_node not in visited:
-                queue.append(next_node)
-                visited[next_node] = cur_node
-    return (x2, y2) in visited, visited
