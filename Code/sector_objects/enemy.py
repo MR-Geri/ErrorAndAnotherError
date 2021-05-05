@@ -34,8 +34,19 @@ class Enemy:
     def check(self, x, y, board):
         return True if 0 <= x < SECTOR_X_NUMBER and 0 <= y < SECTOR_Y_NUMBER and board[y][x] != 1 else False
 
+    def get_state(self) -> dict:
+        data = {
+            'name': self.__class__.__name__, 'pos': tuple(self.pos), 'x': self.pos[0], 'y': self.pos[1],
+            'hp': self.hp, 'damage': self.dmg, 'dmg': self.dmg, 'sell_block': self.sell_block,
+            'distance_move': self.distance_move
+        }
+        for k, v in data.items():
+            data[k] = type(v)(v)
+        return data
+
     def get_next_nodes(self, x, y, board) -> list:
-        ways = [-1, 0], [0, -1], [1, 0], [0, 1]
+        ways = [(x, y) for x in range(-self.distance_move, self.distance_move + 1) 
+                for y in range(-self.distance_move, self.distance_move + 1)]
         return [(x + dx, y + dy) for dx, dy in ways if self.check(x + dx, y + dy, board)]
 
     def has_path(self, x1, y1, x2, y2, board):
@@ -56,38 +67,28 @@ class Enemy:
                 if next_node not in visited:
                     queue.append(next_node)
                     visited[next_node] = cur_node
-        return (x2, y2) in visited
-
-    def get_state(self) -> dict:
-        data = {
-            'name': self.__class__.__name__, 'pos': tuple(self.pos), 'x': self.pos[0], 'y': self.pos[1],
-            'hp': self.hp, 'damage': self.dmg, 'dmg': self.dmg, 'sell_block': self.sell_block,
-            'distance_move': self.distance_move
-        }
-        for k, v in data.items():
-            data[k] = type(v)(v)
-        return data
+        return (x2, y2) in visited, visited
 
     def move_core(self, sector) -> Union[None, Tuple[int, int]]:
-        data = []
-        for y in range(SECTOR_Y_NUMBER):
-            temp = []
-            for x in range(SECTOR_X_NUMBER):
-                if sector.board[y][x].__class__.__name__ in self.sell_block or sector.entities.entities_sector[y][x]:
-                    temp.append(1)
-                else:
-                    temp.append(0)
-            data.append(temp)
-        #
         pos_base = sector.base.pos
-        if self.has_path(*self.pos, *pos_base, data):
-            path_segment = pos_base
-            while path_segment and path_segment in self.visited:
-                self.temp.append(path_segment)
-                path_segment = self.visited[path_segment]
+        data = [
+            [1 if sector.board[y][x].__class__.__name__ in self.sell_block or
+                  (sector.entities.entities_sector[y][x] and self.pos != [x, y] and pos_base != [x, y]) else 0
+             for x in range(SECTOR_X_NUMBER)]
+            for y in range(SECTOR_Y_NUMBER)
+        ]
+        #
+        flag, visited = self.has_path(*self.pos, *pos_base, data)
+        if flag:
+            path_segment = tuple(pos_base)
+            while path_segment and path_segment in visited:
+                path_segment = visited[path_segment]
+                if path_segment and visited[path_segment] == tuple(self.pos):
+                    return path_segment
+        return None
 
     def attack_core(self, sector) -> Union[None, Tuple[int, int]]:
-        return sector.base.pos
+        return None  # sector.base.pos
 
     def hp_update(self, hp) -> None:
         # НЕ ВЛИЯЕТ пользователь

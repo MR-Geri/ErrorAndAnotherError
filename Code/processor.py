@@ -7,6 +7,7 @@ class Processor:
         self.tick_complete = tick_complete
         self.tick = tick
         self.time_update = 2  # 2 раза за секунду
+        self.last_spawn = 0
         self.max_speed = 8
         self.min_speed = 1
         self.day = True
@@ -36,7 +37,8 @@ class Processor:
             self.day = not self.day
 
     def check_enemy(self) -> None:
-        if (self.tick_complete // UPDATE_CHANGE_TIME // 2) // len(self.sector.enemy_bases):
+        if self.tick_complete - self.last_spawn > UPDATE_CHANGE_TIME:
+            self.last_spawn = self.tick_complete
             self.sector.place_enemy_base(self.tick_complete)
         if self.sector.enemy_bases:
             self.sector.check_enemy(self.tick_complete)
