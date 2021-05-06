@@ -45,7 +45,7 @@ class Enemy:
         return data
 
     def move_core(self, sector) -> Union[None, Tuple[int, int]]:
-        time.sleep(0.1)
+        # time.sleep(0.1)
         pos_base = sector.base.pos
         if get_distance(self.pos, pos_base) >= self.distance_move:
             data = [
