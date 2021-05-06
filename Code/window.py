@@ -1,4 +1,5 @@
 import json
+from threading import Thread
 
 from Code.inventory import Inventory
 from Code.settings import *
@@ -295,6 +296,7 @@ class SettingsWindow(Window):
 class GameWindow(Window):
     def __init__(self, controller: object, size_display: Tuple[int, int], display: pg.Surface) -> None:
         super().__init__(controller, size_display, display)
+        self.thread = None
         # Панели
         panel_width = self.win_width // INFO_PANEL_K
         pad, size = panel_width * 0.02, panel_width * 0.96
@@ -344,6 +346,32 @@ class GameWindow(Window):
                                              dialog_info=self.dialog_info, sector=self.sector)
         self.left_panel.init(self.processor)
         #
+
+    def thread_ticked(self) -> None:
+        while self.is_run:
+            self.clock.tick(FPS)
+            if not self.get_action_window() and self.processor.state:
+                self.processor.ticked()
+                self.sound.play()
+
+    def join(self) -> None:
+        self.is_run = False
+        self.thread.join()
+
+    def run(self, last: str = None) -> None:
+        self.last_window = last
+        pg.event.clear()
+        self.is_run = True
+        self.thread = Thread(target=self.thread_ticked)
+        self.thread.start()
+        while self.is_run:
+            self.clock.tick(FPS)
+            self.display.blit(self.bd, (0, 0))
+            self.event()
+            self.draw()
+            self.update()
+            #
+            pg.display.update()
 
     def save(self) -> None:
         board, entities = self.sector.save()
@@ -457,7 +485,7 @@ class GameWindow(Window):
     def update(self) -> None:
         # pg.display.set_caption(str(self.clock.get_fps()))  # нужно для отладки. FPS в заголовок окна!
         if not self.get_action_window() and self.processor.state:
-            self.processor.ticked()
+            # self.processor.ticked()
             self.camera.move(self.camera_left, self.camera_right, self.camera_up, self.camera_down)
             if self.size_cell > self.size_cell_min:
                 pos_l = self.get_number_cell((self.left_panel.rect.width, 0))
@@ -470,7 +498,7 @@ class GameWindow(Window):
             else:
                 self.left_panel.render_minimap(self.sector.surface)
             #
-            self.sound.play()
+            # self.sound.play()
         self.right_panel.update()
         self.left_panel.update()
 
