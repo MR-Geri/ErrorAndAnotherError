@@ -1,4 +1,3 @@
-from numba import njit
 from Code.settings import *
 
 
@@ -167,5 +166,6 @@ def random_cord() -> Tuple[int, int]:
     return randint(0, SECTOR_X_NUMBER - 1), randint(0, SECTOR_Y_NUMBER - 1)
 
 
-def get_distance(pos_one: Tuple[int, int], pos_two: Tuple[int, int] = (0, 0)) -> Tuple[int, int]:
-    return abs(pos_one[0] - pos_two[0]), abs(pos_one[1] - pos_two[1])
+def get_distance(pos_one: Union[list, Tuple[int, int]], pos_two: Union[list, Tuple[int, int]] = (0, 0)) -> int:
+    a, b = abs(pos_one[0] - pos_two[0]), abs(pos_one[1] - pos_two[1])
+    return min(a, b) + abs(a - b) - 1

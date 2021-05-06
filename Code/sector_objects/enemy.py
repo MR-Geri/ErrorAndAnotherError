@@ -1,8 +1,10 @@
+import time
+
 from Code.settings import *
 from Code.dialogs import DialogInfo, DialogFile, DialogState
 from Code.info_panel import RightPanel, LeftPanel
 from Code.finding_path import a_star_search
-from Code.utils import has_path
+from Code.utils import get_distance
 
 
 class Enemy:
@@ -43,20 +45,22 @@ class Enemy:
         return data
 
     def move_core(self, sector) -> Union[None, Tuple[int, int]]:
+        time.sleep(0.1)
         pos_base = sector.base.pos
-        data = [
-            [1 if sector.board[y][x].__class__.__name__ in self.sell_block or
-                  (sector.entities.entities_sector[y][x] and self.pos != [x, y] and pos_base != [x, y]) else 0
-             for x in range(SECTOR_X_NUMBER)]
-            for y in range(SECTOR_Y_NUMBER)
-        ]
-        flag, visited = a_star_search(*self.pos, *pos_base, np.array(data, int), self.distance_move)
-        if flag:
-            path_segment = tuple(pos_base)
-            while path_segment and path_segment in visited:
-                path_segment = visited[path_segment]
-                if path_segment and visited[path_segment] == tuple(self.pos):
-                    return path_segment
+        if get_distance(self.pos, pos_base) >= self.distance_move:
+            data = [
+                [1 if sector.board[y][x].__class__.__name__ in self.sell_block or
+                      (sector.entities.entities_sector[y][x] and self.pos != [x, y] and pos_base != [x, y]) else 0
+                 for x in range(SECTOR_X_NUMBER)]
+                for y in range(SECTOR_Y_NUMBER)
+            ]
+            flag, visited = a_star_search(*self.pos, *pos_base, np.array(data, int), self.distance_move)
+            if flag:
+                path_segment = tuple(pos_base)
+                while path_segment and path_segment in visited:
+                    path_segment = visited[path_segment]
+                    if path_segment and visited[path_segment] == tuple(self.pos):
+                        return path_segment
         return None
 
     def attack_core(self, sector) -> Union[None, Tuple[int, int]]:

@@ -1,4 +1,5 @@
 import importlib
+import time
 
 from Code.sector_objects.foundry import Foundry
 from Code.settings import *
@@ -205,10 +206,12 @@ class Sector:
                     self.item_transfer(entity, entity.item_transfer_core(board=board, entities=entities))
                 except Exception as e:
                     print(e)
+        t = time.time()
         if enemies:
             for enemy in enemies:
                 self.move(enemy, enemy.move_core(self))
                 self.attack(enemy, enemy.attack_core(self))
+        print(time.time() - t)
         self.render()
 
     def place_foundry(self, x: int, y: int) -> None:
@@ -236,7 +239,7 @@ class Sector:
 
     def place_enemy_base(self, tick_complete: int) -> None:
         pos = utils.random_cord()
-        while sum(utils.get_distance(pos, self.base.pos)) < 16 or type(self.board[pos[1]][pos[0]]) in SELL_BLOCKED:
+        while utils.get_distance(pos, self.base.pos) < 16 or type(self.board[pos[1]][pos[0]]) in SELL_BLOCKED:
             pos = utils.random_cord()
         base = EnemyBase(pos=pos, size_cell=self.size_cell, board=self.board, entities=self.entities,
                          dialog_info=self.dialog_info, dialog_file=self.dialog_file,

@@ -3,11 +3,11 @@ from Code.settings import *
 
 
 class Processor:
-    def __init__(self, sector, tick_complete=0, tick=0) -> None:
+    def __init__(self, sector, tick_complete=0, tick=0, last_spawn=0) -> None:
         self.tick_complete = tick_complete
         self.tick = tick
+        self.last_spawn = last_spawn
         self.time_update = 2  # 2 раза за секунду
-        self.last_spawn = 0
         self.max_speed = 8
         self.min_speed = 1
         self.day = True

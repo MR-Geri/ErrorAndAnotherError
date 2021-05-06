@@ -349,7 +349,7 @@ class GameWindow(Window):
         board, entities = self.sector.save()
         save = {
             'camera': self.camera.save(self.coefficient_scale),
-            'processor': (self.processor.tick, self.processor.tick_complete),
+            'processor': (self.processor.tick_complete, self.processor.tick, self.processor.last_spawn),
             'board': board,
             'entities': entities,
             'degree_scale': (self.size_cell - self.size_cell_min) / self.coefficient_scale
@@ -366,8 +366,7 @@ class GameWindow(Window):
                 self.inventory_active = self.sector.base.inventory
             self.camera.load(data['camera'], self.coefficient_scale)
             self.scale(0)
-            processor = data['processor']
-            self.processor = Processor(sector=self.sector, tick=processor[0], tick_complete=processor[1])
+            self.processor = Processor(self.sector, *data['processor'])
             self.left_panel.init(self.processor)
 
     def scale(self, coeff_scale: float):

@@ -1,5 +1,5 @@
 from collections import deque
-from typing import Union, Tuple
+from typing import Union, Tuple, List
 from os import walk
 import pygame as pg
 import numpy as np
